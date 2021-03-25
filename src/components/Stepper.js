@@ -21,8 +21,8 @@ const getSteps = () => {
     return [
         "Created Ticket",
         "Approve Terms",
-        "Set Ticket Date",
-        "Waiting for the appointment",
+        "Set Appointment Date",
+        "Appointment",
         "Feedback"
     ];
 };
@@ -34,7 +34,7 @@ const getStepContent = (stepIndex) => {
         case 1:
             return "Please, check your e-mail box and approve the terms.";
         case 2:
-            return "Please, set your ticket date.";
+            return "Please, set your appointment date.";
         case 3:
             return "Please, don't forget your appointment!";
         case 4:
