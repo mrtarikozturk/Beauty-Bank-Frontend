@@ -28,7 +28,10 @@ const getSteps = () => {
 };
 
 const getStepContent = (stepIndex) => {
+    console.log({stepIndex})
     switch (stepIndex) {
+        case -1:
+            return ""
         case 0:
             return "Our connector will call you...";
         case 1:

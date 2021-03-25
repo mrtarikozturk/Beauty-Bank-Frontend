@@ -192,11 +192,11 @@ const UserDetail = ({ selectedUser, handleClose }) => {
                       <TableRow>
                         <TableCell>Gender</TableCell>
                         <TableCell align="left">
-                          {userData?.gender == 1
-                            ? "Female"
-                            : userData?.gender == 2
+                          {userData?.gender === 0
                             ? "Male"
-                            : "Other"}
+                            : userData?.gender === 1
+                            ? "Female"
+                            : "Not Specified"}
                         </TableCell>
                       </TableRow>
                       <TableRow>

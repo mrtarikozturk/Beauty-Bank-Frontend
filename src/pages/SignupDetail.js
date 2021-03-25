@@ -22,8 +22,8 @@ import {
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Modal } from "../components/Index";
-import Request from "../services/Request";
-import axios from "axios";
+import api, {handleError} from "../api";
+import {useSnackbar} from 'notistack'
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -73,6 +73,7 @@ const SignupDetail = () => {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
 
   //states
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -90,6 +91,8 @@ const SignupDetail = () => {
       setDetailPath("register-connector");
     } else if (id === "sponsor") {
       setDetailPath("register-sponsor");
+    } else {
+      history.push('/login')
     }
   }, []);
 
@@ -130,6 +133,13 @@ const SignupDetail = () => {
       .min(1, "Must be at least 1 characters")
       .max(20, "Must be a maximum of 20 characters"),
     conditions: yup.bool().oneOf([true], "This field is required"),
+    ...(id === "client" && {
+      zip: yup
+        .string()
+        .required("This field is required")
+        .min(1, "Must be at least 1 characters")
+        .max(30, "Must be a maximum of 8 characters")
+    }),
     ...(id === "professional" && {
       zip: yup
         .string()
@@ -158,6 +168,9 @@ const SignupDetail = () => {
     passwordConfirm: "",
     phone: "",
     conditions: false,
+    ...(id === "client" && {
+      zip: "",
+    }),
     ...(id === "professional" && {
       aboutMe: "",
       zip: "",
@@ -186,27 +199,15 @@ const SignupDetail = () => {
         zip_address: values.zip,
         service_type: 0,
       }),
+      ...(id === 'client' && {
+        zip_address: values.zip,
+      })
     };
-    // console.log(data);
-    // console.log(detailPath);
     //TODO: Email verify info page yapılmalı register olduktan sonra oraya yonlendirmeli
-    Request.postData(
-      `https://bbank-backend-app.herokuapp.com/auth/${detailPath}/`,
-      data
-    )
-      .then(() => {
-        alert(
-          "Successfull! You have been registered! Please activate your email!"
-        );
-        setLoading(false);
-      })
-      .then((response) => {
-        // alert(response);
-      })
-      .catch((error) => {
-        console.log(error.message);
-        setLoading(false);
-      });
+    api.post(`auth/${detailPath}/`, data).then(() => {
+      enqueueSnackbar("Successful! You have been registered! Please activate your email!", {variant: 'success'})
+      setLoading(false)
+    }).catch(handleError(enqueueSnackbar, closeSnackbar, setLoading))
   };
 
   // formik
@@ -355,8 +356,22 @@ const SignupDetail = () => {
                 }
               />
             </Grid>
+            {id === 'client' && (
+              <Grid item xs={12} sm={12}>
+              <TextField
+                label="Zip / Postal code"
+                name="zip"
+                autoComplete="zip"
+                required
+                fullWidth
+                {...formik.getFieldProps("zip")}
+                error={formik.touched.zip && formik.errors.zip}
+                helperText={formik.touched.zip && formik.errors.zip}
+              />
+            </Grid>
+            )}
             {/* company name */}
-            {id === "professional" ? (
+            {id === "professional" && (
               <>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -427,8 +442,6 @@ const SignupDetail = () => {
                   />
                 </Grid>
               </>
-            ) : (
-              ""
             )}
 
             {/* phone number */}

@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { useHistory, useParams } from "react-router-dom";
+import React from "react";
+import { makeStyles, Select, FormControl, MenuItem, InputLabel } from "@material-ui/core";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Paper, Grid, TextField, Button } from "@material-ui/core";
-import Request from "../services/Request";
-
-import { AppContext } from "../context/AppContext";
+import api, {handleError} from '../api'
+import {useSnackbar} from 'notistack'
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -50,11 +48,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EditProfile = ({handleClose}) => {
+export const EditProfile = ({handleClose, userData}) => {
   const classes = useStyles();
-  const history = useHistory();
-  const { id } = useParams();
-  const { user, setUser, userProfile, setUserProfile } = useContext(AppContext);
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
 
   // validation obj
   const validationSchema = yup.object().shape({
@@ -89,7 +85,7 @@ const EditProfile = ({handleClose}) => {
       .required("This field is required")
       .min(1, "Must be at least 1 characters")
       .max(30, "Must be a maximum of 30 characters"),
-      address: yup
+    address: yup
       .string()
       .required("This field is required")
       .min(1, "Must be at least 1 characters")
@@ -99,48 +95,42 @@ const EditProfile = ({handleClose}) => {
       .required("This field is required")
       .min(100, "Must be at least 100 characters")
       .max(1500, "Must be a maximum of 1500 characters"),
+    minimumIncome: yup
+      .boolean()
+      .required("This field is required")
   });
 
   // initial values
   const initialValues = {
-    firstName: userProfile?.first_name,
-    lastName: userProfile?.last_name,
-    userName: userProfile?.username,
-    email: userProfile?.email,
-    phone: userProfile?.phone_number,
-    phone2: userProfile?.phone_number2,
-    zipAddress: userProfile?.zip_address,
-    address: userProfile?.address,
-    aboutMe: userProfile?.about_me,
+    firstName: userData?.first_name,
+    lastName: userData?.last_name,
+    userName: userData?.username,
+    email: userData?.email,
+    phone: userData?.phone_number,
+    phone2: userData?.phone_number2,
+    zipAddress: userData?.zip_address,
+    address: userData?.address,
+    aboutMe: userData?.about_me,
+    minimumIncome: userData?.min_incomer
   };
 
   // handleSubmit
   async function onSubmit(values) {
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.tokens?.access}`,
-      },
-      body: JSON.stringify({
-        email: values.email,
-        username: values.userName,
-        first_name: values.firstName,
-        last_name: values.lastName,
-        phone_number: values.phone,
-        phone_number2: values.phone2,
-        zip_address: values.zipAddress,
-        address: values.address,
-        about_me: values.aboutMe,
-      }),
-    };
-
-    const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/auth/user-detail/${user?.username}`,
-      requestOptions
-    );
-    const data = await response.json();
-    handleClose();
+    api.put(`/auth/user-detail/${userData?.username}`, {
+      email: values.email,
+      username: values.userName,
+      first_name: values.firstName,
+      last_name: values.lastName,
+      phone_number: values.phone,
+      phone_number2: values.phone2,
+      zip_address: values.zipAddress,
+      address: values.address,
+      about_me: values.aboutMe,
+      min_incomer: values.minimumIncome
+    }).then(() => {
+      enqueueSnackbar("Updated profile successfully!", {variant: 'success'})
+      handleClose()
+    }).catch(handleError(enqueueSnackbar, closeSnackbar))
   }
 
   // formik
@@ -281,6 +271,29 @@ const EditProfile = ({handleClose}) => {
                 }
               />
             </Grid>
+            <Grid item xs={12}>
+              <FormControl className={classes.formControl}>
+              <InputLabel id="min-income-select-helper-label">
+                Do you have minimum income?
+              </InputLabel>
+              <Select
+                labelId="min-income-select-helper-label"
+                id="min-income-select-helper"
+                name="minimumIncome"
+                {...formik.getFieldProps("minimumIncome")}
+                error={
+                  formik.touched.minimumIncome && formik.errors.minimumIncome
+                }
+                helperText={
+                  formik.touched.minimumIncome && formik.errors.minimumIncome
+                }
+              >
+                <MenuItem value={false}>No</MenuItem>
+                <MenuItem value={true}>Yes</MenuItem>
+              </Select>
+              {/* <FormHelperText>Some important helper text</FormHelperText> */}
+            </FormControl>
+            </Grid>
           </Grid>
           <Button
             type="submit"
@@ -296,47 +309,3 @@ const EditProfile = ({handleClose}) => {
     </main>
   );
 };
-
-export { EditProfile };
-
-{
-  /* <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justify="center"
-      style={{ minHeight: "100vh" }}
-    >
-      <Grid item xs={12}>
-          Edit Profile
-      <Button
-              onClick={handleClick}
-              fullWidth
-              variant="outlined"
-              color="secondary"
-              value="Login Page"
-            >
-              Submit
-            </Button>
-      </Grid>
-    </Grid> 
-
-      async function handleClick() {
-    const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ }),
-      };
-  
-      const response = await fetch(
-        "https://bbank-backend-app.herokuapp.com/auth/email-verify/",
-        requestOptions
-      );
-      const data = await response.json();
-  };
-
-
-
-*/
-}

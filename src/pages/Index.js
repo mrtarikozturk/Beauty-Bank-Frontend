@@ -9,6 +9,6 @@ export * from './DashboardSponsor';
 export * from './Profile';
 export * from './EmailVerify';
 export * from './CreateTicket';
-export * from './ConnectorUserList';
+export * from './ConnectorClientList';
 export * from './ConfirmTicket';
 export * from './TermsApproved';
