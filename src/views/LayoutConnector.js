@@ -10,19 +10,24 @@ export const LayoutConnector = ({children, pageTitle}) => {
 
   const list = [
     {
-      icon: <DashboardIon color='primary' />,
-      title: "Dashboard",
-      onClick: () => history.push('/connector')
-    },
-    {
       icon: <AccountCircle color='primary' />,
       title: "Profile",
       onClick: () => history.push('/connector-profile')
     },
     {
+      icon: <DashboardIon color='primary' />,
+      title: "Tickets",
+      onClick: () => history.push('/connector')
+    },
+    {
       icon: <PeopleAltIcon color='primary' />,
-      title: "User List",
-      onClick: () => history.push('/connector-user-list')
+      title: "Client List",
+      onClick: () => history.push('/connector-client-list')
+    },
+    {
+      icon: <PeopleAltIcon color='primary' />,
+      title: "Pro List",
+      onClick: () => history.push('/connector-pro-list')
     }
   ]
   return <Layout pageTitle={pageTitle} list={list}>{children}</Layout>

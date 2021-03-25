@@ -31,7 +31,7 @@ export const Dashboard = ({Layout, classes, tickets, modals, hasStepper, list, p
           hasStepper &&
           <Grid item xs={12}>
             <Paper className={fixedHeightPaper}>
-              <Stepper activeStep={Number(tickets[0]?.ticket_status)} />
+              <Stepper activeStep={tickets.length > 0 ? Number(tickets[0]?.ticket_status): -1} />
             </Paper>
           </Grid>
         }

@@ -10,14 +10,14 @@ export const LayoutClient = ({children, pageTitle}) => {
 
   const list = [
     {
-      icon: <DashboardIon color='primary' />,
-      title: "Dashboard",
-      onClick: () => history.push('/client')
-    },
-    {
       icon: <AccountCircle color='primary' />,
       title: "Profile",
       onClick: () => history.push('/client-profile')
+    },
+    {
+      icon: <DashboardIon color='primary' />,
+      title: "Dashboard",
+      onClick: () => history.push('/client')
     },
     {
       icon: <PostAddIcon color='primary' />,

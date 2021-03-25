@@ -18,6 +18,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import CardContent from "@material-ui/core/CardContent";
+import api, {handleError} from '../api'
+import {useSnackbar} from 'notistack'
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -71,48 +73,24 @@ const CreateTicket = () => {
   const history = useHistory();
   const { user } = useContext(AppContext);
   const [userData, setUserData] = useState([]);
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
 
   // Get User
-  useEffect(async () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.tokens?.access}`,
-      },
-    };
-
-    const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/auth/user-detail/${user?.username}`,
-      requestOptions
-    );
-    const data = await response.json();
-
-    setUserData(data);
+  useEffect(() => {
+    api.get(`/auth/user-detail/${user?.username}`)
+    .then(setUserData)
+    .catch(handleError(enqueueSnackbar, closeSnackbar))
   }, []);
 
 
   // Submit Create Ticket
   async function handleCreateTicket(){
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.tokens?.access}`,
-      },
-    };
-
-    const response = await fetch(
-      "https://bbank-backend-app.herokuapp.com/ticket/create/",
-      requestOptions
-    );
-
-    if (response?.status == 201) {
-      // alert("Your ticket succesfully created!");
-      history.push("/client");
-    } else { alert("Please update and fill in all the information in your profile!")}
+    api.post('/ticket/create/').then(() => {
+      enqueueSnackbar("Your ticket successfully created!", {variant: 'success'})
+      history.push("/client")
+    }).catch(handleError(enqueueSnackbar, closeSnackbar))
   }
-  
+
 
   return (
     <LayoutClient pageTitle="Create Ticket">

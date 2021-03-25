@@ -5,9 +5,9 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import {CssBaseline, Drawer,
   Container, AppBar, Toolbar,
-  List, Typography, Divider,  Avatar, IconButton, Menu as MenuIcon} from "@material-ui/core";
+  List, Typography, Divider,  Avatar, IconButton} from "@material-ui/core";
 import {ChevronLeft as ChevronLeftIcon,
-   AccountBox as AccountBoxIcon, ExitToApp as ExitToAppIcon} from "@material-ui/icons";
+   AccountBox as AccountBoxIcon, ExitToApp as ExitToAppIcon, Menu as MenuIcon} from "@material-ui/icons";
 
 import LayoutListItem from './ListItem'
 import { AppContext } from "../../context/AppContext";
@@ -118,7 +118,7 @@ const Layout = ({ children, pageTitle, list }) => {
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
-            color="inherit"
+            color='inherit'
             aria-label="open drawer"
             onClick={() => setIsDrawerOpen(true)}
             className={clsx(

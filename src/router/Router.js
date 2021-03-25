@@ -12,12 +12,13 @@ import {
     EmailVerify,
     Profile,
     CreateTicket,
-    ConnectorUserList,
     ConfirmTicket,
     TermsApproved,
+    ConnectorClientList,
 } from '../pages/Index';
 import { Footer } from '../components/Index';
 import { AppContext } from '../context/AppContext';
+import { ConnectorProList } from '../pages/ConnectorProList';
 
 const AppRouter = () => {
 
@@ -35,7 +36,8 @@ const AppRouter = () => {
                 <Route exact path='/client-profile' component={user?.role === 'Client' ? Profile : Signin} />
                 <Route exact path='/connector' component={user?.role === 'Connector' ? DashboardConnector : Signin} />
                 <Route exact path='/connector-profile' component={user?.role === 'Connector' ? Profile : Signin} />
-                <Route exact path='/connector-user-list' component={user?.role === 'Connector' ? ConnectorUserList : Signin} />
+                <Route exact path='/connector-client-list' component={user?.role === 'Connector' ? ConnectorClientList : Signin} />
+                <Route exact path='/connector-pro-list' component={user?.role === 'Connector' ? ConnectorProList : Signin} />
                 <Route exact path='/professional' component={user?.role === 'Pro' ? DashboardProfessional : Signin} />
                 <Route exact path='/professional-profile' component={user?.role === 'Pro' ? Profile : Signin} />
                 <Route exact path='/sponsor' component={user?.role === 'Sponsor' ? DashboardSponsor : Signin} />

@@ -4,7 +4,14 @@ export const handleError = (snackbar, closer, setter) => err => {
   if (err?.response?.data) {
     const errors = Object.keys(err.response.data)
     if (errors.length) {
-      error = `${errors[0]}: ${err.response.data[errors[0]]}`
+      if (errors.indexOf('detail') !== -1) {
+        // Token error
+        localStorage.removeItem('user')
+        error = 'Session expired, please login again!'
+      } else {
+        const key = errors[0]
+        error = `${key}: ${err.response.data[key]}`
+      }
     }
   }
   const key = snackbar(error, {variant: 'error', onClick: () => {

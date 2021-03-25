@@ -5,7 +5,8 @@ const api = axios.create({baseURL: "https://bbank-backend-app.herokuapp.com/"})
 api.interceptors.request.use(request => {
   let user = localStorage.getItem("user");
   request.headers = {"Content-Type": "application/json", ...request.headers}
-  if (user) {
+
+  if (user && !request.url.includes('auth/login')) {
     user = JSON.parse(user);
     if (user?.tokens?.access) {
       request.headers = {Authorization: `Bearer ${user.tokens.access}`, ...request.headers}

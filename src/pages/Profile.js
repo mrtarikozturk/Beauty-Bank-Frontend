@@ -15,7 +15,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import Typography from "@material-ui/core/Typography";
 import { AppContext } from "../context/AppContext";
 
-import Avatar from "@material-ui/core/Avatar";
+import {Avatar, CircularProgress} from "@material-ui/core";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -26,6 +26,9 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Modal from "@material-ui/core/Modal";
 import { EditProfile } from "../components/Index";
+
+import api, {handleError} from '../api'
+import {useSnackbar} from 'notistack'
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -77,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     top: "20vh",
     left: "35vw",
     width: 700,
-    height: 600,
+    height: 700,
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
@@ -95,9 +98,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = () => {
   const classes = useStyles();
-  const { user, setUser, userProfile, setUserProfile } = useContext(AppContext);
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+
+  const { user } = useContext(AppContext);
   const [userData, setUserData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false)
 
   let Layout;
   switch (user?.role) {
@@ -127,46 +133,31 @@ const Profile = () => {
 
 
   const handleUploadImage = async (event) => {
+    setImageLoading(true)
     let image = await event.target.files[0];
     let form_data = await new FormData();
     await form_data.append('profile_image', image);
 
-    axios.patch( `https://bbank-backend-app.herokuapp.com/auth/user-detail/${user?.username}`, form_data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${user?.tokens?.access}`
-      }
-    })
-    .then(res => setUserData([...userData, userData.profile_image=res.data.profile_image]))
-    .catch((err) => console.log(err));
+    api.patch(`/auth/user-detail/${user?.username}`, form_data, {headers: {"Content-Type": "multipart/form-data"}})
+    .then(data => setUserData({...userData, profile_image: data.profile_image}))
+    .catch(handleError(enqueueSnackbar, closeSnackbar))
+    .finally(() => setImageLoading(false))
   }
 
   const modalBody = (
     <div className={classes.paperModal}>
       <h1 id="simple-modal-title">Edit Profile</h1>
-      <EditProfile handleClose={handleClose} />
+      <EditProfile handleClose={handleClose} userData={userData} />
     </div>
   );
 
-  useEffect(async () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.tokens?.access}`,
-      },
-    };
-
-    const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/auth/user-detail/${user?.username}`,
-      requestOptions
-    );
-    const data = await response.json();
-
-    setUserData(data);
-  }, [open, userData]);
-
-  setUserProfile(userData);
+  useEffect(() => {
+    setImageLoading(true)
+    api.get(`/auth/user-detail/${user?.username}`)
+    .then(setUserData)
+    .catch(handleError(enqueueSnackbar, closeSnackbar))
+    .finally(() => setImageLoading(false))
+  }, [open]);
 
   return (
     <Layout pageTitle="Profile">
@@ -192,11 +183,12 @@ const Profile = () => {
         </div>
         <Grid container spacing={3}>
           <Grid item xs={6} className={classes.profile_image}>
+            {imageLoading ? <div className={classes.large}> <CircularProgress /></div> : (
             <Avatar
               alt={userData?.email}
               src={userData?.profile_image}
               className={classes.large}
-            />
+            />)}
             <input
               accept="image/*"
               className={classes.input}
