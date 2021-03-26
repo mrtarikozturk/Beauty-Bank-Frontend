@@ -22,14 +22,13 @@ const useStyles = makeStyles((theme) => ({
     },
     container: {
         padding: theme.spacing(20, 0),
-        height: '100vh',
         justifyContent: 'center',
         [theme.breakpoints.down('sm')]: {
             padding: theme.spacing(5, 5),
-          },
-          [theme.breakpoints.up('md')]: {
+        },
+        [theme.breakpoints.up('md')]: {
             padding: theme.spacing(10, 10),
-          },
+        },
     },
     cardHeader: {
         backgroundColor:
@@ -96,51 +95,51 @@ const SignupMenu = () => {
     }
 
     return (
-            <Container maxWidth="lg" style={{height: "100vh"}}>
-                <Grid container spacing={5} className={classes.container}>
-                    {items.map((item) => (
-                        // Enterprise card is full width at sm breakpoint
-                        <Grid item key={item.title} xs={12} sm={6} md={3} alignItems="center" style={{display: 'flex'}}>
-                            <Card>
-                                <CardHeader
-                                    title={item.title}
-                                    subheader={item.subheader}
-                                    titleTypographyProps={{ align: 'center' }}
-                                    subheaderTypographyProps={{ align: 'center' }}
-                                    action={item.title === 'Professional' ? <StarIcon /> : null}
-                                    className={classes.cardHeader}
-                                />
-                                <CardMedia
+        <Container maxWidth="lg" >
+            <Grid container spacing={5} className={classes.container}>
+                {items.map((item) => (
+                    // Enterprise card is full width at sm breakpoint
+                    <Grid item key={item.title} xs={12} sm={6} md={3} alignItems="center" style={{ display: 'flex' }}>
+                        <Card>
+                            <CardHeader
+                                title={item.title}
+                                subheader={item.subheader}
+                                titleTypographyProps={{ align: 'center' }}
+                                subheaderTypographyProps={{ align: 'center' }}
+                                action={item.title === 'Professional' ? <StarIcon /> : null}
+                                className={classes.cardHeader}
+                            />
+                            <CardMedia
 
-                                    className={classes.cardMedia}
-                                    image={item.imageURL}
-                                    title={item.title}
-                                />
-                                <CardContent>
-                                    <ul>
-                                        {item.description.map((line) => (
-                                            <Typography component="li" variant="subtitle1" align="center" key={line}>
-                                                {line}
-                                            </Typography>
-                                        ))}
-                                    </ul>
-                                </CardContent>
-                                <CardActions>
-                                    <Button
-                                        onClick={handleClick}
-                                        fullWidth
-                                        variant={item.buttonVariant}
-                                        color="secondary"
-                                        value={item.title}
-                                    >
-                                        {item.buttonText}
-                                    </Button>
-                                </CardActions>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-            </Container>
+                                className={classes.cardMedia}
+                                image={item.imageURL}
+                                title={item.title}
+                            />
+                            <CardContent>
+                                <ul>
+                                    {item.description.map((line) => (
+                                        <Typography component="li" variant="subtitle1" align="center" key={line}>
+                                            {line}
+                                        </Typography>
+                                    ))}
+                                </ul>
+                            </CardContent>
+                            <CardActions>
+                                <Button
+                                    onClick={handleClick}
+                                    fullWidth
+                                    variant={item.buttonVariant}
+                                    color="secondary"
+                                    value={item.title}
+                                >
+                                    {item.buttonText}
+                                </Button>
+                            </CardActions>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+        </Container>
     );
 }
 
