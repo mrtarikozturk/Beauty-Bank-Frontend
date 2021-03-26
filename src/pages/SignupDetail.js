@@ -22,15 +22,15 @@ import {
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Modal } from "../components/Index";
-import api, {handleError} from "../api";
-import {useSnackbar} from 'notistack'
+import api, { handleError } from "../api";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
     width: "auto",
     display: "flex",
-    alignItems: 'center',
-    height: '100vh',
+    alignItems: "center",
+    height: "100vh",
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
       width: 600,
       marginLeft: "auto",
@@ -73,7 +73,7 @@ const SignupDetail = () => {
   const classes = useStyles();
   const history = useHistory();
   const { id } = useParams();
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   //states
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -92,7 +92,7 @@ const SignupDetail = () => {
     } else if (id === "sponsor") {
       setDetailPath("register-sponsor");
     } else {
-      history.push('/login')
+      history.push("/login");
     }
   }, []);
 
@@ -138,14 +138,14 @@ const SignupDetail = () => {
         .string()
         .required("This field is required")
         .min(1, "Must be at least 1 characters")
-        .max(30, "Must be a maximum of 8 characters")
+        .max(8, "Must be a maximum of 8 characters"),
     }),
     ...(id === "professional" && {
       zip: yup
         .string()
         .required("This field is required")
         .min(1, "Must be at least 1 characters")
-        .max(30, "Must be a maximum of 8 characters"),
+        .max(8, "Must be a maximum of 8 characters"),
       aboutMe: yup
         .string()
         .required("This field is required")
@@ -155,7 +155,6 @@ const SignupDetail = () => {
       gender: yup.number().min(0).max(2),
       capacity: yup.number().min(0),
     }),
-    // TODO: search whether there is extra validation for password.
   });
 
   // initial values
@@ -170,6 +169,9 @@ const SignupDetail = () => {
     conditions: false,
     ...(id === "client" && {
       zip: "",
+    }),
+    ...(id === "connector" && {
+      zip: "1671 EA",
     }),
     ...(id === "professional" && {
       aboutMe: "",
@@ -199,15 +201,24 @@ const SignupDetail = () => {
         zip_address: values.zip,
         service_type: 0,
       }),
-      ...(id === 'client' && {
+      ...(id === "client" && {
         zip_address: values.zip,
-      })
+      }),
+      ...(id === "connector" && {
+        zip_address: "1671 EA",
+      }),
     };
     //TODO: Email verify info page yapılmalı register olduktan sonra oraya yonlendirmeli
-    api.post(`auth/${detailPath}/`, data).then(() => {
-      enqueueSnackbar("Successful! You have been registered! Please activate your email!", {variant: 'success'})
-      setLoading(false)
-    }).catch(handleError(enqueueSnackbar, closeSnackbar, setLoading))
+    api
+      .post(`auth/${detailPath}/`, data)
+      .then(() => {
+        enqueueSnackbar(
+          "Successful! You have been registered! Please activate your email!",
+          { variant: "success" }
+        );
+        setLoading(false);
+      })
+      .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
   };
 
   // formik
@@ -356,20 +367,21 @@ const SignupDetail = () => {
                 }
               />
             </Grid>
-            {id === 'client' && (
+            {id === "client" && (
               <Grid item xs={12} sm={12}>
-              <TextField
-                label="Zip / Postal code"
-                name="zip"
-                autoComplete="zip"
-                required
-                fullWidth
-                {...formik.getFieldProps("zip")}
-                error={formik.touched.zip && formik.errors.zip}
-                helperText={formik.touched.zip && formik.errors.zip}
-              />
-            </Grid>
+                <TextField
+                  label="Zip / Postal code"
+                  name="zip"
+                  autoComplete="zip"
+                  required
+                  fullWidth
+                  {...formik.getFieldProps("zip")}
+                  error={formik.touched.zip && formik.errors.zip}
+                  helperText={formik.touched.zip && formik.errors.zip}
+                />
+              </Grid>
             )}
+
             {/* company name */}
             {id === "professional" && (
               <>
