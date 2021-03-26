@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useFormik } from "formik";
+import { useSnackbar } from "notistack";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppContext } from "../context/AppContext";
 import {
   Paper,
   Grid,
@@ -11,14 +11,16 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CardContent,
 } from "@material-ui/core";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import CardContent from "@material-ui/core/CardContent";
+import { AppContext } from "../context/AppContext";
+import api, { handleError } from "../api";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -70,36 +72,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AssignPro = ({ selectedTicket, handleClose }) => {
-  
   // Constants
   const classes = useStyles();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { user } = useContext(AppContext);
   const [proList, setProList] = useState([]);
   const [selectPro, setSelectPro] = useState("");
-
+  const [loading, setLoading] = useState(true);
 
   // Get Pro list
   useEffect(async () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.tokens?.access}`,
-      },
-    };
-
-    const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/auth/user-list/`,
-      requestOptions
-    );
-    const data = await response.json();
-
-    const filteredPro = data.results.filter((item) => {
-      if (item.is_pro) return item;
-    });
-    setProList(filteredPro);
+    api
+      .get(`/ticket/dist-list/${selectedTicket.id}`)
+      .then((data) => {
+        console.log(data);
+        setProList(data);
+        setLoading(false);
+      })
+      .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
   }, []);
-
 
   // Assign Pro
   async function onSubmit() {
@@ -118,7 +109,7 @@ const AssignPro = ({ selectedTicket, handleClose }) => {
     const response = await fetch(
       `https://bbank-backend-app.herokuapp.com/ticket/connector-tickets/${selectedTicket.id}`,
       requestOptions
-    ).then(r => console.log("PRO RES: ", r))
+    ).then((r) => console.log("PRO RES: ", r));
     handleClose();
   }
 
@@ -210,10 +201,7 @@ const AssignPro = ({ selectedTicket, handleClose }) => {
             >
               <div className={classes.formInputs}>
                 <Grid item xs={12}>
-                  <FormControl
-                    variant="outlined"
-                    fullWidth
-                  >
+                  <FormControl variant="outlined" fullWidth>
                     <InputLabel id="demo-simple-select-outlined-label">
                       Select Pro
                     </InputLabel>
@@ -225,7 +213,9 @@ const AssignPro = ({ selectedTicket, handleClose }) => {
                       label="Select Pro"
                     >
                       {proList?.map((pro) => (
-                        <MenuItem value={pro?.id}>{`${pro?.first_name} ${pro?.last_name} (✉${pro?.email}) (☎${pro?.phone_number})`}</MenuItem>
+                        <MenuItem
+                          value={pro?.id}
+                        >{`${pro?.company_name} (☎${pro?.phone}) (${pro?.distance}-KM)`}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
