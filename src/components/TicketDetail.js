@@ -1,11 +1,9 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import {
   Paper,
   Grid,
-  Typography,
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +11,6 @@ import {
   TableHead,
   TableRow,
   CardContent,
-  TextField,
 } from "@material-ui/core";
 
 import { FormatDateTime } from "../helper/FormatDate";
@@ -84,62 +81,74 @@ const TicketDetail = ({ selectedTicket, handleClose }) => {
                   <TableRow>
                     <TableCell> Appointment Date</TableCell>
                     <TableCell align="left">
-                      {FormatDateTime(selectedTicket?.appointment_date)}
+                      {selectedTicket?.appointment_date &&
+                        FormatDateTime(selectedTicket?.appointment_date)}
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
+
             <Grid item xs={12}>
               <CardContent style={{ alignItems: "center" }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Pro Info</TableCell>
+                    <TableCell>Professional Info</TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
               </CardContent>
             </Grid>
-            <TableContainer>
-              <Table
-                className={classes.table}
-                aria-label="a dense table"
-                size="small"
-              >
-                <TableBody>
-                  <TableRow>
-                    <TableCell>Pro Name</TableCell>
-                    <TableCell align="left">{`${selectedTicket?.pro_detail?.first_name} ${selectedTicket?.pro_detail?.last_name}`}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Pro Company Name</TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.pro_detail?.company_name}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Pro Phone Number</TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.pro_detail?.phone_number}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Pro zip_address</TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.pro_detail?.zip_address}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Pro address</TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.pro_detail?.address
-                        ? selectedTicket?.pro_detail?.address
-                        : "--"}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+
+            {Number(selectedTicket.ticket_status) >= 2 ? (
+              <TableContainer>
+                <Table
+                  className={classes.table}
+                  aria-label="a dense table"
+                  size="small"
+                >
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Full Name</TableCell>
+                      <TableCell align="left">{`${selectedTicket?.pro_detail?.first_name} ${selectedTicket?.pro_detail?.last_name}`}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Company Name</TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.company_name}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Phone Number</TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.phone_number}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Email</TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.email}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Zip Address</TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.zip_address}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Address</TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.address
+                          ? selectedTicket?.pro_detail?.address
+                          : "--"}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : null}
+
             <Grid item xs={12}>
               <CardContent style={{ alignItems: "center" }}>
                 <TableHead>
@@ -150,26 +159,35 @@ const TicketDetail = ({ selectedTicket, handleClose }) => {
                 </TableHead>
               </CardContent>
             </Grid>
-            <TableContainer>
-              <Table
-                className={classes.table}
-                aria-label="a dense table"
-                size="small"
-              >
-                <TableBody>
-                  <TableRow>
-                    <TableCell>Connector Name</TableCell>
-                    <TableCell align="left">{`${selectedTicket?.connector_detail?.first_name} ${selectedTicket?.connector_detail?.last_name}`}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>Pro Phone Number</TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.connector_detail?.phone_number}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
+
+            {Number(selectedTicket.ticket_status) >= 1 ? (
+              <TableContainer>
+                <Table
+                  className={classes.table}
+                  aria-label="a dense table"
+                  size="small"
+                >
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Full Name</TableCell>
+                      <TableCell align="left">{`${selectedTicket?.connector_detail?.first_name} ${selectedTicket?.connector_detail?.last_name}`}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Phone Number</TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.connector_detail?.phone_number}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Email</TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.connector_detail?.email}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : null}
           </Grid>
         </Grid>
       </Paper>
