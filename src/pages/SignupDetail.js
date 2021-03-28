@@ -21,7 +21,6 @@ import {
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import { Modal } from "../components/Index";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
 
@@ -74,7 +73,6 @@ const SignupDetail = () => {
 
   //states
   const [isShowPassword, setIsShowPassword] = useState(false);
-  const [modal, setModal] = useState({ isOpen: false, message: "" });
 
   const [detailPath, setDetailPath] = useState("");
   const [loading, setLoading] = useState(false);
@@ -176,6 +174,7 @@ const SignupDetail = () => {
       companyName: "",
       gender: null,
       capacity: 0,
+
     }),
   };
 
@@ -233,10 +232,6 @@ const SignupDetail = () => {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
-  };
-
-  const modalTrigger = () => {
-    setModal({ isOpen: !modal.isOpen, message: "Successfully registered" });
   };
 
   return (
@@ -516,11 +511,6 @@ const SignupDetail = () => {
           </Grid>
         </form>
       </Paper>
-      <Modal
-        isOpen={modal.isOpen}
-        message={modal.message}
-        modalTrigger={modalTrigger}
-      />
     </main>
   );
 };

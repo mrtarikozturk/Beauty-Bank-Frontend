@@ -30,6 +30,8 @@ import {
   LayoutSponsor,
 } from "../views";
 
+import { Popup, usePopup } from '../components/Index';
+
 const useStyles = makeStyles((theme) => ({
   wrapper: {
     display: "flex",
@@ -101,11 +103,12 @@ const Profile = () => {
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { user } = useContext(AppContext);
+  const { open, handleClose, handleOpen } = usePopup();
 
   // states
   const [userData, setUserData] = useState([]);
-  const [open, setOpen] = useState(false);
-  const [imageLoading, setImageLoading] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false)
+
 
   let Layout;
   switch (user?.role) {
@@ -125,13 +128,13 @@ const Profile = () => {
       break;
   }
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
 
   const handleUploadImage = async (event) => {
     setImageLoading(true);
@@ -296,14 +299,24 @@ const Profile = () => {
           </Grid>
         </Grid>
       </Paper>
-      <Modal
+      {/* <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
         {modalBody}
-      </Modal>
+      </Modal> */}
+
+      <Popup
+        open={open}
+        title={"Edit Profile"}
+        handleClose={handleClose}
+        buttonText={'Submit'}
+      >
+        <EditProfile handleClose={handleClose} userData={userData} />
+      </Popup>
+
     </Layout>
   );
 };
