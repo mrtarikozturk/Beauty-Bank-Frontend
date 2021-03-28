@@ -1,10 +1,21 @@
 import React from "react";
-import { makeStyles, Select, FormControl, MenuItem, InputLabel } from "@material-ui/core";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { Paper, Grid, TextField, Button } from "@material-ui/core";
-import api, {handleError} from '../api'
-import {useSnackbar} from 'notistack'
+import { useSnackbar } from 'notistack';
+import { makeStyles, Select, FormControl, MenuItem, InputLabel, Paper, Grid, TextField, Button } from "@material-ui/core";
+
+import api, { handleError } from '../api'
+import {
+  firstName,
+  lastName,
+  userName,
+  email,
+  phone,
+  zipAddress,
+  address,
+  aboutMe,
+  minimumIncome,
+} from '../utils/validations';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -48,57 +59,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const EditProfile = ({handleClose, userData}) => {
+export const EditProfile = ({ handleClose, userData }) => {
+  // constants
   const classes = useStyles();
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   // validation obj
   const validationSchema = yup.object().shape({
-    firstName: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    lastName: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    userName: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    email: yup
-      .string()
-      .required("This field is required")
-      .email("Invalid e-mail")
-      .min(4, "Must be at least 4 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    phone: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(20, "Must be a maximum of 20 characters"),
-    zipAddress: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    address: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(100, "Must be a maximum of 30 characters"),
-    aboutMe: yup
-      .string()
-      .required("This field is required")
-      .min(100, "Must be at least 100 characters")
-      .max(1500, "Must be a maximum of 1500 characters"),
-    minimumIncome: yup
-      .boolean()
-      .required("This field is required")
+    firstName,
+    lastName,
+    userName,
+    email,
+    phone,
+    zipAddress,
+    address: address,
+    aboutMe,
+    minimumIncome,
   });
+
+  console.log(userData) //TODO: Silmeyi unutma
 
   // initial values
   const initialValues = {
@@ -108,12 +87,13 @@ export const EditProfile = ({handleClose, userData}) => {
     email: userData?.email,
     phone: userData?.phone_number,
     phone2: userData?.phone_number2,
+    gender: userData?.gender,
     zipAddress: userData?.zip_address,
     address: userData?.address,
     aboutMe: userData?.about_me,
-    minimumIncome: userData?.min_incomer
+    ...(userData?.is_client && { minimumIncome: userData?.min_incomer })
   };
-
+  // !! TODO: register olurken kullanici adresi alinmadigi icin address property'si null ataniyor. Bu nedenle de edit sayfasinda address alani bos iken submit yapildiginda once string() metodunu validate ettigi icin kutuphaneden bunun mesaji gosteriliyor.
   // handleSubmit
   async function onSubmit(values) {
     api.put(`/auth/user-detail/${userData?.username}`, {
@@ -126,9 +106,9 @@ export const EditProfile = ({handleClose, userData}) => {
       zip_address: values.zipAddress,
       address: values.address,
       about_me: values.aboutMe,
-      min_incomer: values.minimumIncome
+      ...(userData.is_client && { min_incomer: values.minimumIncome })
     }).then(() => {
-      enqueueSnackbar("Updated profile successfully!", {variant: 'success'})
+      enqueueSnackbar("Updated profile successfully!", { variant: 'success' })
       handleClose()
     }).catch(handleError(enqueueSnackbar, closeSnackbar))
   }
@@ -215,17 +195,69 @@ export const EditProfile = ({handleClose, userData}) => {
                 helperText={formik.touched.phone && formik.errors.phone}
               />
             </Grid>
-             {/* phone number 2 */}
-             <Grid item xs={12} sm={6}>
+            {/* phone number 2 */}
+            <Grid item xs={12} sm={6}>
               <TextField
                 label="Phone Number 2"
                 name="phone2"
                 autoComplete="phone2"
-                required
                 fullWidth
                 {...formik.getFieldProps("phone2")}
               />
             </Grid>
+            {/* Gender */}
+            <Grid item xs={12} sm={6}>
+              <FormControl className={classes.formControl}>
+                <InputLabel putLabel id="gender-label">
+                  Gender
+                </InputLabel>
+                <Select
+                  labelId="gender-label"
+                  id="gender"
+                  name="gender"
+                  {...formik.getFieldProps("gender")}
+                  error={
+                    formik.touched.gender && formik.errors.gender
+                  }
+                  helperText={
+                    formik.touched.gender && formik.errors.gender
+                  }
+                >
+                  <MenuItem value={null}>
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={0}>Female</MenuItem>
+                  <MenuItem value={1}>Male</MenuItem>
+                  <MenuItem value={2}>I don't say</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* Income */}
+            {
+              userData.is_client &&
+              (<Grid item xs={12} sm={6}>
+                <FormControl className={classes.formControl}>
+                  <InputLabel id="min-income-select-helper-label">
+                    Do you have minimum income?
+              </InputLabel>
+                  <Select
+                    labelId="min-income-select-helper-label"
+                    id="min-income-select-helper"
+                    name="minimumIncome"
+                    {...formik.getFieldProps("minimumIncome")}
+                    error={
+                      formik.touched.minimumIncome && formik.errors.minimumIncome
+                    }
+                    helperText={
+                      formik.touched.minimumIncome && formik.errors.minimumIncome
+                    }
+                  >
+                    <MenuItem value={false}>No</MenuItem>
+                    <MenuItem value={true}>Yes</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>)
+            }
             {/* zipaddress */}
             <Grid item xs={12} sm={6}>
               <TextField
@@ -242,7 +274,7 @@ export const EditProfile = ({handleClose, userData}) => {
               />
             </Grid>
             {/* address */}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={userData.is_client ? 6 : 12}>
               <TextField
                 label="Address"
                 name="address"
@@ -251,15 +283,13 @@ export const EditProfile = ({handleClose, userData}) => {
                 fullWidth
                 {...formik.getFieldProps("address")}
                 error={formik.touched.address && formik.errors.address}
-                helperText={
-                  formik.touched.address && formik.errors.address
-                }
+                helperText={formik.touched.address && formik.errors.address}
               />
             </Grid>
             {/* aboutme */}
             <Grid item xs={12} sm={12}>
               <TextField
-                label="About Me"
+                label="About Me (My goal, my dream, my wish..)"
                 name="aboutMe"
                 autoComplete="ame"
                 required
@@ -271,29 +301,7 @@ export const EditProfile = ({handleClose, userData}) => {
                 }
               />
             </Grid>
-            <Grid item xs={12}>
-              <FormControl className={classes.formControl}>
-              <InputLabel id="min-income-select-helper-label">
-                Do you have minimum income?
-              </InputLabel>
-              <Select
-                labelId="min-income-select-helper-label"
-                id="min-income-select-helper"
-                name="minimumIncome"
-                {...formik.getFieldProps("minimumIncome")}
-                error={
-                  formik.touched.minimumIncome && formik.errors.minimumIncome
-                }
-                helperText={
-                  formik.touched.minimumIncome && formik.errors.minimumIncome
-                }
-              >
-                <MenuItem value={false}>No</MenuItem>
-                <MenuItem value={true}>Yes</MenuItem>
-              </Select>
-              {/* <FormHelperText>Some important helper text</FormHelperText> */}
-            </FormControl>
-            </Grid>
+
           </Grid>
           <Button
             type="submit"

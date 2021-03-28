@@ -400,6 +400,7 @@ const SignupDetail = () => {
                     }
                   />
                 </Grid>
+                {/* Gender */}
                 <Grid item xs={12} sm={6}>
                   <FormControl className={classes.formControl}>
                     <InputLabel id="gender-select-helper-label">
@@ -411,10 +412,10 @@ const SignupDetail = () => {
                       name="gender"
                       {...formik.getFieldProps("gender")}
                       error={
-                        formik.touched.companyName && formik.errors.companyName
+                        formik.touched.gender && formik.errors.gender
                       }
                       helperText={
-                        formik.touched.companyName && formik.errors.companyName
+                        formik.touched.gender && formik.errors.gender
                       }
                     >
                       <MenuItem value={null}>
@@ -424,7 +425,6 @@ const SignupDetail = () => {
                       <MenuItem value={1}>Male</MenuItem>
                       <MenuItem value={2}>I don't say</MenuItem>
                     </Select>
-                    {/* <FormHelperText>Some important helper text</FormHelperText> */}
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -470,7 +470,8 @@ const SignupDetail = () => {
               />
             </Grid>
             {/* about me */}
-            {id === "professional" ? (
+            {
+              id === "professional" &&
               <Grid item xs={12}>
                 <TextField
                   label="About Me"
@@ -484,10 +485,9 @@ const SignupDetail = () => {
                   helperText={formik.touched.aboutMe && formik.errors.aboutMe}
                 />
               </Grid>
-            ) : (
-              ""
-            )}
-            {/* detail */}
+
+            }
+            {/* terms */}
             <Grid item xs={12}>
               <Checkbox
                 {...formik.getFieldProps("conditions")}
