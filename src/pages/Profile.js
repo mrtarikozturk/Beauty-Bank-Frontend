@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import { useSnackbar } from 'notistack';
+import { useSnackbar } from "notistack";
 import {
   Grid,
   CardContent,
@@ -16,13 +16,13 @@ import {
   Paper,
   Modal,
   Avatar,
-  CircularProgress
+  CircularProgress,
 } from "@material-ui/core";
 
 // custom imports
 import { AppContext } from "../context/AppContext";
 import { EditProfile } from "../components/Index";
-import api, { handleError } from '../api'
+import api, { handleError } from "../api";
 import {
   LayoutClient,
   LayoutConnector,
@@ -31,7 +31,6 @@ import {
 } from "../views";
 
 import { Popup, usePopup } from '../components/Index';
-
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -95,21 +94,21 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   input: {
-    display: 'none',
+    display: "none",
   },
 }));
 
 const Profile = () => {
   // constants
   const classes = useStyles();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { user } = useContext(AppContext);
   const { open, handleClose, handleOpen } = usePopup();
 
   // states
   const [userData, setUserData] = useState([]);
-  // const [open, setOpen] = useState(false);
   const [imageLoading, setImageLoading] = useState(false)
+
 
   let Layout;
   switch (user?.role) {
@@ -137,18 +136,22 @@ const Profile = () => {
   //   setOpen(false);
   // };
 
-
   const handleUploadImage = async (event) => {
-    setImageLoading(true)
+    setImageLoading(true);
     let image = await event.target.files[0];
     let form_data = await new FormData();
-    await form_data.append('profile_image', image);
+    await form_data.append("profile_image", image);
 
-    api.patch(`/auth/user-detail/${user?.username}`, form_data, { headers: { "Content-Type": "multipart/form-data" } })
-      .then(data => setUserData({ ...userData, profile_image: data.profile_image }))
+    api
+      .patch(`/auth/user-detail/${user?.username}`, form_data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((data) =>
+        setUserData({ ...userData, profile_image: data.profile_image })
+      )
       .catch(handleError(enqueueSnackbar, closeSnackbar))
-      .finally(() => setImageLoading(false))
-  }
+      .finally(() => setImageLoading(false));
+  };
 
   const modalBody = (
     <div className={classes.paperModal}>
@@ -158,11 +161,18 @@ const Profile = () => {
   );
 
   useEffect(() => {
-    setImageLoading(true)
-    api.get(`/auth/user-detail/${user?.username}`)
+    setImageLoading(true);
+    api
+      .get(`/auth/user-detail/${user?.username}`)
       .then(setUserData)
       .catch(handleError(enqueueSnackbar, closeSnackbar))
-      .finally(() => setImageLoading(false))
+      .finally(() => setImageLoading(false));
+
+    if (!userData.about_me || !userData.address || !userData.zip_address) {
+      enqueueSnackbar("Please complete your Profile Information!", {
+        variant: "warning",
+      });
+    }
   }, [open]);
 
   return (
@@ -174,7 +184,7 @@ const Profile = () => {
             variant="outlined"
             color="secondary"
             value="Edit Profile"
-          // size="small"
+            // size="small"
           >
             Edit Profile
           </Button>
@@ -182,12 +192,18 @@ const Profile = () => {
         <Grid container spacing={3}>
           {/* Profile Image */}
           <Grid item xs={6} className={classes.profile_image}>
-            {imageLoading ? <div className={classes.large}> <CircularProgress /></div> : (
+            {imageLoading ? (
+              <div className={classes.large}>
+                {" "}
+                <CircularProgress />
+              </div>
+            ) : (
               <Avatar
                 alt={userData?.email}
                 src={userData?.profile_image}
                 className={classes.large}
-              />)}
+              />
+            )}
             <input
               accept="image/*"
               className={classes.input}
@@ -229,9 +245,10 @@ const Profile = () => {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>{`${user?.username.charAt(0).toUpperCase() +
+                    <TableCell>{`${
+                      user?.username.charAt(0).toUpperCase() +
                       user?.username.slice(1)
-                      }'s Profile`}</TableCell>
+                    }'s Profile`}</TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
@@ -254,8 +271,8 @@ const Profile = () => {
                       {userData?.gender === 0
                         ? "Male"
                         : userData?.gender === 1
-                          ? "Female"
-                          : "Not Specified"}
+                        ? "Female"
+                        : "Not Specified"}
                     </TableCell>
                   </TableRow>
                   <TableRow>

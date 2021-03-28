@@ -1,29 +1,21 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Grid, makeStyles } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+
 import {
-  LayoutClient,
-  LayoutConnector,
-  LayoutProfessional,
-  LayoutSponsor,
-} from "../components/Index";
+  Grid,
+  makeStyles,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  CircularProgress,
+} from "@material-ui/core";
+import { useSnackbar } from "notistack";
 
-import axios from "axios";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import Typography from "@material-ui/core/Typography";
-import { AppContext } from "../context/AppContext";
-
-import Avatar from "@material-ui/core/Avatar";
-
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+import api, { handleError } from "../api";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -35,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
+      width: 800,
       marginLeft: "auto",
       marginRight: "auto",
     },
@@ -50,15 +42,18 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: 140,
   },
-
   paper: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(10),
     padding: theme.spacing(2),
-    marginTop: theme.spacing(2),
     display: "flex",
-    overflow: "auto",
     flexDirection: "column",
-    width: 600,
-    textAlign: "center",
+    alignItems: "center",
+    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(10),
+      padding: theme.spacing(3),
+    },
   },
   fixedHeight: {
     height: 240,
@@ -72,72 +67,35 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(30),
     textAlign: "left",
   },
-  button: {
-    textAlign: "right",
-    margin: theme.spacing(2),
-  },
-  table: {
-    margin: theme.spacing(5),
-    width: 500,
-  },
-  paperModal: {
-    position: "absolute",
-    top: "20vh",
-    left: "35vw",
-    width: 700,
-    height: 600,
-    backgroundColor: theme.palette.background.paper,
-    border: "2px solid #000",
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  profile_image: {
+  profileImage: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  input: {
-    display: "none",
   },
 }));
 
 const UserDetail = ({ selectedUser, handleClose }) => {
   const classes = useStyles();
-  const { user } = useContext(AppContext);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.tokens?.access}`,
-      },
-    };
-
-    const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/auth/connector-user-detail/${selectedUser}`,
-      requestOptions
-    );
-    const data = await response.json();
-    console.log(data);
-
-    setUserData(data);
-  }, [userData?.username]);
+  useEffect(() => {
+    api
+      .get(`/auth/connector-user-detail/${selectedUser}`)
+      .then((data) => {
+        console.log(data);
+        setUserData(data);
+        setLoading(false);
+      })
+      .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
+  }, []);
 
   return (
     <main className={classes.layout}>
       <Paper className={classes.paper}>
-        <Grid
-          container
-          spacing={3}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-          }}
-        >
+        <Grid container spacing={3}>
           {/* <Grid item xs={6} className={classes.profile_image}>
             <Avatar
               alt={userData?.email}
@@ -146,7 +104,7 @@ const UserDetail = ({ selectedUser, handleClose }) => {
             />
           </Grid> */}
 
-          {userData ? (
+          {!loading ? (
             <>
               <Grid item xs={12}>
                 <Typography gutterBottom variant="h5" component="h2">
@@ -158,14 +116,16 @@ const UserDetail = ({ selectedUser, handleClose }) => {
               </Grid>
               <Grid item xs={12}>
                 <TableContainer>
-                  <Table
-                    className={classes.table}
-                    aria-label="a dense table"
-                    size="small"
-                  >
+                  <Table aria-label="a dense table" size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell>{`${
+                        <TableCell
+                          style={{
+                            overflowX: "auto",
+                            whiteSpace: "nowrap",
+                            textAlign: "center !important",
+                          }}
+                        >{`${
                           userData?.username?.charAt(0).toUpperCase() +
                           userData?.username?.slice(1)
                         }'s Profile`}</TableCell>

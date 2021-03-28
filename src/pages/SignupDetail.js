@@ -213,6 +213,7 @@ const SignupDetail = () => {
           { variant: "success" }
         );
         setLoading(false);
+        history.push("/register-email-info");
       })
       .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
   };
@@ -403,12 +404,8 @@ const SignupDetail = () => {
                       id="gender-select-helper"
                       name="gender"
                       {...formik.getFieldProps("gender")}
-                      error={
-                        formik.touched.gender && formik.errors.gender
-                      }
-                      helperText={
-                        formik.touched.gender && formik.errors.gender
-                      }
+                      error={formik.touched.gender && formik.errors.gender}
+                      helperText={formik.touched.gender && formik.errors.gender}
                     >
                       <MenuItem value={null}>
                         <em>None</em>
@@ -462,8 +459,7 @@ const SignupDetail = () => {
               />
             </Grid>
             {/* about me */}
-            {
-              id === "professional" &&
+            {id === "professional" && (
               <Grid item xs={12}>
                 <TextField
                   label="About Me"
@@ -477,8 +473,7 @@ const SignupDetail = () => {
                   helperText={formik.touched.aboutMe && formik.errors.aboutMe}
                 />
               </Grid>
-
-            }
+            )}
             {/* terms */}
             <Grid item xs={12}>
               <Checkbox

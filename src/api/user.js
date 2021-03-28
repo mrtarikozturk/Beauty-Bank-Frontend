@@ -1,17 +1,17 @@
 export const UserRoles = {
   Client: {
-    path: '/client'
+    path: "/client-profile",
   },
   Connector: {
-    path: '/connector'
+    path: "/connector",
   },
   Pro: {
-    path: '/professional'
+    path: "/professional",
   },
   Sponsor: {
-    path: '/sponsor'
+    path: "/sponsor",
   },
   Admin: {
-    path: '/admin'
+    path: "/admin",
   },
-}
+};
