@@ -1,5 +1,28 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Grid, makeStyles } from "@material-ui/core";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { useSnackbar } from 'notistack';
+import {
+  Grid,
+  CardContent,
+  Button,
+  Typography,
+  makeStyles,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Modal,
+  Avatar,
+  CircularProgress
+} from "@material-ui/core";
+
+// custom imports
+import { AppContext } from "../context/AppContext";
+import { EditProfile } from "../components/Index";
+import api, { handleError } from '../api'
 import {
   LayoutClient,
   LayoutConnector,
@@ -7,28 +30,6 @@ import {
   LayoutSponsor,
 } from "../views";
 
-import axios from 'axios';
-
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import Typography from "@material-ui/core/Typography";
-import { AppContext } from "../context/AppContext";
-
-import {Avatar, CircularProgress} from "@material-ui/core";
-
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import Modal from "@material-ui/core/Modal";
-import { EditProfile } from "../components/Index";
-
-import api, {handleError} from '../api'
-import {useSnackbar} from 'notistack'
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -97,10 +98,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Profile = () => {
+  // constants
   const classes = useStyles();
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
-
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { user } = useContext(AppContext);
+
+  // states
   const [userData, setUserData] = useState([]);
   const [open, setOpen] = useState(false);
   const [imageLoading, setImageLoading] = useState(false)
@@ -138,10 +141,10 @@ const Profile = () => {
     let form_data = await new FormData();
     await form_data.append('profile_image', image);
 
-    api.patch(`/auth/user-detail/${user?.username}`, form_data, {headers: {"Content-Type": "multipart/form-data"}})
-    .then(data => setUserData({...userData, profile_image: data.profile_image}))
-    .catch(handleError(enqueueSnackbar, closeSnackbar))
-    .finally(() => setImageLoading(false))
+    api.patch(`/auth/user-detail/${user?.username}`, form_data, { headers: { "Content-Type": "multipart/form-data" } })
+      .then(data => setUserData({ ...userData, profile_image: data.profile_image }))
+      .catch(handleError(enqueueSnackbar, closeSnackbar))
+      .finally(() => setImageLoading(false))
   }
 
   const modalBody = (
@@ -154,21 +157,13 @@ const Profile = () => {
   useEffect(() => {
     setImageLoading(true)
     api.get(`/auth/user-detail/${user?.username}`)
-    .then(setUserData)
-    .catch(handleError(enqueueSnackbar, closeSnackbar))
-    .finally(() => setImageLoading(false))
+      .then(setUserData)
+      .catch(handleError(enqueueSnackbar, closeSnackbar))
+      .finally(() => setImageLoading(false))
   }, [open]);
 
   return (
     <Layout pageTitle="Profile">
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        {modalBody}
-      </Modal>
       <Paper className={classes.paper}>
         <div className={classes.button}>
           <Button
@@ -176,19 +171,20 @@ const Profile = () => {
             variant="outlined"
             color="secondary"
             value="Edit Profile"
-            // size="small"
+          // size="small"
           >
             Edit Profile
           </Button>
         </div>
         <Grid container spacing={3}>
+          {/* Profile Image */}
           <Grid item xs={6} className={classes.profile_image}>
             {imageLoading ? <div className={classes.large}> <CircularProgress /></div> : (
-            <Avatar
-              alt={userData?.email}
-              src={userData?.profile_image}
-              className={classes.large}
-            />)}
+              <Avatar
+                alt={userData?.email}
+                src={userData?.profile_image}
+                className={classes.large}
+              />)}
             <input
               accept="image/*"
               className={classes.input}
@@ -209,6 +205,7 @@ const Profile = () => {
               </Button>
             </label>
           </Grid>
+          {/* About me */}
           <Grid item xs={6}>
             <CardContent className={classes.about}>
               <Typography gutterBottom variant="h5" component="h2">
@@ -219,6 +216,7 @@ const Profile = () => {
               </Typography>
             </CardContent>
           </Grid>
+          {/* User data table */}
           <Grid item xs={12}>
             <TableContainer>
               <Table
@@ -228,10 +226,9 @@ const Profile = () => {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>{`${
-                      user?.username.charAt(0).toUpperCase() +
+                    <TableCell>{`${user?.username.charAt(0).toUpperCase() +
                       user?.username.slice(1)
-                    }'s Profile`}</TableCell>
+                      }'s Profile`}</TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
@@ -251,11 +248,11 @@ const Profile = () => {
                   <TableRow>
                     <TableCell>Gender</TableCell>
                     <TableCell align="left">
-                      {userData?.gender == 1
-                        ? "Female"
-                        : userData?.gender == 2
+                      {userData?.gender === 0
                         ? "Male"
-                        : "Other"}
+                        : userData?.gender === 1
+                          ? "Female"
+                          : "Not Specified"}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -282,6 +279,14 @@ const Profile = () => {
           </Grid>
         </Grid>
       </Paper>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        {modalBody}
+      </Modal>
     </Layout>
   );
 };
