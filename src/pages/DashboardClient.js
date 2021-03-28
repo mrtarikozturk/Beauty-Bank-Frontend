@@ -9,6 +9,7 @@ import { FormatDate, FormatDateTime } from "../helper/FormatDate";
 import { SetTicketDate } from "../components/SetTicketDate";
 import { SetTicketFeedback } from "../components/SetTicketFeedback";
 import { TicketDetail } from "../components/TicketDetail";
+import useWindowSize from "../hooks/useWindowsSize";
 
 import api from "../api";
 
@@ -21,8 +22,24 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     marginBottom: theme.spacing(10),
   },
+  paperMobil: {
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   fixedHeight: {
-    height: 240,
+    minHeight: 240,
+  },
+  mobilStep: {
+    display: "flex",
+    overflow: "none",
+    flexDirection: "column",
+    marginBottom: theme.spacing(10),
+    alignItems: "center",
+    justifyContent: "center",
   },
   paperModal: {
     width: 900,
@@ -47,6 +64,8 @@ const useStyles = makeStyles((theme) => ({
 export const DashboardClient = () => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const { width } = useWindowSize();
+  const isMobile = width < 550;
 
   const [open, setOpen] = useState(false);
   const [openDate, setOpenDate] = useState(false);
@@ -94,6 +113,7 @@ export const DashboardClient = () => {
       classes={classes}
       tickets={tickets}
       hasStepper={true}
+      isMobile={isMobile}
       modals={[
         {
           title: "Set Appointment Date",
