@@ -39,7 +39,15 @@ export const List = ({ list, tickets, pagination }) => (
         {tickets?.map((ticket) => (
           <TableRow key={ticket.id}>
             {list.body.map((lb) => (
-              <TableCell>{lb(ticket)}</TableCell>
+              <TableCell
+                style={{
+                  overflowX: "auto",
+                  whiteSpace: "nowrap",
+                  textAlign: "center !important",
+                }}
+              >
+                {lb(ticket)}
+              </TableCell>
             ))}
           </TableRow>
         ))}
