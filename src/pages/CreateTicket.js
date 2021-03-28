@@ -1,25 +1,25 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { useSnackbar } from "notistack";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppContext } from "../context/AppContext";
 
 import {
   Paper,
   Grid,
   Typography,
   Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CardContent,
 } from "@material-ui/core";
 import { LayoutClient } from "../views";
 
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import CardContent from "@material-ui/core/CardContent";
-import api, {handleError} from '../api'
-import {useSnackbar} from 'notistack'
+import api, { handleError } from "../api";
+import { AppContext } from "../context/AppContext";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -67,30 +67,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateTicket = () => {
-
   // Constants
   const classes = useStyles();
   const history = useHistory();
   const { user } = useContext(AppContext);
   const [userData, setUserData] = useState([]);
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   // Get User
   useEffect(() => {
-    api.get(`/auth/user-detail/${user?.username}`)
-    .then(setUserData)
-    .catch(handleError(enqueueSnackbar, closeSnackbar))
+    api
+      .get(`/auth/user-detail/${user?.username}`)
+      .then(setUserData)
+      .catch(handleError(enqueueSnackbar, closeSnackbar));
   }, []);
 
-
   // Submit Create Ticket
-  async function handleCreateTicket(){
-    api.post('/ticket/create/').then(() => {
-      enqueueSnackbar("Your ticket successfully created!", {variant: 'success'})
-      history.push("/client")
-    }).catch(handleError(enqueueSnackbar, closeSnackbar))
+  async function handleCreateTicket() {
+    if (userData.about_me && userData.address && userData.zip_address) {
+      api
+        .post("/ticket/create/")
+        .then(() => {
+          enqueueSnackbar("Your ticket successfully created!", {
+            variant: "success",
+          });
+          history.push("/client");
+        })
+        .catch(handleError(enqueueSnackbar, closeSnackbar));
+    } else {
+      enqueueSnackbar("Please complete your missing profile information!", {
+        variant: "error",
+      });
+      history.push("/client-profile");
+    }
   }
-
 
   return (
     <LayoutClient pageTitle="Create Ticket">
