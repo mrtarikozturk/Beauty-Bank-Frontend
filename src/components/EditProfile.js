@@ -1,44 +1,27 @@
 import React from "react";
-import { makeStyles, Select, FormControl, MenuItem, InputLabel } from "@material-ui/core";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { Paper, Grid, TextField, Button } from "@material-ui/core";
-import api, {handleError} from '../api'
-import {useSnackbar} from 'notistack'
+import { useSnackbar } from 'notistack';
+import { makeStyles, Select, FormControl, MenuItem, InputLabel, Paper, Grid, TextField, Button } from "@material-ui/core";
+
+import api, { handleError } from '../api'
+import {
+  firstName,
+  lastName,
+  userName,
+  email,
+  phone,
+  zipAddress,
+  address,
+  aboutMe,
+  minimumIncome,
+  url,
+} from '../utils/validations';
 
 const useStyles = makeStyles((theme) => ({
-  layout: {
-    width: "auto",
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
-      marginLeft: "auto",
-      marginRight: "auto",
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(10),
-    padding: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(10),
-      padding: theme.spacing(3),
-    },
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-  },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    // marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -48,56 +31,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const EditProfile = ({handleClose, userData}) => {
+export const EditProfile = ({ handleClose, userData }) => {
+  // constants
   const classes = useStyles();
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   // validation obj
   const validationSchema = yup.object().shape({
-    firstName: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    lastName: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    userName: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    email: yup
-      .string()
-      .required("This field is required")
-      .email("Invalid e-mail")
-      .min(4, "Must be at least 4 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    phone: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(20, "Must be a maximum of 20 characters"),
-    zipAddress: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    address: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(100, "Must be a maximum of 30 characters"),
-    aboutMe: yup
-      .string()
-      .required("This field is required")
-      .min(100, "Must be at least 100 characters")
-      .max(1500, "Must be a maximum of 1500 characters"),
-    minimumIncome: yup
-      .boolean()
-      .required("This field is required")
+    firstName,
+    lastName,
+    userName,
+    email,
+    phone,
+    zipAddress,
+    address,
+    aboutMe,
+    ...(userData?.is_client && { minimumIncome }),
+    ...(userData?.is_pro && {
+      twitter: url,
+      youtube: url,
+      instagram: url,
+      facebook: url,
+
+    })
   });
 
   // initial values
@@ -108,12 +64,19 @@ export const EditProfile = ({handleClose, userData}) => {
     email: userData?.email,
     phone: userData?.phone_number,
     phone2: userData?.phone_number2,
+    gender: userData?.gender,
     zipAddress: userData?.zip_address,
     address: userData?.address,
     aboutMe: userData?.about_me,
-    minimumIncome: userData?.min_incomer
+    ...(userData?.is_client && { minimumIncome: userData?.min_incomer }),
+    ...(userData?.is_pro && {
+      twitter: userData?.twitter_account,
+      instagram: userData?.instagram_account,
+      facebook: userData?.facebook_account,
+      youtube: userData?.youtube_account,
+    })
   };
-
+  // !! TODO: register olurken kullanici adresi alinmadigi icin address property'si null ataniyor. Bu nedenle de edit sayfasinda address alani bos iken submit yapildiginda once string() metodunu validate ettigi icin kutuphaneden bunun mesaji gosteriliyor.
   // handleSubmit
   async function onSubmit(values) {
     api.put(`/auth/user-detail/${userData?.username}`, {
@@ -126,9 +89,15 @@ export const EditProfile = ({handleClose, userData}) => {
       zip_address: values.zipAddress,
       address: values.address,
       about_me: values.aboutMe,
-      min_incomer: values.minimumIncome
+      ...(userData.is_client && { min_incomer: values.minimumIncome }),
+      ...values(userData.is_pro && {
+        twitter_account: values.twitter,
+        youtube_account: values.youtube,
+        instagram_account: values.instagram,
+        facebook_account: values.facebook,
+      })
     }).then(() => {
-      enqueueSnackbar("Updated profile successfully!", {variant: 'success'})
+      enqueueSnackbar("Updated profile successfully!", { variant: 'success' })
       handleClose()
     }).catch(handleError(enqueueSnackbar, closeSnackbar))
   }
@@ -141,138 +110,127 @@ export const EditProfile = ({handleClose, userData}) => {
   });
 
   return (
-    <main className={classes.layout}>
-      <Paper className={classes.paper}>
-        <form
-          className={classes.form}
-          noValidate
-          onSubmit={formik.handleSubmit}
-        >
-          <Grid container spacing={3}>
-            {/* firstname */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="First Name"
-                name="firstName"
-                autoComplete="fname"
-                required
-                fullWidth
-                autoFocus
-                {...formik.getFieldProps("firstName")}
-                error={formik.touched.firstName && formik.errors.firstName}
-                helperText={formik.touched.firstName && formik.errors.firstName}
-              />
-            </Grid>
-            {/* lastname */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                required
-                fullWidth
-                {...formik.getFieldProps("lastName")}
-                error={formik.touched.lastName && formik.errors.lastName}
-                helperText={formik.touched.lastName && formik.errors.lastName}
-              />
-            </Grid>
-            {/* username */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="User Name"
-                name="userName"
-                autoComplete="uname"
-                required
-                fullWidth
-                {...formik.getFieldProps("userName")}
-                error={formik.touched.userName && formik.errors.userName}
-                helperText={formik.touched.userName && formik.errors.userName}
-              />
-            </Grid>
-            {/* email */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                label="E-mail"
-                name="email"
-                autoComplete="email"
-                {...formik.getFieldProps("email")}
-                error={formik.touched.email && formik.errors.email}
-                helperText={formik.touched.email && formik.errors.email}
-              />
-            </Grid>
-            {/* phone number */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Phone Number"
-                name="phone"
-                autoComplete="phone"
-                required
-                fullWidth
-                {...formik.getFieldProps("phone")}
-                error={formik.touched.phone && formik.errors.phone}
-                helperText={formik.touched.phone && formik.errors.phone}
-              />
-            </Grid>
-             {/* phone number 2 */}
-             <Grid item xs={12} sm={6}>
-              <TextField
-                label="Phone Number 2"
-                name="phone2"
-                autoComplete="phone2"
-                required
-                fullWidth
-                {...formik.getFieldProps("phone2")}
-              />
-            </Grid>
-            {/* zipaddress */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Zip Address"
-                name="zipAddress"
-                autoComplete="zaddress"
-                required
-                fullWidth
-                {...formik.getFieldProps("zipAddress")}
-                error={formik.touched.zipAddress && formik.errors.zipAddress}
-                helperText={
-                  formik.touched.zipAddress && formik.errors.zipAddress
-                }
-              />
-            </Grid>
-            {/* address */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Address"
-                name="address"
-                autoComplete="address"
-                required
-                fullWidth
-                {...formik.getFieldProps("address")}
-                error={formik.touched.address && formik.errors.address}
-                helperText={
-                  formik.touched.address && formik.errors.address
-                }
-              />
-            </Grid>
-            {/* aboutme */}
-            <Grid item xs={12} sm={12}>
-              <TextField
-                label="About Me"
-                name="aboutMe"
-                autoComplete="ame"
-                required
-                fullWidth
-                {...formik.getFieldProps("aboutMe")}
-                error={formik.touched.aboutMe && formik.errors.aboutMe}
-                helperText={
-                  formik.touched.aboutMe && formik.errors.aboutMe
-                }
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl className={classes.formControl}>
+    <form
+      className={classes.form}
+      noValidate
+      onSubmit={formik.handleSubmit}
+    >
+      <Grid container spacing={3}>
+        {/* firstname */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="First Name"
+            name="firstName"
+            autoComplete="fname"
+            size="small"
+            required
+            fullWidth
+            size='small'
+            autoFocus
+            {...formik.getFieldProps("firstName")}
+            error={formik.touched.firstName && formik.errors.firstName}
+            helperText={formik.touched.firstName && formik.errors.firstName}
+          />
+        </Grid>
+        {/* lastname */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Last Name"
+            name="lastName"
+            autoComplete="lname"
+            required
+            fullWidth
+            size='small'
+            {...formik.getFieldProps("lastName")}
+            error={formik.touched.lastName && formik.errors.lastName}
+            helperText={formik.touched.lastName && formik.errors.lastName}
+          />
+        </Grid>
+        {/* username */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="User Name"
+            name="userName"
+            autoComplete="uname"
+            required
+            fullWidth
+            size='small'
+            {...formik.getFieldProps("userName")}
+            error={formik.touched.userName && formik.errors.userName}
+            helperText={formik.touched.userName && formik.errors.userName}
+          />
+        </Grid>
+        {/* email */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            fullWidth
+            size='small'
+            label="E-mail"
+            name="email"
+            autoComplete="email"
+            {...formik.getFieldProps("email")}
+            error={formik.touched.email && formik.errors.email}
+            helperText={formik.touched.email && formik.errors.email}
+          />
+        </Grid>
+        {/* phone number */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Phone Number"
+            name="phone"
+            autoComplete="phone"
+            required
+            fullWidth
+            size='small'
+            {...formik.getFieldProps("phone")}
+            error={formik.touched.phone && formik.errors.phone}
+            helperText={formik.touched.phone && formik.errors.phone}
+          />
+        </Grid>
+        {/* phone number 2 */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Phone Number 2"
+            name="phone2"
+            autoComplete="phone2"
+            fullWidth
+            size='small'
+            {...formik.getFieldProps("phone2")}
+          />
+        </Grid>
+        {/* Gender */}
+        <Grid item xs={12} sm={6}>
+          <FormControl className={classes.formControl}>
+            <InputLabel putLabel id="gender-label">
+              Gender
+                </InputLabel>
+            <Select
+              labelId="gender-label"
+              id="gender"
+              name="gender"
+              {...formik.getFieldProps("gender")}
+              error={
+                formik.touched.gender && formik.errors.gender
+              }
+              helperText={
+                formik.touched.gender && formik.errors.gender
+              }
+            >
+              <MenuItem value={null}>
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={0}>Female</MenuItem>
+              <MenuItem value={1}>Male</MenuItem>
+              <MenuItem value={2}>I don't say</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        {/* Income */}
+        {
+          userData.is_client &&
+          (<Grid item xs={12} sm={6}>
+            <FormControl className={classes.formControl}>
               <InputLabel id="min-income-select-helper-label">
                 Do you have minimum income?
               </InputLabel>
@@ -291,21 +249,121 @@ export const EditProfile = ({handleClose, userData}) => {
                 <MenuItem value={false}>No</MenuItem>
                 <MenuItem value={true}>Yes</MenuItem>
               </Select>
-              {/* <FormHelperText>Some important helper text</FormHelperText> */}
             </FormControl>
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
+          </Grid>)
+        }
+        {/* zipaddress */}
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Zip Address"
+            name="zipAddress"
+            autoComplete="zaddress"
+            required
             fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.submit}
-          >
-            Submit
+            size='small'
+            {...formik.getFieldProps("zipAddress")}
+            error={formik.touched.zipAddress && formik.errors.zipAddress}
+            helperText={
+              formik.touched.zipAddress && formik.errors.zipAddress
+            }
+          />
+        </Grid>
+        {/* address */}
+        <Grid item xs={12} sm={userData.is_client ? 6 : 12}>
+          <TextField
+            label="Address"
+            name="address"
+            autoComplete="address"
+            required
+            fullWidth
+            size='small'
+            {...formik.getFieldProps("address")}
+            error={formik.touched.address && formik.errors.address}
+            helperText={formik.touched.address && formik.errors.address}
+          />
+        </Grid>
+        {/* aboutme */}
+        <Grid item xs={12} sm={12}>
+          <TextField
+            label="About Me (My goal, my dream, my wish..)"
+            name="aboutMe"
+            autoComplete="aboutMe"
+            required
+            fullWidth
+            size='small'
+            {...formik.getFieldProps("aboutMe")}
+            error={formik.touched.aboutMe && formik.errors.aboutMe}
+            helperText={
+              formik.touched.aboutMe && formik.errors.aboutMe
+            }
+          />
+        </Grid>
+        {/* Professional links */}
+        {
+          userData.is_pro && (
+            <>
+              <Grid item xs={12}>
+                <TextField
+                  label="Youtube"
+                  name="youtube"
+                  autoComplete="youtube"
+                  fullWidth
+                  size='small'
+                  {...formik.getFieldProps("youtube")}
+                  error={formik.touched.youtube && formik.errors.youtube}
+                  helperText={formik.touched.youtube && formik.errors.youtube}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Twitter"
+                  name="twitter"
+                  autoComplete="twitter"
+                  fullWidth
+                  size='small'
+                  {...formik.getFieldProps("twitter")}
+                  error={formik.touched.twitter && formik.errors.twitter}
+                  helperText={formik.touched.twitter && formik.errors.twitter}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Instagram"
+                  name="instagram"
+                  autoComplete="instagram"
+                  fullWidth
+                  size='small'
+                  {...formik.getFieldProps("instagram")}
+                  error={formik.touched.instagram && formik.errors.instagram}
+                  helperText={formik.touched.instagram && formik.errors.instagram}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Facebook"
+                  name="facebook"
+                  autoComplete="facebook"
+                  fullWidth
+                  size='small'
+                  {...formik.getFieldProps("facebook")}
+                  error={formik.touched.facebook && formik.errors.facebook}
+                  helperText={formik.touched.facebook && formik.errors.facebook}
+                />
+              </Grid>
+            </>
+          )
+        }
+      </Grid>
+      <Button
+        type="submit"
+        fullWidth
+        size='small'
+        variant="contained"
+        color="secondary"
+        className={classes.submit}
+      >
+        Submit
           </Button>
-        </form>
-      </Paper>
-    </main>
+    </form>
   );
 };

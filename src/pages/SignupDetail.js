@@ -21,7 +21,6 @@ import {
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import { Modal } from "../components/Index";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
 
@@ -30,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
     display: "flex",
     alignItems: "center",
-    height: "100vh",
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
       width: 600,
       marginLeft: "auto",
@@ -38,15 +36,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(10),
-    padding: theme.spacing(2),
+    margin: theme.spacing(3, 1),
+    padding: theme.spacing(1),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(10),
+      margin: theme.spacing(3, 0),
       padding: theme.spacing(3),
     },
   },
@@ -77,7 +73,6 @@ const SignupDetail = () => {
 
   //states
   const [isShowPassword, setIsShowPassword] = useState(false);
-  const [modal, setModal] = useState({ isOpen: false, message: "" });
 
   const [detailPath, setDetailPath] = useState("");
   const [loading, setLoading] = useState(false);
@@ -179,6 +174,7 @@ const SignupDetail = () => {
       companyName: "",
       gender: null,
       capacity: 0,
+
     }),
   };
 
@@ -217,6 +213,7 @@ const SignupDetail = () => {
           { variant: "success" }
         );
         setLoading(false);
+        history.push("/register-email-info");
       })
       .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
   };
@@ -235,10 +232,6 @@ const SignupDetail = () => {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
-  };
-
-  const modalTrigger = () => {
-    setModal({ isOpen: !modal.isOpen, message: "Successfully registered" });
   };
 
   return (
@@ -400,6 +393,7 @@ const SignupDetail = () => {
                     }
                   />
                 </Grid>
+                {/* Gender */}
                 <Grid item xs={12} sm={6}>
                   <FormControl className={classes.formControl}>
                     <InputLabel id="gender-select-helper-label">
@@ -410,12 +404,8 @@ const SignupDetail = () => {
                       id="gender-select-helper"
                       name="gender"
                       {...formik.getFieldProps("gender")}
-                      error={
-                        formik.touched.companyName && formik.errors.companyName
-                      }
-                      helperText={
-                        formik.touched.companyName && formik.errors.companyName
-                      }
+                      error={formik.touched.gender && formik.errors.gender}
+                      helperText={formik.touched.gender && formik.errors.gender}
                     >
                       <MenuItem value={null}>
                         <em>None</em>
@@ -424,7 +414,6 @@ const SignupDetail = () => {
                       <MenuItem value={1}>Male</MenuItem>
                       <MenuItem value={2}>I don't say</MenuItem>
                     </Select>
-                    {/* <FormHelperText>Some important helper text</FormHelperText> */}
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -470,7 +459,7 @@ const SignupDetail = () => {
               />
             </Grid>
             {/* about me */}
-            {id === "professional" ? (
+            {id === "professional" && (
               <Grid item xs={12}>
                 <TextField
                   label="About Me"
@@ -484,10 +473,8 @@ const SignupDetail = () => {
                   helperText={formik.touched.aboutMe && formik.errors.aboutMe}
                 />
               </Grid>
-            ) : (
-              ""
             )}
-            {/* detail */}
+            {/* terms */}
             <Grid item xs={12}>
               <Checkbox
                 {...formik.getFieldProps("conditions")}
@@ -524,11 +511,6 @@ const SignupDetail = () => {
           </Grid>
         </form>
       </Paper>
-      <Modal
-        isOpen={modal.isOpen}
-        message={modal.message}
-        modalTrigger={modalTrigger}
-      />
     </main>
   );
 };

@@ -1,19 +1,26 @@
 import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
 import { makeStyles } from "@material-ui/core/styles";
+
+import {
+  Paper,
+  Grid,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  CardContent,
+  TextField,
+} from "@material-ui/core";
+
+import { FormatDate } from "../helper/FormatDate";
 import { AppContext } from "../context/AppContext";
-import { Paper, Grid, Typography, Button } from "@material-ui/core";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import CardContent from "@material-ui/core/CardContent";
-import TextField from "@material-ui/core/TextField";
-
-import {FormatDate} from '../helper/FormatDate';
-
+import api, { handleError } from "../api";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -70,27 +77,22 @@ const useStyles = makeStyles((theme) => ({
 const SetTicketDate = ({ selectedTicket, handleClose }) => {
   // constants
   const classes = useStyles();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { user } = useContext(AppContext);
   const [datePicker, setDatePicker] = useState("2021-01-01T00:00:00Z");
-
-  async function onSubmit() {
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.tokens?.access}`,
-      },
-      body: JSON.stringify({
+  // handleSubmit
+  async function onSubmit(values) {
+    api
+      .put(`/ticket/client-tickets/${selectedTicket.id}`, {
         appointment_date: datePicker,
-      }),
-    };
-
-    const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/ticket/client-tickets/${selectedTicket.id}`,
-      requestOptions
-    );
-     
-    handleClose();
+      })
+      .then(() => {
+        enqueueSnackbar("Set Appointment Date Successfully!", {
+          variant: "success",
+        });
+        handleClose();
+      })
+      .catch(handleError(enqueueSnackbar, closeSnackbar));
   }
 
   // initial values
@@ -101,7 +103,6 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
     initialValues,
     onSubmit,
   });
-
 
   const handleDatePicker = (event) => {
     setDatePicker(event.target.value);
@@ -129,12 +130,10 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell>Email</TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.owner.email}
-                    </TableCell>
+                    <TableCell>TicketID</TableCell>
+                    <TableCell align="left">{selectedTicket?.id}</TableCell>
                   </TableRow>
-                  <TableRow>
+                  {/* <TableRow>
                     <TableCell>First Name</TableCell>
                     <TableCell align="left">
                       {selectedTicket?.owner.first_name}
@@ -163,18 +162,18 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
                     <TableCell align="left">
                       {selectedTicket?.owner.phone_number}
                     </TableCell>
-                  </TableRow>
+                  </TableRow> */}
                 </TableBody>
               </Table>
             </TableContainer>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <CardContent>
                 <Typography variant="body2">About me:</Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {selectedTicket?.owner.about_me}
                 </Typography>
               </CardContent>
-            </Grid>
+            </Grid> */}
             <TableContainer>
               <Table
                 className={classes.table}
@@ -183,18 +182,46 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>Assigned Pro</TableCell>
+                    <TableCell>Assigned Professional</TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell>Pro Name</TableCell>
+                    <TableCell>Full Name</TableCell>
                     <TableCell align="left">{`${selectedTicket?.pro_detail?.first_name} ${selectedTicket?.pro_detail?.last_name}`}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Pro Phone Number</TableCell>
-                    <TableCell align="left">{selectedTicket?.pro_detail?.phone_number}</TableCell>
+                    <TableCell>Company Name</TableCell>
+                    <TableCell align="left">
+                      {selectedTicket?.pro_detail?.company_name}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Phone Number</TableCell>
+                    <TableCell align="left">
+                      {selectedTicket?.pro_detail?.phone_number}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Email</TableCell>
+                    <TableCell align="left">
+                      {selectedTicket?.pro_detail?.email}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Zip Address</TableCell>
+                    <TableCell align="left">
+                      {selectedTicket?.pro_detail?.zip_address}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Address</TableCell>
+                    <TableCell align="left">
+                      {selectedTicket?.pro_detail?.address
+                        ? selectedTicket?.pro_detail?.address
+                        : "--"}
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

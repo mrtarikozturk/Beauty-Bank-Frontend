@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { LayoutConnector } from "../views";
-import {Modal, Table, TableBody, TableCell, TableHead, TableRow, Typography, Grid, Paper, makeStyles, CircularProgress} from "@material-ui/core";
+import {
+  Modal,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography,
+  Grid,
+  Paper,
+  makeStyles,
+  CircularProgress,
+} from "@material-ui/core";
 import Pagination from "@material-ui/lab/Pagination";
 import { UserDetail } from "./UserDetail";
-import {useSnackbar} from 'notistack'
-import api, {handleError} from '../api'
+import { useSnackbar } from "notistack";
+import api, { handleError } from "../api";
 
-import {SearchBar} from './SearchBar'
+import { SearchBar } from "./SearchBar";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -20,15 +32,19 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(10),
   },
   paperModal: {
-    position: "absolute",
-    top: "%50",
-    left: "%50",
-    width: 700,
-    height: 650,
+    maxWidth: 800,
+    maxWidth: "90vw",
+    maxHeight: "90%",
+    margin: "auto",
+    marginTop: "60px",
+    overflowY: "auto",
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
+    padding: "20px",
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
   },
   fixedHeight: {
     height: 240,
@@ -40,25 +56,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const UserList = ({listType, title, modal, list}) => {
+export const UserList = ({ listType, title, modal, list }) => {
   const classes = useStyles();
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [userList, setUserList] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
-  const onSearch = searchTerm => {
-    setLoading(true)
-    api.get(`auth/user-list/?search=${searchTerm}&page=${page}&${listType}=true`).then(data => {
-      setTotal(data.count);
-      setUserList(data.results);
-      setLoading(false)
-    }).catch(handleError(enqueueSnackbar, closeSnackbar, setLoading))
-  }
+  const onSearch = (searchTerm) => {
+    setLoading(true);
+    api
+      .get(`auth/user-list/?search=${searchTerm}&page=${page}&${listType}=true`)
+      .then((data) => {
+        setTotal(data.count);
+        setUserList(data.results);
+        setLoading(false);
+      })
+      .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
+  };
 
   const handleClick = (username) => {
     setOpen(true);
@@ -69,11 +88,14 @@ export const UserList = ({listType, title, modal, list}) => {
   };
 
   useEffect(() => {
-    api.get(`/auth/user-list/?page=${page}&${listType}=true`).then(data => {
-      setTotal(data.count);
-      setUserList(data.results);
-      setLoading(false)
-    }).catch(handleError(enqueueSnackbar, closeSnackbar, setLoading))
+    api
+      .get(`/auth/user-list/?page=${page}&${listType}=true`)
+      .then((data) => {
+        setTotal(data.count);
+        setUserList(data.results);
+        setLoading(false);
+      })
+      .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
   }, [page, open]);
 
   const modalBody = (
@@ -106,29 +128,41 @@ export const UserList = ({listType, title, modal, list}) => {
               {title}
             </Typography>
             <Grid item container xs={12}>
-                  <Grid item xs={12} md={12} lg={6}>
-                    <SearchBar onSearchClick={onSearch} />
-                  </Grid>
-                  <Grid item xs={12} md={12} lg={6} justify="flex-end">
-                    {total > 10 &&
-                      <Pagination
-                        count={userList.length}
-                        color="secondary"
-                        onChange={(event, page) => setPage(page)}
-                      />
-                    }
-                  </Grid>
-                </Grid>
-                <Table size="small">
-                  <TableHead>
-                    <TableRow>
-                      {
-                        list.headers.map(h => <TableCell key={h}>{h}</TableCell>)
-                      }
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {!loading && userList.length > 0 && userList?.map((user) => (
+              <Grid item xs={12} md={6} lg={6}>
+                <SearchBar onSearchClick={onSearch} />
+              </Grid>
+              <Grid item xs={12} md={12} lg={6} justify="flex-end">
+                {total > 10 && (
+                  <Pagination
+                    count={total / 10}
+                    color="secondary"
+                    onChange={(event, page) => setPage(page)}
+                  />
+                )}
+              </Grid>
+            </Grid>
+            <div style={{ overflowX: "auto" }}>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    {list.headers.map((h) => (
+                      <TableCell
+                        style={{
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          textAlign: "center !important",
+                        }}
+                        key={h}
+                      >
+                        {h}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {!loading &&
+                    userList.length > 0 &&
+                    userList?.map((user) => (
                       <TableRow
                         style={{ cursor: "pointer" }}
                         hover
@@ -136,25 +170,37 @@ export const UserList = ({listType, title, modal, list}) => {
                         onClick={() => handleClick(user?.username)}
                         className={classes.tableRow}
                       >
-                        {
-                          list.body.map(bf => <TableCell key={bf(user)}>{bf(user)}</TableCell>)
-                        }
+                        {list.body.map((bf) => (
+                          <TableCell
+                            style={{
+                              overflowX: "auto",
+                              whiteSpace: "nowrap",
+                              textAlign: "center !important",
+                            }}
+                            key={bf(user)}
+                          >
+                            {bf(user)}
+                          </TableCell>
+                        ))}
                       </TableRow>
                     ))}
-                    {loading && (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <CircularProgress color="secondary" />
-                      </div>
-                    )}
-                    {!loading && userList.length === 0 && <Typography>No users to list!</Typography> }
-                  </TableBody>
-                </Table>
+                </TableBody>
+              </Table>
+              {loading && (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CircularProgress color="secondary" />
+                </div>
+              )}
+              {!loading && userList.length === 0 && (
+                <Typography>No users to list!</Typography>
+              )}
+            </div>
           </Paper>
         </Grid>
       </Grid>
