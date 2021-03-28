@@ -128,14 +128,6 @@ const Profile = () => {
       break;
   }
 
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-
   const handleUploadImage = async (event) => {
     setImageLoading(true);
     let image = await event.target.files[0];
@@ -152,13 +144,6 @@ const Profile = () => {
       .catch(handleError(enqueueSnackbar, closeSnackbar))
       .finally(() => setImageLoading(false));
   };
-
-  const modalBody = (
-    <div className={classes.paperModal}>
-      <h1 id="simple-modal-title">Edit Profile</h1>
-      <EditProfile handleClose={handleClose} userData={userData} />
-    </div>
-  );
 
   useEffect(() => {
     setImageLoading(true);
@@ -181,10 +166,9 @@ const Profile = () => {
         <div className={classes.button}>
           <Button
             onClick={handleOpen}
-            variant="outlined"
+            variant="contained"
             color="secondary"
             value="Edit Profile"
-            // size="small"
           >
             Edit Profile
           </Button>
@@ -245,10 +229,9 @@ const Profile = () => {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>{`${
-                      user?.username.charAt(0).toUpperCase() +
+                    <TableCell>{`${user?.username.charAt(0).toUpperCase() +
                       user?.username.slice(1)
-                    }'s Profile`}</TableCell>
+                      }'s Profile`}</TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
@@ -271,8 +254,8 @@ const Profile = () => {
                       {userData?.gender === 0
                         ? "Male"
                         : userData?.gender === 1
-                        ? "Female"
-                        : "Not Specified"}
+                          ? "Female"
+                          : "Not Specified"}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -299,24 +282,15 @@ const Profile = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        {modalBody}
-      </Modal> */}
-
       <Popup
         open={open}
         title={"Edit Profile"}
         handleClose={handleClose}
+        autoClose={false}
         buttonText={'Submit'}
       >
         <EditProfile handleClose={handleClose} userData={userData} />
       </Popup>
-
     </Layout>
   );
 };
