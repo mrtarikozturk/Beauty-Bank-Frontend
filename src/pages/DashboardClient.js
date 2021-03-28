@@ -58,6 +58,9 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     width: 150,
+    fontSize: 12,
+    paddingLeft: 2,
+    paddingRight: 2,
   },
 }));
 
@@ -148,6 +151,7 @@ export const DashboardClient = () => {
             t?.appointment_date ? FormatDateTime(t.appointment_date) : "-",
           (t) => (
             <Button
+              size="small"
               onClick={() => {
                 t?.appointment_date
                   ? alert("You already set the date!")
@@ -168,6 +172,7 @@ export const DashboardClient = () => {
           ),
           (t) => (
             <Button
+              size="small"
               onClick={() => handleOpenTicket(t)}
               variant="outlined"
               color={"primary"}
@@ -180,6 +185,7 @@ export const DashboardClient = () => {
           (t) =>
             t?.ticket_status === "4" && (
               <Button
+                size="small"
                 onClick={() => handleOpen(t)}
                 variant="outlined"
                 color={"primary"}

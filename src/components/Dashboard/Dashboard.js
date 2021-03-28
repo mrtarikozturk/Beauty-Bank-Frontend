@@ -69,7 +69,9 @@ export const Dashboard = ({
               {list.title}
             </Typography>
             {!loading && tickets.length > 0 && (
-              <List list={list} tickets={tickets} pagination={pagination} />
+              <div style={{ overflowX: "auto" }}>
+                <List list={list} tickets={tickets} pagination={pagination} />
+              </div>
             )}
             {!loading && !tickets.length && (
               <Typography>No tickets to list!</Typography>
