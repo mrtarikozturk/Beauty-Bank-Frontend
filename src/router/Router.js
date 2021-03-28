@@ -47,7 +47,7 @@ const AppRouter = () => {
                 <Route path='/ticket/confirm/:id' component={ConfirmTicket} />
                 <Route path='/terms_approved/:id' component={TermsApproved} />
             </Switch>
-            <Footer />
+            {/* <Footer /> */}
         </Router>
     )
 }
