@@ -21,10 +21,12 @@ export const Dashboard = ({
   list,
   pagination,
   loading,
+  isMobile,
 }) => {
-  const fixedHeightPaper = hasStepper
-    ? clsx(classes.paper, classes.fixedHeight)
-    : 0;
+  const fixedHeightPaper =
+    hasStepper && !isMobile
+      ? clsx(classes.paper, classes.fixedHeight)
+      : clsx(classes.paperMobil);
 
   return (
     <Layout pageTitle="Dashboard">
@@ -50,6 +52,8 @@ export const Dashboard = ({
                 activeStep={
                   tickets.length > 0 ? Number(tickets[0]?.ticket_status) : -1
                 }
+                isMobile={isMobile}
+                className={isMobile && classes.mobilStep}
               />
             </Paper>
           </Grid>
@@ -65,7 +69,9 @@ export const Dashboard = ({
               {list.title}
             </Typography>
             {!loading && tickets.length > 0 && (
-              <List list={list} tickets={tickets} pagination={pagination} />
+              <div style={{ overflowX: "auto" }}>
+                <List list={list} tickets={tickets} pagination={pagination} />
+              </div>
             )}
             {!loading && !tickets.length && (
               <Typography>No tickets to list!</Typography>

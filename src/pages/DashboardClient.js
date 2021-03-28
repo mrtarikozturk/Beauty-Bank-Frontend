@@ -9,6 +9,7 @@ import { FormatDate, FormatDateTime } from "../helper/FormatDate";
 import { SetTicketDate } from "../components/SetTicketDate";
 import { SetTicketFeedback } from "../components/SetTicketFeedback";
 import { TicketDetail } from "../components/TicketDetail";
+import useWindowSize from "../hooks/useWindowsSize";
 
 import api from "../api";
 
@@ -21,8 +22,24 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     marginBottom: theme.spacing(10),
   },
+  paperMobil: {
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   fixedHeight: {
-    height: 240,
+    minHeight: 240,
+  },
+  mobilStep: {
+    display: "flex",
+    overflow: "none",
+    flexDirection: "column",
+    marginBottom: theme.spacing(10),
+    alignItems: "center",
+    justifyContent: "center",
   },
   paperModal: {
     width: 900,
@@ -41,12 +58,17 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     width: 150,
+    fontSize: 12,
+    paddingLeft: 2,
+    paddingRight: 2,
   },
 }));
 
 export const DashboardClient = () => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const { width } = useWindowSize();
+  const isMobile = width < 550;
 
   const [open, setOpen] = useState(false);
   const [openDate, setOpenDate] = useState(false);
@@ -94,6 +116,7 @@ export const DashboardClient = () => {
       classes={classes}
       tickets={tickets}
       hasStepper={true}
+      isMobile={isMobile}
       modals={[
         {
           title: "Set Appointment Date",
@@ -128,6 +151,7 @@ export const DashboardClient = () => {
             t?.appointment_date ? FormatDateTime(t.appointment_date) : "-",
           (t) => (
             <Button
+              size="small"
               onClick={() => {
                 t?.appointment_date
                   ? alert("You already set the date!")
@@ -148,6 +172,7 @@ export const DashboardClient = () => {
           ),
           (t) => (
             <Button
+              size="small"
               onClick={() => handleOpenTicket(t)}
               variant="outlined"
               color={"primary"}
@@ -160,6 +185,7 @@ export const DashboardClient = () => {
           (t) =>
             t?.ticket_status === "4" && (
               <Button
+                size="small"
                 onClick={() => handleOpen(t)}
                 variant="outlined"
                 color={"primary"}
