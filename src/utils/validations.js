@@ -3,7 +3,7 @@ import { string, number, boolean, date, array, object, ref } from 'yup';
 
 export const firstName = string()
     .required("This field is required")
-    .min(1, "Must be at least 1 characters")
+    .min(2, "Must be at least 2 characters")
     .max(30, "Must be a maximum of 30 characters");
 
 export const lastName = string()
@@ -33,14 +33,20 @@ export const zipAddress = string()
     .max(30, "Must be a maximum of 30 characters");
 
 export const address = string()
+    .typeError('This field is required')
     .required("This field is required")
     .min(1, "Must be at least 1 characters")
     .max(100, "Must be a maximum of 30 characters");
 
 export const aboutMe = string()
+    .typeError('This field is required')
     .required("This field is required")
     .min(100, "Must be at least 100 characters")
     .max(1500, "Must be a maximum of 1500 characters");
 
 export const minimumIncome = boolean()
-    .required("This field is required")
+    .required("This field is required");
+
+export const url = string()
+    .typeError('This field is required');
+// !! TODO: edit formdaki url alanlari icin regex yazilmasi gerekiyor. Simdilik  pas gectik
