@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
     display: "flex",
     alignItems: "center",
-    height: "100vh",
     [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
       width: 600,
       marginLeft: "auto",
@@ -38,15 +37,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(10),
-    padding: theme.spacing(2),
+    margin: theme.spacing(3, 1),
+    padding: theme.spacing(1),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(10),
+      margin: theme.spacing(3, 0),
       padding: theme.spacing(3),
     },
   },
