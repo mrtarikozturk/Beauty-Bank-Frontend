@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import {useSnackbar} from 'notistack'
+import { useSnackbar } from 'notistack'
 import {
   Avatar,
   Button,
@@ -20,7 +20,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { AppContext } from "../context/AppContext";
-import api, {UserRoles, handleError} from '../api'
+import api, { UserRoles, handleError } from '../api'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -49,7 +49,7 @@ const Signin = () => {
   const classes = useStyles();
   const history = useHistory();
   const { setUser } = useContext(AppContext);
-  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   // states
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -73,7 +73,7 @@ const Signin = () => {
   // handleSubmit
   const onSubmit = (values) => {
     setLoading(true);
-    console.log({values})
+    console.log({ values })
     api.post('/auth/login/', values).then(data => {
       setUser(data)
       localStorage.setItem("user", JSON.stringify(data))
@@ -150,17 +150,6 @@ const Signin = () => {
             error={formik.touched.password && formik.errors.password}
             helperText={formik.touched.password && formik.errors.password}
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="isRemember"
-                value="remember"
-                color="primary"
-                {...formik.getFieldProps("isRemember")}
-              />
-            }
-            label="Remember me"
-          />
           <Button
             type="submit"
             fullWidth
@@ -172,18 +161,18 @@ const Signin = () => {
           </Button>
         </form>
         <Grid container>
-            <Grid item xs>
-              <Link to='#' variant="body2">
-                Forgot password?
+          <Grid item xs>
+            <Link to='#' variant="body2">
+              Forgot password?
               </Link>
-            </Grid>
-            <Grid item>
-              Don't have an account?{" "}
-              <Link to='/register' variant="body2">
-                Sign Up
-              </Link>
-            </Grid>
           </Grid>
+          <Grid item>
+            Don't have an account?{" "}
+            <Link to='/register' variant="body2">
+              Sign Up
+              </Link>
+          </Grid>
+        </Grid>
       </div>
     </Container>
   );
