@@ -15,9 +15,9 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Modal,
   Avatar,
   CircularProgress,
+  Link
 } from "@material-ui/core";
 
 // custom imports
@@ -246,6 +246,42 @@ const Profile = () => {
                         {userData?.phone_number2}
                       </TableCell>
                     </TableRow>
+                    {userData?.is_pro && (
+                      <>
+                        <TableRow>
+                          <TableCell>Instagram</TableCell>
+                          <TableCell align="left">
+                            <Link href={userData?.instagram_account} variant="body2">
+                              {userData?.instagram_account}
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Facebook</TableCell>
+                          <TableCell align="left">
+                            <Link href={userData?.facebook_account} variant="body2">
+                              {userData?.facebook_account}
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Youtube</TableCell>
+                          <TableCell align="left">
+                            <Link href={userData?.youtube_account} variant="body2">
+                              {userData?.youtube_account}
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>Twitter</TableCell>
+                          <TableCell align="left">
+                            <Link href={userData?.twitter_account} variant="body2">
+                              {userData?.twitter_account}
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      </>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
