@@ -47,13 +47,13 @@ export const EditProfile = ({ handleClose, userData }) => {
     address,
     aboutMe,
     ...(userData?.is_client && { minimumIncome }),
-    ...(userData?.is_pro && {
-      twitter: url,
-      youtube: url,
-      instagram: url,
-      facebook: url,
+    // ...(userData?.is_pro && {
+    //   twitter: url,
+    //   youtube: url,
+    //   instagram: url,
+    //   facebook: url,
 
-    })
+    // })
   });
 
   // initial values
