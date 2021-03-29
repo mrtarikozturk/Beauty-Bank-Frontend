@@ -22,7 +22,6 @@ import {
   ConnectorClientList,
   EmailSendInfo,
 } from "../pages/Index";
-import { Footer } from "../components/Index";
 import { AppContext } from "../context/AppContext";
 import { ConnectorProList } from "../pages/ConnectorProList";
 
@@ -101,7 +100,6 @@ const AppRouter = () => {
         <Route path="/ticket/confirm/:id" component={ConfirmTicket} />
         <Route path="/terms_approved/:id" component={TermsApproved} />
       </Switch>
-      {/* <Footer /> */}
     </Router>
   );
 };

@@ -33,7 +33,7 @@ export const usePopup = () => {
 
 export const Popup = (props) => {
 
-    const { open, title, children, handleClose, scroll = 'paper' } = props
+    const { open, title, children, handleClose, autoClose, scroll = 'paper' } = props
     const descriptionElementRef = useRef(null);
     const classes = useStyles();
 
@@ -50,7 +50,7 @@ export const Popup = (props) => {
     return (
         <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={autoClose && handleClose}
             scroll={scroll}
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
