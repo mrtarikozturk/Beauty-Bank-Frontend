@@ -76,10 +76,10 @@ export const EditProfile = ({ handleClose, userData }) => {
       youtube: userData?.youtube_account,
     })
   };
-  // !! TODO: register olurken kullanici adresi alinmadigi icin address property'si null ataniyor. Bu nedenle de edit sayfasinda address alani bos iken submit yapildiginda once string() metodunu validate ettigi icin kutuphaneden bunun mesaji gosteriliyor.
+
   // handleSubmit
-  async function onSubmit(values) {
-    api.put(`/auth/user-detail/${userData?.username}`, {
+  const onSubmit = (values) => {
+    api.put(`auth/user-detail/${userData?.username}`, {
       email: values.email,
       username: values.userName,
       first_name: values.firstName,
@@ -90,7 +90,7 @@ export const EditProfile = ({ handleClose, userData }) => {
       address: values.address,
       about_me: values.aboutMe,
       ...(userData.is_client && { min_incomer: values.minimumIncome }),
-      ...values(userData.is_pro && {
+      ...(userData.is_pro && {
         twitter_account: values.twitter,
         youtube_account: values.youtube,
         instagram_account: values.instagram,
@@ -99,7 +99,7 @@ export const EditProfile = ({ handleClose, userData }) => {
     }).then(() => {
       enqueueSnackbar("Updated profile successfully!", { variant: 'success' })
       handleClose()
-    }).catch(handleError(enqueueSnackbar, closeSnackbar))
+    }).catch(handleError(enqueueSnackbar, closeSnackbar)).finally(handleClose())
   }
 
   // formik
