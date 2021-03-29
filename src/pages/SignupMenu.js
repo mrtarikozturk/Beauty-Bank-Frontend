@@ -146,7 +146,5 @@ const SignupMenu = () => {
 export { SignupMenu };
 
 // TODO: yazi alanina sabit bir uzunluk vermek gerekiyor ki yaziya gore yukariya dogru uzamanasin.
-// TODO: Button renkleri ve yazilari ayarlanacak.
-// TODO: Ekran kuculdugunde alttaki kartlarin butonlari footer altinda kaliyor duzeltilecek.
 // TODO: Cart'larin header kismina farkli bir renk verilebilir.
 // TODO: 
