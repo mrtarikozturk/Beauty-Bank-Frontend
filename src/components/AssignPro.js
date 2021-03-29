@@ -85,32 +85,26 @@ const AssignPro = ({ selectedTicket, handleClose }) => {
     api
       .get(`/ticket/dist-list/${selectedTicket.id}`)
       .then((data) => {
-        console.log(data);
         setProList(data);
         setLoading(false);
       })
-      .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
+      .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading))
+      .finally(() => setLoading(false));
   }, []);
-
-  // Assign Pro
-  async function onSubmit() {
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user?.tokens?.access}`,
-      },
-      body: JSON.stringify({
+  // handleSubmit // Assign Pro
+  async function onSubmit(values) {
+    api
+      .put(`/ticket/connector-tickets/${selectedTicket.id}`, {
         pro: selectPro,
         service_type: 0,
-      }),
-    };
-
-    const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/ticket/connector-tickets/${selectedTicket.id}`,
-      requestOptions
-    ).then((r) => console.log("PRO RES: ", r));
-    handleClose();
+      })
+      .then(() => {
+        enqueueSnackbar("Assing Pro  successfully!", {
+          variant: "success",
+        });
+        handleClose();
+      })
+      .catch(handleError(enqueueSnackbar, closeSnackbar));
   }
 
   const handleChangePro = (event) => {
@@ -212,11 +206,12 @@ const AssignPro = ({ selectedTicket, handleClose }) => {
                       onChange={handleChangePro}
                       label="Select Pro"
                     >
-                      {proList?.map((pro) => (
-                        <MenuItem
-                          value={pro?.id}
-                        >{`${pro?.company_name} (☎${pro?.phone}) (${pro?.distance}-KM)`}</MenuItem>
-                      ))}
+                      {!loading &&
+                        proList?.map((pro) => (
+                          <MenuItem
+                            value={pro?.id}
+                          >{`${pro?.company_name} (☎${pro?.phone}) (${pro?.distance}-KM)`}</MenuItem>
+                        ))}
                     </Select>
                   </FormControl>
                 </Grid>
