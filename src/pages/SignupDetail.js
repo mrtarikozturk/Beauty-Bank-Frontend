@@ -23,6 +23,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
+import { usePopup, Popup } from '../components/Popup';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -70,6 +71,7 @@ const SignupDetail = () => {
   const history = useHistory();
   const { id } = useParams();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { open, togglePopup } = usePopup();
 
   //states
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -234,203 +236,140 @@ const SignupDetail = () => {
     event.preventDefault();
   };
 
+  // handle Terms and conditions
+  const handleTerms = () => {
+    togglePopup();
+  }
+
   return (
-    <main className={classes.layout}>
-      <Paper className={classes.paper}>
-        <img src="../images/logo.jpg" className={classes.avatar} />
-        <Typography component="h1" variant="h5">
-          Register
+    <>
+      <main className={classes.layout}>
+        <Paper className={classes.paper}>
+          <img src="../images/logo.jpg" className={classes.avatar} />
+          <Typography component="h1" variant="h5">
+            Register
         </Typography>
-        <form
-          className={classes.form}
-          noValidate
-          onSubmit={formik.handleSubmit}
-        >
-          <Grid container spacing={3}>
-            {/* firstname */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="First Name"
-                name="firstName"
-                autoComplete="fname"
-                required
-                fullWidth
-                autoFocus
-                {...formik.getFieldProps("firstName")}
-                error={formik.touched.firstName && formik.errors.firstName}
-                helperText={formik.touched.firstName && formik.errors.firstName}
-              />
-            </Grid>
-            {/* lastname */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                required
-                fullWidth
-                {...formik.getFieldProps("lastName")}
-                error={formik.touched.lastName && formik.errors.lastName}
-                helperText={formik.touched.lastName && formik.errors.lastName}
-              />
-            </Grid>
-            {/* username */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="User Name"
-                name="userName"
-                autoComplete="uname"
-                required
-                fullWidth
-                {...formik.getFieldProps("userName")}
-                error={formik.touched.userName && formik.errors.userName}
-                helperText={formik.touched.userName && formik.errors.userName}
-              />
-            </Grid>
-            {/* email */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                label="E-mail"
-                name="email"
-                autoComplete="email"
-                {...formik.getFieldProps("email")}
-                error={formik.touched.email && formik.errors.email}
-                helperText={formik.touched.email && formik.errors.email}
-              />
-            </Grid>
-            {/* password */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Password"
-                name="password"
-                autoComplete="password"
-                required
-                fullWidth
-                type={isShowPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {isShowPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                {...formik.getFieldProps("password")}
-                error={formik.touched.password && formik.errors.password}
-                helperText={formik.touched.password && formik.errors.password}
-              />
-            </Grid>
-            {/* password confirm */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Confirm"
-                name="passwordConfirm"
-                autoComplete="passwordConfirm"
-                required
-                fullWidth
-                type={isShowPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {isShowPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                {...formik.getFieldProps("passwordConfirm")}
-                error={
-                  formik.touched.passwordConfirm &&
-                  formik.errors.passwordConfirm
-                }
-                helperText={
-                  formik.touched.passwordConfirm &&
-                  formik.errors.passwordConfirm
-                }
-              />
-            </Grid>
-            {id === "client" && (
-              <Grid item xs={12} sm={12}>
+          <form
+            className={classes.form}
+            noValidate
+            onSubmit={formik.handleSubmit}
+          >
+            <Grid container spacing={3}>
+              {/* firstname */}
+              <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Zip / Postal code"
-                  name="zip"
-                  autoComplete="zip"
+                  label="First Name"
+                  name="firstName"
+                  autoComplete="fname"
                   required
                   fullWidth
-                  {...formik.getFieldProps("zip")}
-                  error={formik.touched.zip && formik.errors.zip}
-                  helperText={formik.touched.zip && formik.errors.zip}
+                  autoFocus
+                  {...formik.getFieldProps("firstName")}
+                  error={formik.touched.firstName && formik.errors.firstName}
+                  helperText={formik.touched.firstName && formik.errors.firstName}
                 />
               </Grid>
-            )}
-
-            {/* company name */}
-            {id === "professional" && (
-              <>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Company"
-                    name="companyName"
-                    autoComplete="companyName"
-                    fullWidth
-                    {...formik.getFieldProps("companyName")}
-                    error={
-                      formik.touched.companyName && formik.errors.companyName
-                    }
-                    helperText={
-                      formik.touched.companyName && formik.errors.companyName
-                    }
-                  />
-                </Grid>
-                {/* Gender */}
-                <Grid item xs={12} sm={6}>
-                  <FormControl className={classes.formControl}>
-                    <InputLabel id="gender-select-helper-label">
-                      Gender
-                    </InputLabel>
-                    <Select
-                      labelId="gender-select-helper-label"
-                      id="gender-select-helper"
-                      name="gender"
-                      {...formik.getFieldProps("gender")}
-                      error={formik.touched.gender && formik.errors.gender}
-                      helperText={formik.touched.gender && formik.errors.gender}
-                    >
-                      <MenuItem value={null}>
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={0}>Female</MenuItem>
-                      <MenuItem value={1}>Male</MenuItem>
-                      <MenuItem value={2}>I don't say</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Capacity"
-                    name="capacity"
-                    autoComplete="capacity"
-                    fullWidth
-                    type="number"
-                    {...formik.getFieldProps("capacity")}
-                    error={formik.touched.capacity && formik.errors.capacity}
-                    helperText={
-                      formik.touched.capacity && formik.errors.capacity
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+              {/* lastname */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="lname"
+                  required
+                  fullWidth
+                  {...formik.getFieldProps("lastName")}
+                  error={formik.touched.lastName && formik.errors.lastName}
+                  helperText={formik.touched.lastName && formik.errors.lastName}
+                />
+              </Grid>
+              {/* username */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="User Name"
+                  name="userName"
+                  autoComplete="uname"
+                  required
+                  fullWidth
+                  {...formik.getFieldProps("userName")}
+                  error={formik.touched.userName && formik.errors.userName}
+                  helperText={formik.touched.userName && formik.errors.userName}
+                />
+              </Grid>
+              {/* email */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  label="E-mail"
+                  name="email"
+                  autoComplete="email"
+                  {...formik.getFieldProps("email")}
+                  error={formik.touched.email && formik.errors.email}
+                  helperText={formik.touched.email && formik.errors.email}
+                />
+              </Grid>
+              {/* password */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Password"
+                  name="password"
+                  autoComplete="password"
+                  required
+                  fullWidth
+                  type={isShowPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {isShowPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  {...formik.getFieldProps("password")}
+                  error={formik.touched.password && formik.errors.password}
+                  helperText={formik.touched.password && formik.errors.password}
+                />
+              </Grid>
+              {/* password confirm */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Confirm"
+                  name="passwordConfirm"
+                  autoComplete="passwordConfirm"
+                  required
+                  fullWidth
+                  type={isShowPassword ? "text" : "password"}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {isShowPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  {...formik.getFieldProps("passwordConfirm")}
+                  error={
+                    formik.touched.passwordConfirm &&
+                    formik.errors.passwordConfirm
+                  }
+                  helperText={
+                    formik.touched.passwordConfirm &&
+                    formik.errors.passwordConfirm
+                  }
+                />
+              </Grid>
+              {id === "client" && (
+                <Grid item xs={12} sm={12}>
                   <TextField
                     label="Zip / Postal code"
                     name="zip"
@@ -442,76 +381,172 @@ const SignupDetail = () => {
                     helperText={formik.touched.zip && formik.errors.zip}
                   />
                 </Grid>
-              </>
-            )}
+              )}
 
-            {/* phone number */}
-            <Grid item xs={12} sm={12}>
-              <TextField
-                label="Phone Number"
-                name="phone"
-                autoComplete="phone"
-                required
-                fullWidth
-                {...formik.getFieldProps("phone")}
-                error={formik.touched.phone && formik.errors.phone}
-                helperText={formik.touched.phone && formik.errors.phone}
-              />
-            </Grid>
-            {/* about me */}
-            {id === "professional" && (
-              <Grid item xs={12}>
+              {/* company name */}
+              {id === "professional" && (
+                <>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Company"
+                      name="companyName"
+                      autoComplete="companyName"
+                      fullWidth
+                      {...formik.getFieldProps("companyName")}
+                      error={
+                        formik.touched.companyName && formik.errors.companyName
+                      }
+                      helperText={
+                        formik.touched.companyName && formik.errors.companyName
+                      }
+                    />
+                  </Grid>
+                  {/* Gender */}
+                  <Grid item xs={12} sm={6}>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="gender-select-helper-label">
+                        Gender
+                    </InputLabel>
+                      <Select
+                        labelId="gender-select-helper-label"
+                        id="gender-select-helper"
+                        name="gender"
+                        {...formik.getFieldProps("gender")}
+                        error={formik.touched.gender && formik.errors.gender}
+                        helperText={formik.touched.gender && formik.errors.gender}
+                      >
+                        <MenuItem value={null}>
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={0}>Female</MenuItem>
+                        <MenuItem value={1}>Male</MenuItem>
+                        <MenuItem value={2}>I don't say</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Capacity"
+                      name="capacity"
+                      autoComplete="capacity"
+                      fullWidth
+                      type="number"
+                      {...formik.getFieldProps("capacity")}
+                      error={formik.touched.capacity && formik.errors.capacity}
+                      helperText={
+                        formik.touched.capacity && formik.errors.capacity
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      label="Zip / Postal code"
+                      name="zip"
+                      autoComplete="zip"
+                      required
+                      fullWidth
+                      {...formik.getFieldProps("zip")}
+                      error={formik.touched.zip && formik.errors.zip}
+                      helperText={formik.touched.zip && formik.errors.zip}
+                    />
+                  </Grid>
+                </>
+              )}
+
+              {/* phone number */}
+              <Grid item xs={12} sm={12}>
                 <TextField
-                  label="About Me"
-                  name="aboutMe"
-                  autoComplete="aboutMe"
-                  multiline
+                  label="Phone Number"
+                  name="phone"
+                  autoComplete="phone"
                   required
                   fullWidth
-                  {...formik.getFieldProps("aboutMe")}
-                  error={formik.touched.aboutMe && formik.errors.aboutMe}
-                  helperText={formik.touched.aboutMe && formik.errors.aboutMe}
+                  {...formik.getFieldProps("phone")}
+                  error={formik.touched.phone && formik.errors.phone}
+                  helperText={formik.touched.phone && formik.errors.phone}
                 />
               </Grid>
-            )}
-            {/* terms */}
-            <Grid item xs={12}>
-              <Checkbox
-                {...formik.getFieldProps("conditions")}
-                name="conditions"
-                id="conditions"
-              />
-              <label for="conditions">
-                I have read the{" "}
-                <span style={{ fontSize: "bold" }}>Terms and Conditions </span>
-              </label>
-              {formik.errors.conditions ? (
-                <label style={{ color: "red" }}>
-                  {formik.errors.conditions}
+              {/* about me */}
+              {id === "professional" && (
+                <Grid item xs={12}>
+                  <TextField
+                    label="About Me"
+                    name="aboutMe"
+                    autoComplete="aboutMe"
+                    multiline
+                    required
+                    fullWidth
+                    {...formik.getFieldProps("aboutMe")}
+                    error={formik.touched.aboutMe && formik.errors.aboutMe}
+                    helperText={formik.touched.aboutMe && formik.errors.aboutMe}
+                  />
+                </Grid>
+              )}
+              {/* terms */}
+              <Grid item xs={12}>
+                <Checkbox
+                  {...formik.getFieldProps("conditions")}
+                  name="conditions"
+                  id="conditions"
+                />
+                <label for="conditions">
+                  I have read the{" "}
+                  <Button style={{ fontSize: "bold" }} onClick={handleTerms}>Terms and Conditions </Button>
                 </label>
-              ) : null}
+                {formik.errors.conditions ? (
+                  <label style={{ color: "red" }}>
+                    {formik.errors.conditions}
+                  </label>
+                ) : null}
+              </Grid>
             </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.submit}
-          >
-            {loading ? <CircularProgress size={18} /> : "Sign Up"}
-          </Button>
-          <Grid container justify="flex-end" spacing={3}>
-            <Grid item>
-              Already have an account?{"  "}
-              <Link href="/login" variant="body2">
-                Log in
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+            >
+              {loading ? <CircularProgress size={18} /> : "Sign Up"}
+            </Button>
+            <Grid container justify="flex-end" spacing={3}>
+              <Grid item>
+                Already have an account?{"  "}
+                <Link href="/login" variant="body2">
+                  Log in
               </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </Paper>
-    </main>
+          </form>
+        </Paper>
+      </main>
+      <Popup
+        {...{ open, togglePopup }}
+        title='Terms & Conditions'
+      // buttons={
+      //   <>
+      //     <Button color='secondary' onClick={togglePopup}>Cancel</Button>
+      //     <Button color='secondary' variant='contained' onClick={togglePopup}>Agree</Button>
+      //   </>
+
+      // }
+
+      >
+        <Typography align='justify'>
+          Zoals besproken zijn hier de voorwaarden voor een behandeling waarvoor ik graag z.s.m. de antwoorden van jou ontvang middels een 'reply'. Zodra ik de antwoorden heb ontvangen geef ik je de contactgegevens van de beauty-professional. Daarna graag binnen één week contact leggen met de professional en aangeven dat je via de BeautyBank komt, hij/ zij heeft je naam al en weet dat jij contact opneemt. Zie je, om welke reden dan ook, af van een behandeling laat het dan s/v/p even weten zodat we een ander blij kunnen maken!
+          VOORWAARDEN:
+          Je vindt je het goed wanneer we je eigen geschreven verhaal over jouw situatie, waarin je ook je wens voor de toekomst beschrijft, delen op onze website. Onze vraag is ook om te beschrijven hoe je de behandeling hebt beleefd bij de beauty-professional en wat het voor jou heeft betekend. Graag z.s.m. na de behandeling je verhaal sturen aan karin@beautybank.nl Tip: voor inspiratie kan je op onze website kijken:https://www.beautybank.nl/vooruitkijkspiegel/ Akkoord/ niet akkoord
+          Jouw foto's van 'voor en na', met of zonder gezicht, mogen wij gebruiken voor onze website van de BeautyBank en op social media. Akkoord/ niet akkoord
+          Verplicht. Je laat ons weten wanneer je de afspraak hebt staan en je houd je aan de afgesproken tijd.
+          Verplicht. Mocht er iets zijn waardoor je in de problemen komt met jouw afspraak laat het dan spoedig weten aan de beauty-professional en aan mij! Let wel: in geval van afwezigheid zonder afbericht komt de behandeling te vervallen!
+          Alvast dank voor jouw antwoorden!
+          Vriendelijke groet en liefs,
+          Naam verbinder & team Beautybank
+          P.s. Om berichten te volgen zou het fijn zijn wanneer je de fb pagina en Instagram zou willen 'liken', is niet verplicht maar wel leuk Jouw VooruitkijkspiegelJouw Vooruitkijkspiegel Vooruitkijkspiegel
+          Stichting BeautyBank
+        </Typography>
+      </Popup>
+    </>
   );
 };
 
