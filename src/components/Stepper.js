@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 
 const getSteps = () => {
   return [
-    "Created Ticket",
+    "Intake Call",
     "Approve Terms",
     "Set Appointment Date",
     "Appointment",
