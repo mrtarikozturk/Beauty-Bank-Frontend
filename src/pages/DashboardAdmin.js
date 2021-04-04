@@ -174,7 +174,7 @@ const DashboardAdmin = () => {
                             <ListItemIcon>
                                 <PostAddIcon color="primary" />
                             </ListItemIcon>
-                            <ListItemText primary="Create Ticket" />
+                            <ListItemText primary="Make Request" />
                         </ListItem>
                         <ListItem button>
                             <ListItemIcon>
