@@ -41,8 +41,8 @@ export const address = string()
 export const aboutMe = string()
     .typeError('This field is required')
     .required("This field is required")
-    .min(100, "Must be at least 100 characters")
-    .max(1500, "Must be a maximum of 1500 characters");
+    .min(50, "Must be at least 50 characters")
+    .max(1000, "Must be a maximum of 1000 characters");
 
 export const minimumIncome = boolean()
     .required("This field is required");
