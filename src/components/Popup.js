@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import Button from "@material-ui/core/Button";
-import { Dialog, DialogActions, DialogContent, DialogContentText, Typography, IconButton, makeStyles, } from "@material-ui/core";
+import { Dialog, DialogTitle, DialogActions, DialogContent, Typography, IconButton, makeStyles, } from "@material-ui/core";
 import CloseIcon from "@material-ui//icons/Close";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles((theme) => ({
     closeIcon: {
@@ -16,27 +15,33 @@ const useStyles = makeStyles((theme) => ({
 export const usePopup = () => {
     const [open, setOpen] = useState(false);
 
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const togglePopup = () => setOpen(prev => !prev)
 
     return {
         open,
-        handleClose,
-        handleOpen,
+        togglePopup
     }
 }
 
 export const Popup = (props) => {
 
-    const { open, title, children, handleClose, autoClose, scroll = 'paper' } = props
+    const {
+        open,
+        title,
+        children,
+        togglePopup,
+        buttons,
+        customTitle,
+        customFooter,
+        closeIcon = true,
+        autoClose = true,
+        scroll = 'paper',
+        maxWidth = 'sm',
+        dividers = true
+    } = props
+
     const descriptionElementRef = useRef(null);
     const classes = useStyles();
-
 
     useEffect(() => {
         if (open) {
@@ -50,30 +55,61 @@ export const Popup = (props) => {
     return (
         <Dialog
             open={open}
-            onClose={autoClose && handleClose}
+            onClose={autoClose && togglePopup}
             scroll={scroll}
-            aria-labelledby="scroll-dialog-title"
-            aria-describedby="scroll-dialog-description"
+            fullWidth={false}
+            maxWidth={maxWidth}
+            aria-labelledby="dialog-title"
+            aria-describedby="dialog-description"
         >
-            <MuiDialogTitle disableTypography >
-                <Typography variant="h6">{title}</Typography>
-                <IconButton
-                    aria-label="close"
-                    className={classes.closeIcon}
-                    onClick={handleClose}
-                >
-                    <CloseIcon />
-                </IconButton>
-            </MuiDialogTitle>
+            <DialogTitle disableTypography >
+                {customTitle || <Typography variant="h6">{title}</Typography>}
+                {closeIcon &&
+                    <IconButton
+                        aria-label="close"
+                        className={classes.closeIcon}
+                        onClick={togglePopup}
+                    >
+                        <CloseIcon />
+                    </IconButton>}
+            </DialogTitle>
             <DialogContent
-                dividers={scroll === "paper"}
+                dividers={dividers}
                 ref={descriptionElementRef}
                 tabIndex={-1}
             >
                 {children}
             </DialogContent>
+            {   buttons ?
+                (<DialogActions>
+                    {buttons}
+                </DialogActions>) :
+                customFooter
+            }
         </Dialog >
     );
+}
+
+Popup.propsTypes = {
+    title: PropTypes.string,
+    closeIcon: PropTypes.bool,
+    autoClose: PropTypes.bool,
+    scroll: PropTypes.oneOf(['paper', 'body']),
+    maxWidth: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
+    dividers: PropTypes.bool,
+    buttons: PropTypes.element,
+    children: PropTypes.node.isRequired,
+    togglePopup: PropTypes.func,
+    open: PropTypes.bool,
+
+}
+Popup.defaultProps = {
+    title: 'Title',
+    closeIcon: true,
+    autoClose: true,
+    scroll: 'paper',
+    maxWidth: 'sm',
+    dividers: true
 }
 
 
