@@ -103,12 +103,12 @@ const CreateTicket = () => {
   }
 
   return (
-    <LayoutClient pageTitle="Create Ticket">
+    <LayoutClient pageTitle="Make Request">
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <img src="../images/logo.jpg" className={classes.avatar} />
           <Typography component="h1" variant="h5">
-            Create Ticket
+            Make Request
           </Typography>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -120,10 +120,9 @@ const CreateTicket = () => {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell>{`${
-                        user?.username.charAt(0).toUpperCase() +
+                      <TableCell>{`${user?.username.charAt(0).toUpperCase() +
                         user?.username.slice(1)
-                      }'s Credentials`}</TableCell>
+                        }'s Credentials`}</TableCell>
                       <TableCell align="right"></TableCell>
                     </TableRow>
                   </TableHead>
@@ -184,7 +183,7 @@ const CreateTicket = () => {
                   className={classes.submit}
                   onClick={() => handleCreateTicket()}
                 >
-                  Create Ticket
+                  Make Request
                 </Button>
               </Grid>
             </Grid>

@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import TwitterIcon from "@material-ui/icons/Twitter";
+import InstagramIcon from "@material-ui/icons/Instagram";
+import FacebookIcon from "@material-ui/icons/Facebook";
+import YouTubeIcon from "@material-ui/icons/YouTube";
+
 import { useSnackbar } from "notistack";
 import {
   Grid,
@@ -17,7 +22,8 @@ import {
   Paper,
   Avatar,
   CircularProgress,
-  Link
+  Link,
+  Chip,
 } from "@material-ui/core";
 
 // custom imports
@@ -31,7 +37,7 @@ import {
   LayoutSponsor,
 } from "../views";
 
-import { Popup, usePopup } from '../components/Index';
+import { Popup, usePopup, SocialMediaLinks } from '../components/Index';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -74,7 +80,7 @@ const Profile = () => {
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { user } = useContext(AppContext);
-  const { open, handleClose, handleOpen } = usePopup();
+  const { open, togglePopup } = usePopup();
 
   // states
   const [userData, setUserData] = useState([]);
@@ -131,13 +137,48 @@ const Profile = () => {
     }
   }, [open]);
 
+  const handleClick = () => {
+    console.log('selam');
+  }
+
+  const socialMedia = {
+    youtube: {
+      label: 'Youtube',
+      color: 'secondary',
+      size: 'small',
+      url: userData.youtube_account,
+      icon: <YouTubeIcon />,
+    },
+    twitter: {
+      label: 'Twitter',
+      color: 'secondary',
+      size: 'small',
+      url: userData.twitter_account,
+      icon: <TwitterIcon />
+    },
+    instagram: {
+      label: 'Instagram',
+      color: 'secondary',
+      size: 'small',
+      url: userData.instagram_account,
+      icon: <InstagramIcon />
+    },
+    facebook: {
+      label: 'Facebook',
+      color: 'secondary',
+      size: 'small',
+      url: userData.facebook_account,
+      icon: <FacebookIcon />
+    },
+  }
+
   return (
     <Layout pageTitle="Profile">
       <Paper className={classes.paper}>
         <Grid container>
           <Grid item xs={12} className={classes.editButton}>
             <Button
-              onClick={handleOpen}
+              onClick={togglePopup}
               variant="contained"
               color="secondary"
             >
@@ -206,6 +247,14 @@ const Profile = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
+                    <TableRow>
+                      <TableCell>Social Media</TableCell>
+                      <TableCell align="left">
+                        <SocialMediaLinks
+                          {...{ socialMedia }}
+                        />
+                      </TableCell>
+                    </TableRow>
                     <TableRow>
                       <TableCell>Email</TableCell>
                       <TableCell align="left">{userData?.email}</TableCell>
@@ -290,16 +339,21 @@ const Profile = () => {
         </Grid>
       </Paper>
       <Popup
+        scroll='paper'
+        dividers={true}
         open={open}
         title={"Edit Profile"}
-        handleClose={handleClose}
+        togglePopup={togglePopup}
         autoClose={false}
         buttonText={'Submit'}
       >
-        <EditProfile handleClose={handleClose} userData={userData} />
+        <EditProfile togglePopup={togglePopup} userData={userData} />
       </Popup>
-    </Layout>
+    </Layout >
   );
 };
 
 export { Profile };
+
+
+// ?? Sosyal medya linkleri daha guzel bir sekilde yukarida sadece olanlar olacak sekilde sergilenebilir.

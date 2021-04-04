@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const EditProfile = ({ handleClose, userData }) => {
+export const EditProfile = ({ togglePopup, userData }) => {
   // constants
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -98,8 +98,8 @@ export const EditProfile = ({ handleClose, userData }) => {
       })
     }).then(() => {
       enqueueSnackbar("Updated profile successfully!", { variant: 'success' })
-      handleClose()
-    }).catch(handleError(enqueueSnackbar, closeSnackbar)).finally(handleClose())
+      togglePopup()
+    }).catch(handleError(enqueueSnackbar, closeSnackbar))
   }
 
   // formik

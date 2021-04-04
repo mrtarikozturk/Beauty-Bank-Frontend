@@ -3,17 +3,21 @@ import { useHistory } from "react-router-dom";
 
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import {CssBaseline, Drawer,
+import {
+  CssBaseline, Drawer,
   Container, AppBar, Toolbar,
-  List, Typography, Divider,  Avatar, IconButton} from "@material-ui/core";
-import {ChevronLeft as ChevronLeftIcon,
-   AccountBox as AccountBoxIcon, ExitToApp as ExitToAppIcon, Menu as MenuIcon} from "@material-ui/icons";
+  List, Typography, Divider, Avatar, IconButton
+} from "@material-ui/core";
+import {
+  ChevronLeft as ChevronLeftIcon,
+  AccountBox as AccountBoxIcon, ExitToApp as ExitToAppIcon, Menu as MenuIcon
+} from "@material-ui/icons";
 
 import LayoutListItem from './ListItem'
 import { AppContext } from "../../context/AppContext";
 import config from '../../config'
 
-const {theme:{drawer}} = config
+const { theme: { drawer } } = config
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,6 +118,7 @@ const Layout = ({ children, pageTitle, list }) => {
       <AppBar
         position="absolute"
         className={clsx(classes.appBar, isDrawerOpen && classes.appBarShift)}
+        color='secondary'
       >
         <Toolbar className={classes.toolbar}>
           <IconButton
@@ -135,9 +140,8 @@ const Layout = ({ children, pageTitle, list }) => {
             noWrap
             className={classes.title}
           >
-            {`${
-              user?.username.charAt(0).toUpperCase() + user?.username.slice(1)
-            }'s ${pageTitle}`}
+            {`${user?.username.charAt(0).toUpperCase() + user?.username.slice(1)
+              }'s ${pageTitle}`}
           </Typography>
           <IconButton color="inherit">
             {false ? (
@@ -167,7 +171,7 @@ const Layout = ({ children, pageTitle, list }) => {
         open={isDrawerOpen}
       >
         <div className={classes.toolbarIcon}>
-          <IconButton onClick={() => setIsDrawerOpen(false)}>
+          <IconButton onClick={() => setIsDrawerOpen(false)} color='secondary'>
             <ChevronLeftIcon />
           </IconButton>
         </div>
@@ -179,7 +183,7 @@ const Layout = ({ children, pageTitle, list }) => {
                 <LayoutListItem key={listItem.title} title={listItem.title} onClick={listItem.onClick}>
                   {listItem.icon}
                 </LayoutListItem>
-                )
+              )
               )
             }
           </div>
