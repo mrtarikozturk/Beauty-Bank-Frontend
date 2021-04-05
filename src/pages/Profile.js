@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
   aboutme: {
     textAlign: "justify",
+    overflow: 'auto',
   },
   editButton: {
     display: 'flex',
@@ -136,10 +137,6 @@ const Profile = () => {
       });
     }
   }, [open]);
-
-  const handleClick = () => {
-    console.log('selam');
-  }
 
   const socialMedia = {
     youtube: {
@@ -271,9 +268,9 @@ const Profile = () => {
                       <TableCell>Gender</TableCell>
                       <TableCell align="left">
                         {userData?.gender === 0
-                          ? "Male"
+                          ? "Female"
                           : userData?.gender === 1
-                            ? "Female"
+                            ? "Male"
                             : "Not Specified"}
                       </TableCell>
                     </TableRow>
