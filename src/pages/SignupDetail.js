@@ -18,12 +18,14 @@ import {
   FormControl,
   InputLabel,
   CircularProgress,
+  Box,
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
 import { usePopup, Popup } from '../components/Popup';
+import Privacy from '../components/Privacy';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -482,7 +484,7 @@ const SignupDetail = () => {
                   />
                 </Grid>
               )}
-              {/* terms */}
+              {/* Privacy */}
               <Grid item xs={12}>
                 <Checkbox
                   {...formik.getFieldProps("conditions")}
@@ -491,7 +493,7 @@ const SignupDetail = () => {
                 />
                 <label for="conditions">
                   I have read the{" "}
-                  <Button style={{ fontSize: "bold" }} onClick={handleTerms}>Terms and Conditions </Button>
+                  <Button style={{ fontSize: "bold" }} onClick={handleTerms}>Privacy </Button>
                 </label>
                 {formik.errors.conditions ? (
                   <label style={{ color: "red" }}>
@@ -523,28 +525,8 @@ const SignupDetail = () => {
       <Popup
         {...{ open, togglePopup }}
         title='Terms & Conditions'
-      // buttons={
-      //   <>
-      //     <Button color='secondary' onClick={togglePopup}>Cancel</Button>
-      //     <Button color='secondary' variant='contained' onClick={togglePopup}>Agree</Button>
-      //   </>
-
-      // }
-
       >
-        <Typography align='justify'>
-          Zoals besproken zijn hier de voorwaarden voor een behandeling waarvoor ik graag z.s.m. de antwoorden van jou ontvang middels een 'reply'. Zodra ik de antwoorden heb ontvangen geef ik je de contactgegevens van de beauty-professional. Daarna graag binnen één week contact leggen met de professional en aangeven dat je via de BeautyBank komt, hij/ zij heeft je naam al en weet dat jij contact opneemt. Zie je, om welke reden dan ook, af van een behandeling laat het dan s/v/p even weten zodat we een ander blij kunnen maken!
-          VOORWAARDEN:
-          Je vindt je het goed wanneer we je eigen geschreven verhaal over jouw situatie, waarin je ook je wens voor de toekomst beschrijft, delen op onze website. Onze vraag is ook om te beschrijven hoe je de behandeling hebt beleefd bij de beauty-professional en wat het voor jou heeft betekend. Graag z.s.m. na de behandeling je verhaal sturen aan karin@beautybank.nl Tip: voor inspiratie kan je op onze website kijken:https://www.beautybank.nl/vooruitkijkspiegel/ Akkoord/ niet akkoord
-          Jouw foto's van 'voor en na', met of zonder gezicht, mogen wij gebruiken voor onze website van de BeautyBank en op social media. Akkoord/ niet akkoord
-          Verplicht. Je laat ons weten wanneer je de afspraak hebt staan en je houd je aan de afgesproken tijd.
-          Verplicht. Mocht er iets zijn waardoor je in de problemen komt met jouw afspraak laat het dan spoedig weten aan de beauty-professional en aan mij! Let wel: in geval van afwezigheid zonder afbericht komt de behandeling te vervallen!
-          Alvast dank voor jouw antwoorden!
-          Vriendelijke groet en liefs,
-          Naam verbinder & team Beautybank
-          P.s. Om berichten te volgen zou het fijn zijn wanneer je de fb pagina en Instagram zou willen 'liken', is niet verplicht maar wel leuk Jouw VooruitkijkspiegelJouw Vooruitkijkspiegel Vooruitkijkspiegel
-          Stichting BeautyBank
-        </Typography>
+        <Privacy />
       </Popup>
     </>
   );
