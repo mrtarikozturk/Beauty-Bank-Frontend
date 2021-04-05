@@ -18,6 +18,8 @@ import {
   TableHead,
   TableRow,
   CardContent,
+  FormControlLabel,
+  Switch,
 } from "@material-ui/core";
 import { AppContext } from "../context/AppContext";
 import api, { handleError } from "../api";
@@ -81,7 +83,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
   const [selectPro, setSelectPro] = useState("");
   const [loading, setLoading] = useState(true);
   const [date, setDate] = useState(new Date());
-
+  const [isIntake, setIsIntake] = useState(false);
 
   // Get Pro list
   useEffect(async () => {
@@ -97,8 +99,9 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
 
   // handleSubmit // Assign Pro
   function onSubmit() {
+    // alert(modalName)
     switch (modalName) {
-      case 'AssignPro':
+      case 'Assign Pro':
         api
           .put(`/ticket/connector-tickets/${selectedTicket.id}`, {
             pro: selectPro,
@@ -113,9 +116,11 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
           .catch(handleError(enqueueSnackbar, closeSnackbar));
         break;
       case 'Intake Date':
+      case 'Is Intake':
         api
           .put(`/ticket/connector-intake/${selectedTicket.id}`, {
-            intake_call_date: date
+            ...(modalName === 'Intake Date' && { intake_call_date: date }),
+            ...(modalName === 'Is Intake' && { is_intake_call: isIntake }),
           })
           .then(() => {
             enqueueSnackbar("Done Successfully!", {
@@ -140,6 +145,8 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
     initialValues,
     onSubmit,
   });
+
+  console.log(selectedTicket);
 
   return (
     <main className={classes.layout}>
@@ -197,6 +204,12 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                       {selectedTicket?.owner.phone_number}
                     </TableCell>
                   </TableRow>
+                  <TableRow>
+                    <TableCell>Income</TableCell>
+                    <TableCell align="left">
+                      {selectedTicket?.owner.income}
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
@@ -249,6 +262,15 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                         onChange={setDate}
                         disablePast
                         format="DD/MM/yyyy HH:mm"
+                      />
+                    )
+                  }
+                  {
+                    modalName === 'Is Intake' &&
+                    (
+                      <FormControlLabel
+                        control={<Switch checked={isIntake} onChange={() => setIsIntake(prev => !prev)} name="isIntake" />}
+                        label="Secondary"
                       />
                     )
                   }
