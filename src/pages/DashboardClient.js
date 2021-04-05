@@ -158,7 +158,7 @@ export const DashboardClient = () => {
                   : handleOpenDate(t);
               }}
               variant="outlined"
-              color={t?.appointment_date ? "primary" : "secondary"}
+              color={t?.appointment_date ? "secondary" : "primary"}
               disabled={!t?.terms_approved}
               value="Confirm"
               className={classes.button}
@@ -166,8 +166,8 @@ export const DashboardClient = () => {
               {t?.appointment_date
                 ? "Date Setted"
                 : t?.terms_approved
-                ? "Set Ticket Date"
-                : "Approve Terms"}
+                  ? "Set Ticket Date"
+                  : "Approve Terms"}
             </Button>
           ),
           (t) => (

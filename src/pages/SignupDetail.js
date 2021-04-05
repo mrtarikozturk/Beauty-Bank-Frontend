@@ -18,7 +18,6 @@ import {
   FormControl,
   InputLabel,
   CircularProgress,
-  Box,
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -493,7 +492,7 @@ const SignupDetail = () => {
                 />
                 <label for="conditions">
                   I have read the{" "}
-                  <Button style={{ fontSize: "bold" }} onClick={handleTerms}>Privacy </Button>
+                  <Button style={{ fontSize: "bold" }} onClick={handleTerms}>Privacy Policy</Button>
                 </label>
                 {formik.errors.conditions ? (
                   <label style={{ color: "red" }}>
@@ -524,7 +523,7 @@ const SignupDetail = () => {
       </main>
       <Popup
         {...{ open, togglePopup }}
-        title='Terms & Conditions'
+        title='Privacy Policy'
       >
         <Privacy />
       </Popup>

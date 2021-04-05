@@ -11,6 +11,7 @@ import { AssignPro } from "../components/AssignPro";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
 import AddIcCallIcon from '@material-ui/icons/AddIcCall';
+import TodayIcon from '@material-ui/icons/Today';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -147,7 +148,7 @@ export const DashboardConnector = () => {
               <Button
                 onClick={() => handleOpen(t, 'Intake Date')}
                 variant="outlined"
-                color={t?.intake_call_date ? "primary" : "secondary"}
+                color='primary'
                 value="intake"
                 className={classes.button}
               >
@@ -165,13 +166,15 @@ export const DashboardConnector = () => {
             t?.is_intake_call ?
               <CheckCircleIcon color='secondary' />
               :
-              < AddIcCallIcon color='primary' />
+              <IconButton onClick={() => handleOpen(t, 'Is Intake')}>
+                < AddIcCallIcon color='primary' />
+              </IconButton>
           ),
           (t) => (
             <Button
               onClick={() => handleOpen(t, 'Assign Pro')}
               variant="outlined"
-              color={t?.pro ? "primary" : "secondary"}
+              color={t?.pro ? "secondary" : "primary"}
               value="Choose"
               className={classes.button}
             >
