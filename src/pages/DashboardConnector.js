@@ -131,7 +131,7 @@ export const DashboardConnector = () => {
           "Create Date",
           "Appointment Date",
           "Phone Number",
-          'Intake Call',
+          'Intake Call Date',
           'Intake Call',
           "Assign Pro",
         ],
