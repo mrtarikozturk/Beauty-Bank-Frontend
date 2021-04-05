@@ -89,6 +89,7 @@ export const EditProfile = ({ togglePopup, userData }) => {
       zip_address: values.zipAddress,
       address: values.address,
       about_me: values.aboutMe,
+      gender: values.gender,
       ...(userData.is_client && { min_incomer: values.minimumIncome }),
       ...(userData.is_pro && {
         twitter_account: values.twitter,
