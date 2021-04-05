@@ -21,6 +21,8 @@ import {
 } from "@material-ui/core";
 import { AppContext } from "../context/AppContext";
 import api, { handleError } from "../api";
+import { DateTimePicker } from "@material-ui/pickers";
+
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -71,14 +73,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AssignPro = ({ selectedTicket, handleClose }) => {
+const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
   // Constants
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const { user } = useContext(AppContext);
   const [proList, setProList] = useState([]);
   const [selectPro, setSelectPro] = useState("");
   const [loading, setLoading] = useState(true);
+  const [date, setDate] = useState(new Date());
+
 
   // Get Pro list
   useEffect(async () => {
@@ -91,20 +94,38 @@ const AssignPro = ({ selectedTicket, handleClose }) => {
       .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading))
       .finally(() => setLoading(false));
   }, []);
+
   // handleSubmit // Assign Pro
-  async function onSubmit(values) {
-    api
-      .put(`/ticket/connector-tickets/${selectedTicket.id}`, {
-        pro: selectPro,
-        service_type: 0,
-      })
-      .then(() => {
-        enqueueSnackbar("Assing Pro  successfully!", {
-          variant: "success",
-        });
-        handleClose();
-      })
-      .catch(handleError(enqueueSnackbar, closeSnackbar));
+  function onSubmit() {
+    switch (modalName) {
+      case 'AssignPro':
+        api
+          .put(`/ticket/connector-tickets/${selectedTicket.id}`, {
+            pro: selectPro,
+            service_type: 0,
+          })
+          .then(() => {
+            enqueueSnackbar("Assing Pro  successfully!", {
+              variant: "success",
+            });
+            handleClose();
+          })
+          .catch(handleError(enqueueSnackbar, closeSnackbar));
+        break;
+      case 'Intake Date':
+        api
+          .put(`/ticket/connector-intake/${selectedTicket.id}`, {
+            intake_call_date: date
+          })
+          .then(() => {
+            enqueueSnackbar("Done Successfully!", {
+              variant: "success",
+            });
+            handleClose();
+          })
+          .catch(handleError(enqueueSnackbar, closeSnackbar));
+        break;
+    }
   }
 
   const handleChangePro = (event) => {
@@ -133,10 +154,9 @@ const AssignPro = ({ selectedTicket, handleClose }) => {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>{`${
-                      selectedTicket?.owner.username.charAt(0).toUpperCase() +
+                    <TableCell>{`${selectedTicket?.owner.username.charAt(0).toUpperCase() +
                       selectedTicket?.owner.username.slice(1)
-                    }'s Ticket`}</TableCell>
+                      }'s Ticket`}</TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
@@ -195,25 +215,43 @@ const AssignPro = ({ selectedTicket, handleClose }) => {
             >
               <div className={classes.formInputs}>
                 <Grid item xs={12}>
-                  <FormControl variant="outlined" fullWidth>
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Select Pro
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={selectPro}
-                      onChange={handleChangePro}
-                      label="Select Pro"
-                    >
-                      {!loading &&
-                        proList?.map((pro) => (
-                          <MenuItem
-                            value={pro?.id}
-                          >{`${pro?.company_name} (☎${pro?.phone}) (${pro?.distance}-KM)`}</MenuItem>
-                        ))}
-                    </Select>
-                  </FormControl>
+                  {
+                    modalName === 'Assign Pro' &&
+                    (
+                      <FormControl variant="outlined" fullWidth>
+                        <InputLabel id="demo-simple-select-outlined-label">
+                          Select Pro
+                      </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-outlined-label"
+                          id="demo-simple-select-outlined"
+                          value={selectPro}
+                          onChange={handleChangePro}
+                          label="Select Pro"
+                        >
+                          {!loading &&
+                            proList?.map((pro) => (
+                              <MenuItem
+                                value={pro?.id}
+                              >{`${pro?.company_name} (☎${pro?.phone}) (${pro?.distance}-KM)`}</MenuItem>
+                            ))}
+                        </Select>
+                      </FormControl>
+                    )
+                  }
+                  {
+                    modalName === 'Intake Date' &&
+                    (
+                      <DateTimePicker
+                        clearable
+                        ampm={false}
+                        value={date}
+                        onChange={setDate}
+                        disablePast
+                        format="DD/MM/yyyy HH:mm"
+                      />
+                    )
+                  }
                 </Grid>
               </div>
               <Button
@@ -223,7 +261,7 @@ const AssignPro = ({ selectedTicket, handleClose }) => {
                 color="secondary"
                 className={classes.submit}
               >
-                Assign Pro
+                {modalName === 'Assign Pro' ? 'Assign Pro' : 'Set Intake'}
               </Button>
             </form>
           </Grid>
