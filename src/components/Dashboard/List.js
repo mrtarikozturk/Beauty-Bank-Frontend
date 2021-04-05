@@ -26,9 +26,9 @@ export const List = ({ list, tickets, pagination }) => (
               style={{
                 overflowX: "auto",
                 whiteSpace: "nowrap",
-                textAlign: "center !important",
               }}
               key={lh}
+              align='center'
             >
               {lh}
             </TableCell>
@@ -43,8 +43,8 @@ export const List = ({ list, tickets, pagination }) => (
                 style={{
                   overflowX: "auto",
                   whiteSpace: "nowrap",
-                  textAlign: "center !important",
                 }}
+                align='center'
               >
                 {lb(ticket)}
               </TableCell>
