@@ -165,7 +165,7 @@ export const DashboardConnector = () => {
             t?.is_intake_call ?
               <CheckCircleIcon color='secondary' />
               :
-              < AddIcCallIcon color='secondary' />
+              < AddIcCallIcon color='primary' />
           ),
           (t) => (
             <Button
