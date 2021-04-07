@@ -83,6 +83,7 @@ export const UserList = ({ listType, title, modal, list }) => {
     setOpen(true);
     setSelectedUser(username);
   };
+  
   const handleClose = () => {
     setOpen(false);
   };

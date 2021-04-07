@@ -110,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
 
 const DashboardAdmin = () => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = useState(true);
     const handleDrawerOpen = () => {
         setOpen(true);
     };

@@ -240,6 +240,7 @@ const Profile = () => {
                       <TableCell>{`${user?.username.charAt(0).toUpperCase() +
                         user?.username.slice(1)
                         }'s Profile`}</TableCell>
+                        //TODO: Burasi nasil olacak dil paketi ile
                       <TableCell align="right"></TableCell>
                     </TableRow>
                   </TableHead>
@@ -339,7 +340,7 @@ const Profile = () => {
         scroll='paper'
         dividers={true}
         open={open}
-        title={"Edit Profile"}
+        title="Edit Profile"
         togglePopup={togglePopup}
         autoClose={false}
         buttonText={'Submit'}

@@ -49,4 +49,4 @@ export const minimumIncome = boolean()
 
 export const url = string()
     .typeError('This field is required');
-// !! TODO: edit formdaki url alanlari icin regex yazilmasi gerekiyor. Simdilik  pas gectik
+// TODO:edit formdaki url alanlari icin regex yazilmasi gerekiyor. Simdilik  pas gectik

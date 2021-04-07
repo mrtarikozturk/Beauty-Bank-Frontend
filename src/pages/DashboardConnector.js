@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import { makeStyles, Button, TextField, Avatar, IconButton } from "@material-ui/core";
+import { makeStyles, Button, IconButton } from "@material-ui/core";
 import { DateTimePicker } from "@material-ui/pickers";
-import AutorenewIcon from '@material-ui/icons/Autorenew';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { Dashboard } from "../components/Dashboard";
 import { LayoutConnector } from "../views";
@@ -11,7 +10,6 @@ import { AssignPro } from "../components/AssignPro";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
 import AddIcCallIcon from '@material-ui/icons/AddIcCall';
-import TodayIcon from '@material-ui/icons/Today';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export const DashboardConnector = () => {
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -63,8 +62,6 @@ export const DashboardConnector = () => {
   const [selectedTicket, setSelectedTicket] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
-  // const [date, handleDateChange] = useState(new Date("2018-01-01T00:00:00.000Z"));
-  const [date, setDate] = useState(new Date());
   const [modalName, setModalName] = useState('');
 
   const [page, setPage] = useState(1);
@@ -94,21 +91,6 @@ export const DashboardConnector = () => {
 
   const dateParams = { selectedTicket, handleClose, modalName };
   const modalParams = { open, onModalClose: handleClose };
-
-  async function handleDateChange(ticket) {
-    alert(date)
-    api
-      .put(`/ticket/connector-intake/${ticket.id}`, {
-        intake_call_date: date,
-      })
-      .then(() => {
-        enqueueSnackbar("Successfull!", {
-          variant: "success",
-        });
-      })
-      .catch(handleError(enqueueSnackbar, closeSnackbar));
-  }
-
 
   return (
     <Dashboard
@@ -146,13 +128,13 @@ export const DashboardConnector = () => {
           (t) => (
             !t?.intake_call_date ?
               <Button
-                onClick={() => handleOpen(t, 'Intake Date')}
+                onClick={() => handleOpen(t, 'Intake Call Date')}
                 variant="outlined"
                 color='primary'
                 value="intake"
                 className={classes.button}
               >
-                {"Set Date"}
+                Set Date
               </Button>
               :
               <DateTimePicker
@@ -166,7 +148,7 @@ export const DashboardConnector = () => {
             t?.is_intake_call ?
               <CheckCircleIcon color='secondary' />
               :
-              <IconButton onClick={() => handleOpen(t, 'Is Intake')}>
+              <IconButton onClick={() => handleOpen(t, 'Intake Call Done')}>
                 < AddIcCallIcon color='primary' />
               </IconButton>
           ),

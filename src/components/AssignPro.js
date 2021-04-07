@@ -108,19 +108,19 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
             service_type: 0,
           })
           .then(() => {
-            enqueueSnackbar("Assing Pro  successfully!", {
+            enqueueSnackbar("Assing Pro  Successfully!", {
               variant: "success",
             });
             handleClose();
           })
           .catch(handleError(enqueueSnackbar, closeSnackbar));
         break;
-      case 'Intake Date':
-      case 'Is Intake':
+      case 'Intake Call Date':
+      case 'Intake Call Done':
         api
           .put(`/ticket/connector-intake/${selectedTicket.id}`, {
-            ...(modalName === 'Intake Date' && { intake_call_date: date }),
-            ...(modalName === 'Is Intake' && { is_intake_call: isIntake }),
+            ...(modalName === 'Intake Call Date' && { intake_call_date: date }),
+            ...(modalName === 'Intake Call Done' && { is_intake_call: isIntake }),
           })
           .then(() => {
             enqueueSnackbar("Done Successfully!", {
@@ -164,6 +164,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                     <TableCell>{`${selectedTicket?.owner.username.charAt(0).toUpperCase() +
                       selectedTicket?.owner.username.slice(1)
                       }'s Ticket`}</TableCell>
+                      // TODO:BUrasi nasil cevrilecek
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
@@ -205,7 +206,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Income</TableCell>
+                    <TableCell>Minumum Income</TableCell>
                     <TableCell align="left">
                       {selectedTicket?.owner.income}
                     </TableCell>
@@ -253,24 +254,29 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                     )
                   }
                   {
-                    modalName === 'Intake Date' &&
+                    modalName === 'Intake Call Date' &&
                     (
-                      <DateTimePicker
-                        clearable
-                        ampm={false}
-                        value={date}
-                        onChange={setDate}
-                        disablePast
-                        format="DD/MM/yyyy HH:mm"
+                      <FormControlLabel
+                        control={<DateTimePicker
+                          clearable
+                          ampm={false}
+                          value={date}
+                          onChange={setDate}
+                          disablePast
+                          format="DD/MM/yyyy HH:mm"
+                        />}
+                        label='Set Intake Call Date :'
+                        labelPlacement='start'
                       />
                     )
                   }
                   {
-                    modalName === 'Is Intake' &&
+                    modalName === 'Intake Call Done' &&
                     (
                       <FormControlLabel
                         control={<Switch checked={isIntake} onChange={() => setIsIntake(prev => !prev)} name="isIntake" />}
-                        label="Secondary"
+                        label="Intake Call Done?"
+                        labelPlacement='top'
                       />
                     )
                   }
@@ -283,7 +289,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                 color="secondary"
                 className={classes.submit}
               >
-                {modalName === 'Assign Pro' ? 'Assign Pro' : 'Set Intake'}
+                Save
               </Button>
             </form>
           </Grid>

@@ -76,7 +76,6 @@ const SignupDetail = () => {
 
   //states
   const [isShowPassword, setIsShowPassword] = useState(false);
-
   const [detailPath, setDetailPath] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -422,6 +421,7 @@ const SignupDetail = () => {
                         <MenuItem value={0}>Female</MenuItem>
                         <MenuItem value={1}>Male</MenuItem>
                         <MenuItem value={2}>I don't say</MenuItem>
+                        //TODO:Burasi duzeltilecek
                       </Select>
                     </FormControl>
                   </Grid>
@@ -451,6 +451,7 @@ const SignupDetail = () => {
                       helperText={formik.touched.zip && formik.errors.zip}
                     />
                   </Grid>
+                  // TODO: ayni alandan yukarida da var.
                 </>
               )}
 

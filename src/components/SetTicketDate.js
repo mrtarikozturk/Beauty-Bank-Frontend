@@ -5,7 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   Paper,
   Grid,
-  Typography,
   Button,
   Table,
   TableBody,
@@ -13,11 +12,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  CardContent,
   TextField,
 } from "@material-ui/core";
 
-import { FormatDate } from "../helper/FormatDate";
 import { AppContext } from "../context/AppContext";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
@@ -78,10 +75,13 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
   // constants
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const { user } = useContext(AppContext);
+
+  //useStates
   const [datePicker, setDatePicker] = useState("2021-01-01T00:00:00Z");
+
   // handleSubmit
   async function onSubmit(values) {
+    // TODO: async olmasina gerek yok?
     api
       .put(`/ticket/client-tickets/${selectedTicket.id}`, {
         appointment_date: datePicker,
@@ -121,10 +121,10 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>{`${
-                      selectedTicket?.owner.username.charAt(0).toUpperCase() +
+                    <TableCell>{`${selectedTicket?.owner.username.charAt(0).toUpperCase() +
                       selectedTicket?.owner.username.slice(1)
-                    }'s Ticket`}</TableCell>
+                      }'s Ticket`}</TableCell>
+                      // TODO: BUrasi nasil duzeltilecek
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
