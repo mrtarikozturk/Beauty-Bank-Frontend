@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-
 import { Dashboard as DashboardIon, AccountCircle, PeopleAlt as PeopleAltIcon } from '@material-ui/icons'
 
 import Layout from '../components/Layout'

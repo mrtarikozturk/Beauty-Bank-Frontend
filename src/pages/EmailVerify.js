@@ -52,6 +52,7 @@ const EmailVerify = () => {
     const response = await fetch(
       "https://bbank-backend-app.herokuapp.com/auth/email-verify/",
       requestOptions
+      //TODO API nin degismesi gerekiyor.
     );
     const data = await response.json();
 

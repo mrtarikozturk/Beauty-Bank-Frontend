@@ -46,6 +46,7 @@ const getStepContent = (stepIndex) => {
   }
 };
 
+// TODO: stepper dikey moda cevrilecek
 export const Stepper = ({ activeStep = 0, isMobile, className }) => {
   // constants
   const classes = useStyles();

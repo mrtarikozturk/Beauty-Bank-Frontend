@@ -83,6 +83,8 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
   // constants
   const classes = useStyles();
   const { user } = useContext(AppContext);
+
+  //useStates
   const [fed, setFed] = useState(null);
   const [file, setFile] = useState(null);
   const [fedImages, setFedImages] = useState(null);
@@ -95,6 +97,7 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
       .min(100, "Must be at least 100 characters")
       .max(1500, "Must be a maximum of 1500 characters"),
   });
+
   async function onSubmit(values) {
     const requestOptions = {
       method: "POST",
@@ -128,6 +131,7 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
     let fileArray = [];
     let images = [];
     fileObj.push(event.target.files);
+
     for (let i = 0; i < fileObj[0].length; i++) {
       fileArray.push(URL.createObjectURL(fileObj[0][i]));
       images.push(fileObj[0][i]);
@@ -141,6 +145,7 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
     for (let i = 0; i < fedImages.length; i++) {
       let form_data = await new FormData();
       await form_data.append("image", fedImages[i]);
+      // TODO: API degisecek
       axios
         .post(
           `https://bbank-backend-app.herokuapp.com/ticket/feedback-imageupload/${fed?.id}`,

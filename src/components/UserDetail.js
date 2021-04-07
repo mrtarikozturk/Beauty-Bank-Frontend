@@ -103,6 +103,7 @@ const UserDetail = ({ selectedUser, handleClose }) => {
               className={classes.large}
             />
           </Grid> */}
+          // TODO: Burasi nedir? Gerekli degilse silelim.
 
           {!loading ? (
             <>

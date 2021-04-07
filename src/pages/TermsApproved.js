@@ -54,6 +54,7 @@ const TermsApproved = () => {
     const response = await fetch(
       `https://bbank-backend-app.herokuapp.com/ticket/terms-approved/`,
       requestOptions
+      //TODO:API degisecek
     );
     const data = await response.json();
 
