@@ -43,9 +43,9 @@ export const EditProfile = ({ togglePopup, userData }) => {
     userName,
     email,
     phone,
-    zipAddress,
     address,
     aboutMe,
+    ...(!userData?.is_sponsor && { zipAddress }),
     ...(userData?.is_client && { minimumIncome }),
     // ...(userData?.is_pro && {
     //   twitter: url,
@@ -66,9 +66,9 @@ export const EditProfile = ({ togglePopup, userData }) => {
     phone: userData?.phone_number,
     phone2: userData?.phone_number2,
     gender: userData?.gender,
-    zipAddress: userData?.zip_address,
     address: userData?.address,
     aboutMe: userData?.about_me,
+    ...(!userData?.is_sponsor && { zipAddress: userData?.zip_address, }),
     ...(userData?.is_client && { minimumIncome: userData?.min_incomer }),
     ...(userData?.is_pro && {
       twitter: userData?.twitter_account,
@@ -87,10 +87,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
       last_name: values.lastName,
       phone_number: values.phone,
       phone_number2: values.phone2,
-      zip_address: values.zipAddress,
       address: values.address,
       about_me: values.aboutMe,
       gender: values.gender,
+      ...(userData.is_sponsor && { zip_address: values.zipAddress }),
       ...(userData.is_client && { min_incomer: values.minimumIncome }),
       ...(userData.is_pro && {
         twitter_account: values.twitter,
@@ -255,21 +255,26 @@ export const EditProfile = ({ togglePopup, userData }) => {
           </Grid>)
         }
         {/* zipaddress */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Zip Address"
-            name="zipAddress"
-            autoComplete="zaddress"
-            required
-            fullWidth
-            size='small'
-            {...formik.getFieldProps("zipAddress")}
-            error={formik.touched.zipAddress && formik.errors.zipAddress}
-            helperText={
-              formik.touched.zipAddress && formik.errors.zipAddress
-            }
-          />
-        </Grid>
+        {
+          !userData.is_sponsor && 
+          (
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Zip Address"
+                name="zipAddress"
+                autoComplete="zaddress"
+                required
+                fullWidth
+                size='small'
+                {...formik.getFieldProps("zipAddress")}
+                error={formik.touched.zipAddress && formik.errors.zipAddress}
+                helperText={
+                  formik.touched.zipAddress && formik.errors.zipAddress
+                }
+              />
+            </Grid>
+          )
+        }
         {/* address */}
         <Grid item xs={12} sm={userData.is_client ? 6 : 12}>
           <TextField
