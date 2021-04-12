@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react'
-import {useSnackbar} from 'notistack'
+import React, { useState, useEffect } from 'react'
+import { useSnackbar } from 'notistack'
 
-import {makeStyles} from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 
-import {Dashboard} from '../components/Dashboard'
-import {LayoutProfessional} from '../views'
+import { Dashboard } from '../components/Dashboard'
+import { LayoutProfessional } from '../views'
 import { FormatDate, FormatDateTime } from '../helper/FormatDate'
 
 import api from '../api'
@@ -27,12 +27,10 @@ const useStyles = makeStyles((theme) => ({
 
 export const DashboardProfessional = () => {
   const classes = useStyles()
-  const {enqueueSnackbar} = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
 
   const [tickets, setTickets] = useState([])
   const [loading, setLoading] = useState(true)
-
-
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(null);
 
@@ -41,34 +39,34 @@ export const DashboardProfessional = () => {
       setTickets(data.results)
       // TODO: pageSize from backend
       setPageSize(Math.floor(data.count / 10))
-    }).catch(err => enqueueSnackbar(err.message, {variant: 'error'}))
-    .finally(() => setLoading(false))
+    }).catch(err => enqueueSnackbar(err.message, { variant: 'error' }))
+      .finally(() => setLoading(false))
 
   }, [page])
 
   return <Dashboard
-          Layout={LayoutProfessional}
-          classes={classes}
-          tickets={tickets}
-          loading={loading}
-          pagination={{pageSize, setPage}}
-          modals={[]}
-          list={{
-            title: "Tickets Assigned to Me",
-            headers: [
-            "Ticket ID",
-            "Owner",
-            "Create Date",
-            "Appointment Date",
-            "Phone Number"
-          ],
-            body: [
-              t => t.id,
-              t => `${t.owner.first_name} ${t.owner.last_name}`,
-              t => FormatDate(t.created_at),
-              t => t?.appointment_date ? FormatDateTime(t.appointment_date) : '-',
-              t => t.phone_number,
-            ]
-          }}
-      />
+    Layout={LayoutProfessional}
+    classes={classes}
+    tickets={tickets}
+    loading={loading}
+    pagination={{ pageSize, setPage }}
+    modals={[]}
+    list={{
+      title: "Tickets Assigned to Me",
+      headers: [
+        "Ticket ID",
+        "Owner",
+        "Create Date",
+        "Appointment Date",
+        "Phone Number"
+      ],
+      body: [
+        t => t.id,
+        t => `${t.owner.first_name} ${t.owner.last_name}`,
+        t => FormatDate(t.created_at),
+        t => t?.appointment_date ? FormatDateTime(t.appointment_date) : '-',
+        t => t.phone_number,
+      ]
+    }}
+  />
 }

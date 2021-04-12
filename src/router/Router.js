@@ -27,8 +27,7 @@ import { ConnectorProList } from "../pages/ConnectorProList";
 
 const AppRouter = () => {
   const { user } = useContext(AppContext);
-  // console.log(user);
-  // console.log(user?.role);
+
   return (
     <Router>
       <Switch>

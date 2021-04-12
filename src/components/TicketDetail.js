@@ -50,9 +50,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TicketDetail = ({ selectedTicket, handleClose }) => {
+const TicketDetail = ({ selectedTicket }) => {
   // constants
   const classes = useStyles();
+
   return (
     <main className={classes.layout}>
       <Paper className={classes.paper}>
@@ -66,10 +67,10 @@ const TicketDetail = ({ selectedTicket, handleClose }) => {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>{`${
-                      selectedTicket?.owner.username.charAt(0).toUpperCase() +
+                    <TableCell>{`${selectedTicket?.owner.username.charAt(0).toUpperCase() +
                       selectedTicket?.owner.username.slice(1)
-                    }'s Ticket`}</TableCell>
+                      }'s Ticket`}</TableCell>
+                    //TODO: Burasi nasil duzeltilecek
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>

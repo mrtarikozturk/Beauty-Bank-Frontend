@@ -54,6 +54,7 @@ export const EditProfile = ({ togglePopup, userData }) => {
     //   facebook: url,
 
     // })
+    //TODO: sosyal medya icin validation konulacak.
   });
 
   // initial values

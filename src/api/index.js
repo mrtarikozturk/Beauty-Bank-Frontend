@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({baseURL: "https://bbank-backend-app.herokuapp.com/"})
+//TODO:API url degistirilecek
 
 api.interceptors.request.use(request => {
   let user = localStorage.getItem("user");

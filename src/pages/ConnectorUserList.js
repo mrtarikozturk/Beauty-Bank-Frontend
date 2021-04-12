@@ -3,10 +3,6 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import { TicketTable } from "../components/Index";
-import { Steps } from "../components/Index";
-import { AppContext } from "../context/AppContext";
-import { LayoutConnector } from "../views";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Modal from "@material-ui/core/Modal";
 import Table from "@material-ui/core/Table";
@@ -16,6 +12,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import Pagination from "@material-ui/lab/Pagination";
+
+import { AppContext } from "../context/AppContext";
+import { LayoutConnector } from "../views";
 import { UserDetail } from "../components/UserDetail";
 
 const useStyles = makeStyles((theme) => ({
@@ -83,8 +82,10 @@ const ConnectorUserList = () => {
       `https://bbank-backend-app.herokuapp.com/auth/user-list/?page=${page}`,
       requestOptions
     );
+    // TODO: api .env dosyasina tasinmasi gerekir.
+    // TODO:console.log ifadelerini temizle.
+
     const data = await response.json();
-    console.log(data);
     setPageSize(Math.floor(data.count / 10));
 
     setUserList(data.results);
@@ -158,8 +159,9 @@ const ConnectorUserList = () => {
                           {user?.gender == 0
                             ? "Male"
                             : user?.gender == 1
-                            ? "Female"
-                            : "-"}
+                              ? "Female"
+                              : "-"}
+                              //TODO: Burasi duzeltilecek. Not specified yazilacak
                         </TableCell>
                         <TableCell>{user?.zip_address}</TableCell>
                       </TableRow>

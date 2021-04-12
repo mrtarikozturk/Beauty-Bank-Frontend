@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 TicketForm = ({ modalTrigger, open, }) => {
-
+// TODO: Bu hicbir yerde kullanilmiyor. Gereksizse silelim.
     return (
         <div>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
