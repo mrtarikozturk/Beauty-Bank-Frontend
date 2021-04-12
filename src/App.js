@@ -1,20 +1,33 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { SnackbarProvider } from 'notistack';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import { IntlProvider } from 'react-intl';
 
 import AppRouter from './router/Router';
-import AppContextProvider from './context/AppContext';
+
+import messages_en from './locales/en.json';
+import messages_nl from './locales/nl.json';
+import { AppContext } from './context/AppContext'
+
+const messages = {
+  en: messages_en,
+  nl: messages_nl,
+}
 
 function App() {
+
+  const { lang } = useContext(AppContext);
+  console.log(lang);
+
   return (
-    <SnackbarProvider maxSnack={3}>
-      <AppContextProvider>
+    <IntlProvider messages={messages[lang]} locale={lang} defaultLocale='nl'>
+      <SnackbarProvider maxSnack={3}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <AppRouter />
         </MuiPickersUtilsProvider>
-      </AppContextProvider>
-    </SnackbarProvider>
+      </SnackbarProvider>
+    </IntlProvider>
   );
 }
 

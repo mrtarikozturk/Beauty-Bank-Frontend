@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useHistory, Link } from "react-router-dom";
+import { useIntl } from "react-intl";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useSnackbar } from 'notistack'
@@ -47,6 +48,7 @@ const Signin = () => {
   const history = useHistory();
   const { setUser } = useContext(AppContext);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { formatMessage } = useIntl();
 
   // states
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -154,7 +156,7 @@ const Signin = () => {
             color="secondary"
             className={classes.submit}
           >
-            {loading ? <CircularProgress size={18} /> : "Sign In"}
+            {loading ? <CircularProgress size={18} /> : formatMessage({ id: 'sign_in' })}
           </Button>
         </form>
         <Grid container>
