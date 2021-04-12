@@ -49,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
     width: theme.spacing(7),
-    height: theme.spacing(7),
   },
   form: {
     width: "100%",
