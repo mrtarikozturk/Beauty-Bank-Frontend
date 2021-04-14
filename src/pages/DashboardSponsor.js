@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { TicketTable } from "../components/Index";
 import { LayoutSponsor } from "../views";
+import { useIntl } from 'react-intl';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -22,11 +23,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// TODO: Bu sayfada ne gosterilecek? Ticket table kullanilmis. Ticket table sadece burada ve dashboardadmin sayfalarinda kullanilmis.
+
 const DashboardSponsor = () => {
   const classes = useStyles();
+  const { formatMessage } = useIntl();
 
   return (
-    <LayoutSponsor pageTitle="Dashboard">
+    <LayoutSponsor pageTitle={formatMessage({
+      id: 'dashboard',
+      defaultMessage: '"Dashboard"'
+    })}>
       <Grid container spacing={3}>
         {/* Recent Orders */}
         <Grid item xs={12}>

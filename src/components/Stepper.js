@@ -3,6 +3,7 @@ import MuiStepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Typography from "@material-ui/core/Typography";
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,8 +18,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// TODO : Dil paketini burada nasil kullanacagiz.
+
 const getSteps = () => {
   return [
+
     "Intake Call",
     "Approve Terms",
     "Set Appointment Date",

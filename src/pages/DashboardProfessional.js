@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSnackbar } from 'notistack'
-
+import { useIntl } from 'react-intl';
 import { makeStyles } from '@material-ui/core'
 
 import { Dashboard } from '../components/Dashboard'
@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 export const DashboardProfessional = () => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
+  const { formatMessage } = useIntl();
 
   const [tickets, setTickets] = useState([])
   const [loading, setLoading] = useState(true)
@@ -52,13 +53,31 @@ export const DashboardProfessional = () => {
     pagination={{ pageSize, setPage }}
     modals={[]}
     list={{
-      title: "Tickets Assigned to Me",
+      title: formatMessage({
+        id: 'tickets_assigned_to_me',
+        defaultMessage: 'Request Assigned to Me'
+      }),
       headers: [
-        "Ticket ID",
-        "Owner",
-        "Create Date",
-        "Appointment Date",
-        "Phone Number"
+        formatMessage({
+          id: 'ticket_id',
+          defaultMessage: 'Request ID'
+        }),
+        formatMessage({
+          id: 'owner',
+          defaultMessage: 'Owner'
+        }),
+        formatMessage({
+          id: 'create_date',
+          defaultMessage: 'Create Date'
+        }),
+        formatMessage({
+          id: 'appointment_date',
+          defaultMessage: 'Appointment Date'
+        }),
+        formatMessage({
+          id: 'phone_number',
+          defaultMessage: 'Phone Number'
+        })
       ],
       body: [
         t => t.id,

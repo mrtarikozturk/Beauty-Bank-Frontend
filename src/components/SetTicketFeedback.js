@@ -3,17 +3,13 @@ import { useFormik } from "formik";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppContext } from "../context/AppContext";
 import { Paper, Grid, Typography, Button } from "@material-ui/core";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import Avatar from "@material-ui/core/Avatar";
 import TextField from "@material-ui/core/TextField";
 import * as yup from "yup";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import axios from "axios";
+import { useIntl } from 'react-intl';
+import { content } from '../utils/validations';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -83,6 +79,7 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
   // constants
   const classes = useStyles();
   const { user } = useContext(AppContext);
+  const { formatMessage } = useIntl();
 
   //useStates
   const [fed, setFed] = useState(null);
@@ -90,13 +87,7 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
   const [fedImages, setFedImages] = useState(null);
 
   // validation obj
-  const validationSchema = yup.object().shape({
-    content: yup
-      .string()
-      .required("This field is required")
-      .min(100, "Must be at least 100 characters")
-      .max(1500, "Must be a maximum of 1500 characters"),
-  });
+  const validationSchema = yup.object().shape({ content });
 
   async function onSubmit(values) {
     const requestOptions = {
@@ -176,9 +167,12 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
               <div className={classes.formInputs}>
                 <Grid item xs={12}>
                   <TextField
-                    label="Set Ticket Feedback Content"
+                    label={formatMessage({
+                      id: 'feedback',
+                      defaultMessage: 'Feedback'
+                    })}
                     name="content"
-                    autoComplete="cnt"
+                    autoComplete="content"
                     required
                     fullWidth
                     {...formik.getFieldProps("content")}
@@ -194,7 +188,10 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
                 color="secondary"
                 className={classes.submit}
               >
-                Set Ticket Feedback
+                {formatMessage({
+                  id: 'give_feedback',
+                  defaultMessage: 'Give Feedback'
+                })}
               </Button>
             </form>
             {fed && (
@@ -244,7 +241,12 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
                     style={{ marginTop: 10, textAlign: "center" }}
                     onClick={handleUpload}
                   >
-                    Upload Image
+                    {
+                      formatMessage({
+                        id: 'upload_image',
+                        defaultMessage: ' Upload Image'
+                      })
+                    }
                   </Button>
                 )}
               </>

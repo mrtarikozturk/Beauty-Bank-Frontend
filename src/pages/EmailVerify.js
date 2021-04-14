@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +39,7 @@ const EmailVerify = () => {
   const params = useParams();
   const [isVerified, setVerified] = useState(false);
   const history = useHistory();
+  const { formatMessage } = useIntl();
 
   useEffect(async () => {
     const token = params.token;
@@ -78,14 +80,29 @@ const EmailVerify = () => {
           <CardContent>
             <Typography className={classes.title}>
               <img src="../images/logo.jpg" className={classes.avatar} />
-              Email Verification
+              {
+                formatMessage({
+                  id: 'email_verification',
+                  defaultMessage: 'E-mail Verification'
+                })
+              }
             </Typography>
             {isVerified ? (
               <Alert severity="success">
-                Your email successfully verified!
+                {
+                  formatMessage({
+                    id: 'your_email_successfully_verified',
+                    defaultMessage: 'Your e-mail successfully verified!'
+                  })
+                }
               </Alert>
             ) : (
-              <Alert severity="error">Your email not verified!</Alert>
+              <Alert severity="error">{
+                formatMessage({
+                  id: 'your_email_not_verified',
+                  defaultMessage: 'Your email not verified!'
+                })
+              }</Alert>
             )}
           </CardContent>
           <CardActions>
@@ -96,7 +113,12 @@ const EmailVerify = () => {
               color="secondary"
               value="Login Page"
             >
-              Go to Login Page
+              {
+                formatMessage({
+                  id: 'go_to_login_page',
+                  defaultMessage: 'Go to Login Page'
+                })
+              }
             </Button>
           </CardActions>
         </Card>

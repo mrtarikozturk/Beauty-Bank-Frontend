@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -14,7 +13,6 @@ import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -26,7 +24,9 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import BookIcon from '@material-ui/icons/Book';
 import { TicketTable } from '../components/Index';
+import { useIntl } from 'react-intl';
 
+// TODO: Bu sayfa kullanilacak mi yoksa silelim.
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -110,6 +110,8 @@ const useStyles = makeStyles((theme) => ({
 
 const DashboardAdmin = () => {
     const classes = useStyles();
+    const { formatMessage } = useIntl();
+
     const [open, setOpen] = useState(true);
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -134,7 +136,10 @@ const DashboardAdmin = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Admin Dashboard
+                        {formatMessage({
+                            id: 'admin_dashboard',
+                            defaultMessage: 'Admin Dashboard'
+                        })}
                     </Typography>
                     <IconButton color="inherit">
                         <Badge badgeContent={4} color="secondary">
@@ -162,25 +167,37 @@ const DashboardAdmin = () => {
                             <ListItemIcon>
                                 <DashboardIcon color="primary" />
                             </ListItemIcon>
-                            <ListItemText primary="Dashboard" />
+                            <ListItemText primary={formatMessage({
+                                id: 'dashboard',
+                                defaultMessage: 'Dashboard'
+                            })} />
                         </ListItem>
                         <ListItem button>
                             <ListItemIcon>
                                 <AccountCircle color="primary" />
                             </ListItemIcon>
-                            <ListItemText primary="Profile" />
+                            <ListItemText primary={formatMessage({
+                                id: 'profile',
+                                defaultMessage: 'Profile'
+                            })} />
                         </ListItem>
                         <ListItem button>
                             <ListItemIcon>
                                 <PostAddIcon color="primary" />
                             </ListItemIcon>
-                            <ListItemText primary="Make Request" />
+                            <ListItemText primary={formatMessage({
+                                id: 'make_request',
+                                defaultMessage: 'Make Request'
+                            })} />
                         </ListItem>
                         <ListItem button>
                             <ListItemIcon>
                                 <BookIcon color="primary" />
                             </ListItemIcon>
-                            <ListItemText primary="My Tickets" />
+                            <ListItemText primary={formatMessage({
+                                id: 'my_tickets',
+                                defaultMessage: 'My Requests'
+                            })} />
                         </ListItem>
                     </div>
                 </List>

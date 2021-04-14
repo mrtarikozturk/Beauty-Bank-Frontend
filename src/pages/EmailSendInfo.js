@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
+import { useIntl } from 'react-intl';
 import {
   Card,
   CardActions,
@@ -37,6 +38,8 @@ const useStyles = makeStyles((theme) => ({
 const EmailSendInfo = () => {
   const classes = useStyles();
   const history = useHistory();
+  const { formatMessage } = useIntl();
+
   const handleClick = () => {
     history.push("/login");
   };
@@ -55,12 +58,16 @@ const EmailSendInfo = () => {
           <CardContent>
             <Typography className={classes.title}>
               <img src="../images/logo.jpg" className={classes.avatar} />
-              Please Verify Your Email!
+              {formatMessage({
+                id: 'please_verify_your_email',
+                defaultMessage: 'Please Verify Your E-mail!'
+              })}
             </Typography>
             <Alert severity="success">
-              We have sent an email to You need to verify your email to
-              continue.If you have not receiveed the verification email, please
-              check your "Spam" or "Bulk Email" folder.
+              {formatMessage({
+                id: 'please_verify_your_email_success_message',
+                defaultMessage: 'We have sent an email to you.If you have not received the verification email, please check your "Spam" or "Bulk Email" folder.'
+              })}
             </Alert>
           </CardContent>
           <CardActions>
@@ -71,7 +78,10 @@ const EmailSendInfo = () => {
               color="secondary"
               value="Login Page"
             >
-              Go to Login Page
+              {formatMessage({
+                id: 'go_to_login_page',
+                defaultMessage: 'Go to Login Page'
+              })}
             </Button>
           </CardActions>
         </Card>

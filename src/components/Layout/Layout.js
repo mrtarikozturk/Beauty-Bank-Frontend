@@ -1,16 +1,26 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { useIntl } from 'react-intl';
 
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-    CssBaseline, Drawer,
-    Container, AppBar, Toolbar,
-    List, Typography, Divider, Avatar, IconButton
+    CssBaseline,
+    Drawer,
+    Container,
+    AppBar,
+    Toolbar,
+    List,
+    Typography,
+    Divider,
+    Avatar,
+    IconButton
 } from "@material-ui/core";
 import {
     ChevronLeft as ChevronLeftIcon,
-    AccountBox as AccountBoxIcon, ExitToApp as ExitToAppIcon, Menu as MenuIcon
+    AccountBox as AccountBoxIcon,
+    ExitToApp as ExitToAppIcon,
+    Menu as MenuIcon
 } from "@material-ui/icons";
 
 import LayoutListItem from './ListItem'
@@ -98,6 +108,7 @@ const Layout = ({ children, pageTitle, list }) => {
     // constants
     const classes = useStyles();
     const history = useHistory();
+    const { formatMessage } = useIntl();
     const { user, setUser, userProfile } = useContext(AppContext);
 
     // states
@@ -157,7 +168,12 @@ const Layout = ({ children, pageTitle, list }) => {
                     </IconButton>
                     <IconButton color="inherit" onClick={handleLogOut}>
                         <ExitToAppIcon />
-                        <Typography>Log Out</Typography>
+                        <Typography>
+                            {formatMessage({
+                                id: 'log_out',
+                                defaultMessage: 'Log Out'
+                            })}
+                        </Typography>
                     </IconButton>
                 </Toolbar>
             </AppBar>

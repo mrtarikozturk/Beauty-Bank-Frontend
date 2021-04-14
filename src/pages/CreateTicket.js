@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { makeStyles } from "@material-ui/core/styles";
+import { useIntl } from 'react-intl';
 
 import {
   Paper,
@@ -20,6 +21,7 @@ import { LayoutClient } from "../views";
 
 import api, { handleError } from "../api";
 import { AppContext } from "../context/AppContext";
+
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -70,6 +72,7 @@ const CreateTicket = () => {
   const classes = useStyles();
   const history = useHistory();
   const { user } = useContext(AppContext);
+  const { formatMessage } = useIntl();
   const [userData, setUserData] = useState([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -87,14 +90,20 @@ const CreateTicket = () => {
       api
         .post("/ticket/create/")
         .then(() => {
-          enqueueSnackbar("Your ticket successfully created!", {
+          enqueueSnackbar(formatMessage({
+            id: 'your_ticket_successfully_created',
+            defaultMessage: 'Your request successfully created!'
+          }), {
             variant: "success",
           });
           history.push("/client");
         })
         .catch(handleError(enqueueSnackbar, closeSnackbar));
     } else {
-      enqueueSnackbar("Please complete your missing profile information!", {
+      enqueueSnackbar(formatMessage({
+        id: 'please_complete_your_missing_profile_information',
+        defaultMessage: 'Please complete your missing profile information!'
+      }), {
         variant: "error",
       });
       history.push("/client-profile");
@@ -102,12 +111,18 @@ const CreateTicket = () => {
   }
 
   return (
-    <LayoutClient pageTitle="Make Request">
+    <LayoutClient pageTitle={formatMessage({
+      id: 'make_request',
+      defaultMessage: 'Make Request'
+    })}>
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <img src="../images/logo.jpg" className={classes.avatar} />
           <Typography component="h1" variant="h5">
-            Make Request
+            {formatMessage({
+              id: 'make_request',
+              defaultMessage: 'Make Request'
+            })}
           </Typography>
           <Grid container spacing={3}>
             <Grid item xs={12}>
@@ -128,33 +143,54 @@ const CreateTicket = () => {
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell>Email</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'email',
+                        defaultMessage: 'Email'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.email}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>First Name</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'first_name',
+                        defaultMessage: 'First Name'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.first_name}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Last Name</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'last_name',
+                        defaultMessage: 'Last Name'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.last_name}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Gender</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'gender',
+                        defaultMessage: 'Gender'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.gender}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Address</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'address',
+                        defaultMessage: 'Address'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.address}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Zip Code</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'zip_code',
+                        defaultMessage: 'Zip Code'
+                      })}</TableCell>
                       <TableCell align="left">
                         {userData?.zip_address}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Phone Number</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'phone_number',
+                        defaultMessage: 'Phone Number'
+                      })}</TableCell>
                       <TableCell align="left">
                         {userData?.phone_number}
                       </TableCell>
@@ -164,7 +200,10 @@ const CreateTicket = () => {
               </TableContainer>
               <Grid item xs={12}>
                 <CardContent>
-                  <Typography variant="body2">About me:</Typography>
+                  <Typography variant="body2">{formatMessage({
+                    id: 'about_me',
+                    defaultMessage: 'About me:'
+                  })}</Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
@@ -183,7 +222,10 @@ const CreateTicket = () => {
                   className={classes.submit}
                   onClick={() => handleCreateTicket()}
                 >
-                  Make Request
+                  {formatMessage({
+                    id: 'make_request',
+                    defaultMessage: 'Make Request'
+                  })}
                 </Button>
               </Grid>
             </Grid>

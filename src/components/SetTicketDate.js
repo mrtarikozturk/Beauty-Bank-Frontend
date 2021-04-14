@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
 import { makeStyles } from "@material-ui/core/styles";
+import { useIntl } from 'react-intl';
 
 import {
   Paper,
@@ -18,6 +19,7 @@ import {
 import { AppContext } from "../context/AppContext";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
+
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -75,6 +77,7 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
   // constants
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { formatMessage } = useIntl();
 
   //useStates
   const [datePicker, setDatePicker] = useState("2021-01-01T00:00:00Z");
@@ -87,7 +90,10 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
         appointment_date: datePicker,
       })
       .then(() => {
-        enqueueSnackbar("Set Appointment Date Successfully!", {
+        enqueueSnackbar(formatMessage({
+          id: 'set_appointment_date_successfully',
+          defaultMessage: 'Appointment Date Set Successfully!'
+        }), {
           variant: "success",
         });
         handleClose();
@@ -130,7 +136,12 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell>TicketID</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'ticket_id',
+                        defaultMessage: 'Request ID'
+                      })}
+                    </TableCell>
                     <TableCell align="left">{selectedTicket?.id}</TableCell>
                   </TableRow>
                   {/* <TableRow>
@@ -182,41 +193,80 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>Assigned Professional</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'assign_professional',
+                        defaultMessage: 'Assigned Professional'
+                      })}
+                    </TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell>Full Name</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'full_name',
+                        defaultMessage: 'Full Name'
+                      })}
+                    </TableCell>
                     <TableCell align="left">{`${selectedTicket?.pro_detail?.first_name} ${selectedTicket?.pro_detail?.last_name}`}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Company Name</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'company_name',
+                        defaultMessage: 'Company Name'
+                      })}
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.pro_detail?.company_name}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Phone Number</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'phone_number',
+                        defaultMessage: 'Phone Number'
+                      })}
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.pro_detail?.phone_number}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Email</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'email',
+                        defaultMessage: 'E-mail'
+                      })}
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.pro_detail?.email}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Zip Address</TableCell>
+                    <TableCell>
+                      {
+                        formatMessage({
+                          id: 'zip_code',
+                          defaultMessage: 'Zip Address'
+                        })
+                      }
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.pro_detail?.zip_address}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Address</TableCell>
+                    <TableCell>
+                      {
+                        formatMessage({
+                          id: 'address',
+                          defaultMessage: 'Address'
+                        })
+                      }
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.pro_detail?.address
                         ? selectedTicket?.pro_detail?.address
@@ -236,7 +286,10 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
                   <TextField
                     variant="outlined"
                     id="datetime-local"
-                    label="Set Ticket Date"
+                    label={formatMessage({
+                      id: 'set_ticket_date',
+                      defaultMessage: 'Set Request Date'
+                    })}
                     type="datetime-local"
                     defaultValue="2021-01-01T10:00"
                     className={classes.textField}
@@ -254,7 +307,10 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
                 color="secondary"
                 className={classes.submit}
               >
-                Set Ticket Date
+                {formatMessage({
+                  id: 'set_ticket_date',
+                  defaultMessage: 'Set Request Date'
+                })}
               </Button>
             </form>
           </Grid>

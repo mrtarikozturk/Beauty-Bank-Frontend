@@ -7,6 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
+import { useIntl } from 'react-intl';
 
 import { AppContext } from "../context/AppContext";
 
@@ -39,6 +40,7 @@ const ConfirmTicket = () => {
   const params = useParams();
   const [isConfirmed, setConfirmed] = useState(false);
   const history = useHistory();
+  const { formatMessage } = useIntl();
 
   const { user, setUser, userProfile, setUserProfile } = useContext(AppContext);
 
@@ -77,14 +79,25 @@ const ConfirmTicket = () => {
         <Card className={classes.root}>
           <CardContent>
             <Typography className={classes.title}>
-              Confirm Ticket
+              {formatMessage({
+                id: 'confirm_ticket',
+                defaultMessage: 'Confirm Request'
+              })}
             </Typography>
             {isConfirmed ? (
               <Alert severity="success">
-                Your ticket successfully confirmed!
+                {formatMessage({
+                  id: 'your_ticket_successfully_confirmed',
+                  defaultMessage: 'Your request was successfully confirmed!'
+                })}
               </Alert>
             ) : (
-              <Alert severity="error">Your ticket not confirmed!</Alert>
+              <Alert severity="error">
+                {formatMessage({
+                  id: 'your_ticket_not_confirmed',
+                  defaultMessage: 'Your request was not confirmed!'
+                })}
+              </Alert>
             )}
           </CardContent>
         </Card>

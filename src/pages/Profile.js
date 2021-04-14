@@ -5,8 +5,9 @@ import TwitterIcon from "@material-ui/icons/Twitter";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import YouTubeIcon from "@material-ui/icons/YouTube";
-
 import { useSnackbar } from "notistack";
+import { useIntl } from 'react-intl';
+
 import {
   Grid,
   CardContent,
@@ -81,6 +82,7 @@ const Profile = () => {
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { user } = useContext(AppContext);
+  const { formatMessage } = useIntl();
   const { open, togglePopup } = usePopup();
 
   // states
@@ -132,7 +134,10 @@ const Profile = () => {
       .finally(() => setImageLoading(false));
 
     if (!userData.about_me || !userData.address || !userData.zip_address) {
-      enqueueSnackbar("Please complete your Profile Information!", {
+      enqueueSnackbar(formatMessage({
+        id: 'please_complete_your_profile_information',
+        defaultMessage: 'Please complete your Profile Information!'
+      }), {
         variant: "warning",
       });
     }
@@ -170,7 +175,10 @@ const Profile = () => {
   }
 
   return (
-    <Layout pageTitle="Profile">
+    <Layout pageTitle={formatMessage({
+      id: 'profile',
+      defaultMessage: 'Profile'
+    })}>
       <Paper className={classes.paper}>
         <Grid container>
           <Grid item xs={12} className={classes.editButton}>
@@ -179,8 +187,11 @@ const Profile = () => {
               variant="contained"
               color="secondary"
             >
-              Edit Profile
-          </Button>
+              {formatMessage({
+                id: 'edit_profile',
+                defaultMessage: 'Edit Profile'
+              })}
+            </Button>
           </Grid>
           <Grid container item xs={12}>
             {/* Profile Image */}
@@ -212,16 +223,22 @@ const Profile = () => {
                   startIcon={<CloudUploadIcon />}
                   component="span"
                 >
-                  Upload
-              </Button>
+                  {formatMessage({
+                    id: 'upload',
+                    defaultMessage: 'Upload'
+                  })}
+                </Button>
               </label>
             </Grid>
             {/* About me */}
             <Grid item md={6} sm={12}>
               <CardContent className={classes.aboutme}>
                 <Typography gutterBottom variant="h5" component="h2" color='secondary'>
-                  About me:
-              </Typography>
+                  {formatMessage({
+                    id: 'about_me',
+                    defaultMessage: 'About me:'
+                  })}
+                </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {userData?.about_me}
                 </Typography>
@@ -240,13 +257,16 @@ const Profile = () => {
                       <TableCell>{`${user?.username.charAt(0).toUpperCase() +
                         user?.username.slice(1)
                         }'s Profile`}</TableCell>
-                        //TODO: Burasi nasil olacak dil paketi ile
+                      {/* TODO: Burasi nasil olacak dil paketi ile */}
                       <TableCell align="right"></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell>Social Media</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'social_media',
+                        defaultMessage: 'Social Media'
+                      })}</TableCell>
                       <TableCell align="left">
                         <SocialMediaLinks
                           {...{ socialMedia }}
@@ -254,41 +274,74 @@ const Profile = () => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Email</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'email',
+                        defaultMessage: 'E-mail'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.email}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>First Name</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'first_name',
+                        defaultMessage: 'First Name'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.first_name}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Last Name</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'last_name',
+                        defaultMessage: 'Last Name'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.last_name}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Gender</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'gender',
+                        defaultMessage: 'Gender'
+                      })}</TableCell>
                       <TableCell align="left">
                         {userData?.gender === 0
-                          ? "Female"
+                          ? formatMessage({
+                            id: 'female',
+                            defaultMessage: 'Female'
+                          })
                           : userData?.gender === 1
-                            ? "Male"
-                            : "Not Specified"}
+                            ? formatMessage({
+                              id: 'male',
+                              defaultMessage: 'Male'
+                            })
+                            : formatMessage({
+                              id: 'not_specified',
+                              defaultMessage: 'Not Specified'
+                            })}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Address</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'address',
+                        defaultMessage: 'Address'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.address}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Zip Code</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'zip_code',
+                        defaultMessage: 'Zip Code'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.zip_address}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Phone Number</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'phone_number',
+                        defaultMessage: 'Phone Number'
+                      })}</TableCell>
                       <TableCell align="left">{userData?.phone_number}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Phone Number 2</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'phone_number',
+                        defaultMessage: 'Phone Number'
+                      })} 2</TableCell>
                       <TableCell align="left">
                         {userData?.phone_number2}
                       </TableCell>
