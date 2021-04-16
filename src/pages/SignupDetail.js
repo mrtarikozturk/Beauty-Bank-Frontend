@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams,useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { makeStyles } from "@material-ui/core/styles";
@@ -214,7 +214,7 @@ const SignupDetail = () => {
           { variant: "success" }
         );
         setLoading(false);
-        history.push("/register-email-info");
+        history.push(`/register-email-info?userRole=${id}`);
       })
       .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
   };
