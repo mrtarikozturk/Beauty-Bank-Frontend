@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory,useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Alert from "@material-ui/lab/Alert";
 import { useIntl } from 'react-intl';
@@ -39,9 +39,21 @@ const EmailSendInfo = () => {
   const classes = useStyles();
   const history = useHistory();
   const { formatMessage } = useIntl();
+  const {search} = useLocation()
+  const searchParams = new URLSearchParams(search)
+  const userRole = searchParams.get('userRole')
 
   const handleClick = () => {
-    history.push("/login");
+
+    if(userRole==="client") {
+      history.push(`/login?_wfx_=6ad034e0-961d-11eb-8b3d-32b5f385aed9`);
+    }else if (userRole==="professional") {
+      history.push(`/login?_wfx_=4bb0e600-9ab3-11eb-b756-32b5f385aed9`);
+    }else {
+      history.push(`/login?_wfx_=9a38c990-9613-11eb-8b3d-32b5f385aed9`);
+    }
+
+
   };
 
   return (
