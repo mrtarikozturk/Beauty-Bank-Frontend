@@ -14,7 +14,7 @@ export const ConnectorProList = () => {
         defaultMessage: 'Professionals List'
       })}
       modal={formatMessage({
-        id: '',
+        id: 'professional_details',
         defaultMessage: 'Professional Details'
       })}
       list={{
