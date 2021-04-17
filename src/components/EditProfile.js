@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import axios from 'axios';
 import { useSnackbar } from 'notistack';
-import { makeStyles, Select, FormControl, MenuItem, InputLabel, Paper, Grid, TextField, Button } from "@material-ui/core";
+import { makeStyles, Select, FormControl, MenuItem, InputLabel, Grid, TextField, Button, Checkbox, ListItemText, Input } from "@material-ui/core";
 import { useIntl } from 'react-intl';
 
 import api, { handleError } from '../api'
@@ -37,6 +38,21 @@ export const EditProfile = ({ togglePopup, userData }) => {
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { formatMessage } = useIntl();
+  const [services, setServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
+  const { REACT_APP_API_BASE_URL } = process.env;
+
+  useEffect(() => {
+    axios.get(`${REACT_APP_API_BASE_URL}/auth/service-type/`)
+      .then(response => {
+        setServices(response?.data?.results);
+        console.log(response?.data?.results)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .then(() => console.log(services))
+  }, [])
 
   // validation obj
   const validationSchema = yup.object().shape({
@@ -49,12 +65,6 @@ export const EditProfile = ({ togglePopup, userData }) => {
     aboutMe,
     ...(!userData?.is_sponsor && { zipAddress }),
     ...(userData?.is_client && { minimumIncome }),
-    ...(userData?.is_pro && {
-      twitter: url,
-      youtube: url,
-      instagram: url,
-      facebook: url,
-    })
   });
 
   // initial values
@@ -75,6 +85,7 @@ export const EditProfile = ({ togglePopup, userData }) => {
       instagram: userData?.instagram_account,
       facebook: userData?.facebook_account,
       youtube: userData?.youtube_account,
+      serviceTypes: userData?.service_type
     })
   };
 
@@ -90,7 +101,7 @@ export const EditProfile = ({ togglePopup, userData }) => {
       address: values.address,
       about_me: values.aboutMe,
       gender: values.gender,
-      service_type: userData?.is_pro ? values.serviceTypes : [1], // TODO: burasi duzeltilecek.
+      service_type: userData?.is_pro ? selectedServices : [1], // TODO: burasi duzeltilecek.
       ...(!userData.is_sponsor && { zip_address: values.zipAddress }),
       ...(userData.is_client && { min_incomer: values.minimumIncome }),
       ...(userData.is_pro && {
@@ -114,6 +125,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
     validationSchema,
     onSubmit,
   });
+
+  const handleChange = (event) => {
+    setSelectedServices(event.target.value);
+  };
 
   return (
     <form
@@ -407,6 +422,28 @@ export const EditProfile = ({ togglePopup, userData }) => {
                   error={formik.touched.facebook && formik.errors.facebook}
                   helperText={formik.touched.facebook && formik.errors.facebook}
                 />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl className={classes.formControl}>
+                  <InputLabel id="demo-mutiple-checkbox-label">Services</InputLabel>
+                  <Select
+                    labelId="demo-mutiple-checkbox-label"
+                    id="demo-mutiple-checkbox"
+                    multiple
+                    fullWidth
+                    value={selectedServices}
+                    onChange={handleChange}
+                    input={<Input />}
+                    renderValue={(selected) => selected.join(", ")}
+                  >
+                    {services && services?.map((item) => (
+                      <MenuItem key={item.id} value={item.id}>
+                        <Checkbox checked={selectedServices.indexOf(item.id) > -1} />
+                        <ListItemText primary={item.name} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </>
           )
