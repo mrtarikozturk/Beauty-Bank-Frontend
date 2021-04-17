@@ -99,15 +99,6 @@ const UserDetail = ({ selectedUser, handleClose }) => {
     <main className={classes.layout}>
       <Paper className={classes.paper}>
         <Grid container spacing={3}>
-          {/* <Grid item xs={6} className={classes.profile_image}>
-            <Avatar
-              alt={userData?.email}
-              src={userData?.profile_image}
-              className={classes.large}
-            />
-          </Grid> */}
-          // TODO: Burasi nedir? Gerekli degilse silelim.
-
           {!loading ? (
             <>
               <Grid item xs={12}>
