@@ -24,6 +24,7 @@ import {
 import { AppContext } from "../context/AppContext";
 import api, { handleError } from "../api";
 import { DateTimePicker } from "@material-ui/pickers";
+import { useIntl } from 'react-intl';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -78,7 +79,10 @@ const useStyles = makeStyles((theme) => ({
 const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
   // Constants
   const classes = useStyles();
+  const { formatMessage } = useIntl();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  // states
   const [proList, setProList] = useState([]);
   const [selectPro, setSelectPro] = useState("");
   const [loading, setLoading] = useState(true);
@@ -108,7 +112,10 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
             service_type: 0,
           })
           .then(() => {
-            enqueueSnackbar("Assing Pro  Successfully!", {
+            enqueueSnackbar(formatMessage({
+              id: 'assign_pro_successfully',
+              defaultMessage: 'Professional Assigned Successfully!'
+            }), {
               variant: "success",
             });
             handleClose();
@@ -123,7 +130,10 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
             ...(modalName === 'Intake Call Done' && { is_intake_call: isIntake }),
           })
           .then(() => {
-            enqueueSnackbar("Done Successfully!", {
+            enqueueSnackbar(formatMessage({
+              id: 'done_successfully',
+              defaultMessage: 'Done Successfully!'
+            }), {
               variant: "success",
             });
             handleClose();
@@ -170,43 +180,84 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell>Email</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'email',
+                        defaultMessage: 'E-mail'
+                      })}
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.owner.email}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>First Name</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'first_name',
+                        defaultMessage: 'First Name'
+                      })}
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.owner.first_name}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Last Name</TableCell>
+                    <TableCell>
+                      {
+                        formatMessage({
+                          id: 'last_name',
+                          defaultMessage: 'Last Name'
+                        })
+                      }
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.owner.last_name}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Gender</TableCell>
+                    <TableCell>
+                      {
+                        formatMessage({
+                          id: 'gender',
+                          defaultMessage: 'Gender'
+                        })
+                      }
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.owner.gender}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Zip Code</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'zip_code',
+                        defaultMessage: 'Zip Code'
+                      })}
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.owner.zip_address}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Phone Number</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'phone_number',
+                        defaultMessage: 'Phone Number'
+                      })}
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.owner.phone_number}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Minumum Income</TableCell>
+                    <TableCell>
+                      {
+                        formatMessage({
+                          id: 'minimum_income',
+                          defaultMessage: 'Minumum Income'
+                        })
+                      }
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.owner.income}
                     </TableCell>
@@ -216,7 +267,14 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
             </TableContainer>
             <Grid item xs={12}>
               <CardContent>
-                <Typography variant="body2">About me:</Typography>
+                <Typography variant="body2">
+                  {
+                    formatMessage({
+                      id: 'about_me',
+                      defaultMessage: 'About me:'
+                    })
+                  }
+                </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {selectedTicket?.owner.about_me}
                 </Typography>
@@ -234,8 +292,13 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                     (
                       <FormControl variant="outlined" fullWidth>
                         <InputLabel id="demo-simple-select-outlined-label">
-                          Select Pro
-                      </InputLabel>
+                          {
+                            formatMessage({
+                              id: 'select_pr',
+                              defaultMessage: 'Select Professional'
+                            })
+                          }
+                        </InputLabel>
                         <Select
                           labelId="demo-simple-select-outlined-label"
                           id="demo-simple-select-outlined"
@@ -265,7 +328,10 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                           disablePast
                           format="DD/MM/yyyy HH:mm"
                         />}
-                        label='Set Intake Call Date :'
+                        label={formatMessage({
+                          id: 'set_intake_call_date',
+                          defaultMessage: 'Set Intake Call Date:'
+                        })}
                         labelPlacement='start'
                       />
                     )
@@ -275,7 +341,10 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                     (
                       <FormControlLabel
                         control={<Switch checked={isIntake} onChange={() => setIsIntake(prev => !prev)} name="isIntake" />}
-                        label="Intake Call Done?"
+                        label={formatMessage({
+                          id: 'intake_call_done',
+                          defaultMessage: 'Intake Call Done'
+                        }) + '?'}
                         labelPlacement='top'
                       />
                     )
@@ -289,7 +358,10 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                 color="secondary"
                 className={classes.submit}
               >
-                Save
+                {formatMessage({
+                  id: 'save',
+                  defaultMessage: 'Save'
+                })}
               </Button>
             </form>
           </Grid>

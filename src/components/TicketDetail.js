@@ -1,4 +1,5 @@
 import React from "react";
+import { useIntl } from 'react-intl';
 import { makeStyles } from "@material-ui/core/styles";
 
 import {
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 const TicketDetail = ({ selectedTicket }) => {
   // constants
   const classes = useStyles();
+  const { formatMessage } = useIntl();
 
   return (
     <main className={classes.layout}>
@@ -76,11 +78,21 @@ const TicketDetail = ({ selectedTicket }) => {
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell> TicketID</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'ticket_id',
+                        defaultMessage: 'Request ID'
+                      })}
+                    </TableCell>
                     <TableCell align="left">{selectedTicket?.id}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell> Appointment Date</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'appoinment_date',
+                        defaultMessage: 'Appointment Date'
+                      })}
+                    </TableCell>
                     <TableCell align="left">
                       {selectedTicket?.appointment_date &&
                         FormatDateTime(selectedTicket?.appointment_date)}
@@ -94,7 +106,12 @@ const TicketDetail = ({ selectedTicket }) => {
               <CardContent style={{ alignItems: "center" }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Professional Info</TableCell>
+                    <TableCell>
+                      {formatMessage({
+                        id: 'professional_info',
+                        defaultMessage: 'Professional Info'
+                      })}
+                    </TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
@@ -110,35 +127,71 @@ const TicketDetail = ({ selectedTicket }) => {
                 >
                   <TableBody>
                     <TableRow>
-                      <TableCell>Full Name</TableCell>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'full_name',
+                            defaultMessage: 'Full Name'
+                          })
+                        }
+                      </TableCell>
                       <TableCell align="left">{`${selectedTicket?.pro_detail?.first_name} ${selectedTicket?.pro_detail?.last_name}`}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Company Name</TableCell>
+                      <TableCell>
+                        {formatMessage({
+                          id: 'company_name',
+                          defaultMessage: 'Company Name'
+                        })}
+                      </TableCell>
                       <TableCell align="left">
                         {selectedTicket?.pro_detail?.company_name}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Phone Number</TableCell>
+                      <TableCell>
+                        {formatMessage({
+                          id: 'phone_number',
+                          defaultMessage: 'Phone Number'
+                        })}
+                      </TableCell>
                       <TableCell align="left">
                         {selectedTicket?.pro_detail?.phone_number}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Email</TableCell>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'email',
+                            defaultMessage: 'E-mail'
+                          })
+                        }
+                      </TableCell>
                       <TableCell align="left">
                         {selectedTicket?.pro_detail?.email}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Zip Address</TableCell>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'zip_code',
+                            defaultMessage: 'Zip Address'
+                          })
+                        }
+                      </TableCell>
                       <TableCell align="left">
                         {selectedTicket?.pro_detail?.zip_address}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Address</TableCell>
+                      <TableCell>
+                        {formatMessage({
+                          id: 'address',
+                          defaultMessage: 'Address'
+                        })}
+                      </TableCell>
                       <TableCell align="left">
                         {selectedTicket?.pro_detail?.address
                           ? selectedTicket?.pro_detail?.address
@@ -154,7 +207,14 @@ const TicketDetail = ({ selectedTicket }) => {
               <CardContent style={{ alignItems: "center" }}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Connector Info</TableCell>
+                    <TableCell>
+                      {
+                        formatMessage({
+                          id: 'connector_info',
+                          defaultMessage: 'Connector Info'
+                        })
+                      }
+                    </TableCell>
                     <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
@@ -170,17 +230,38 @@ const TicketDetail = ({ selectedTicket }) => {
                 >
                   <TableBody>
                     <TableRow>
-                      <TableCell>Full Name</TableCell>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'full_name',
+                            defaultMessage: 'Full Name'
+                          })
+                        }
+                      </TableCell>
                       <TableCell align="left">{`${selectedTicket?.connector_detail?.first_name} ${selectedTicket?.connector_detail?.last_name}`}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Phone Number</TableCell>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'phone_number',
+                            defaultMessage: 'Phone Number'
+                          })
+                        }
+                      </TableCell>
                       <TableCell align="left">
                         {selectedTicket?.connector_detail?.phone_number}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Email</TableCell>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'email',
+                            defaultMessage: 'E-mail'
+                          })
+                        }
+                      </TableCell>
                       <TableCell align="left">
                         {selectedTicket?.connector_detail?.email}
                       </TableCell>

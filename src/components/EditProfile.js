@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { useSnackbar } from 'notistack';
 import { makeStyles, Select, FormControl, MenuItem, InputLabel, Paper, Grid, TextField, Button } from "@material-ui/core";
+import { useIntl } from 'react-intl';
 
 import api, { handleError } from '../api'
 import {
@@ -34,7 +35,8 @@ const useStyles = makeStyles((theme) => ({
 export const EditProfile = ({ togglePopup, userData }) => {
   // constants
   const classes = useStyles();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { formatMessage } = useIntl();
 
   // validation obj
   const validationSchema = yup.object().shape({
@@ -47,14 +49,12 @@ export const EditProfile = ({ togglePopup, userData }) => {
     aboutMe,
     ...(!userData?.is_sponsor && { zipAddress }),
     ...(userData?.is_client && { minimumIncome }),
-    // ...(userData?.is_pro && {
-    //   twitter: url,
-    //   youtube: url,
-    //   instagram: url,
-    //   facebook: url,
-
-    // })
-    //TODO: sosyal medya icin validation konulacak.
+    ...(userData?.is_pro && {
+      twitter: url,
+      youtube: url,
+      instagram: url,
+      facebook: url,
+    })
   });
 
   // initial values
@@ -90,7 +90,8 @@ export const EditProfile = ({ togglePopup, userData }) => {
       address: values.address,
       about_me: values.aboutMe,
       gender: values.gender,
-      ...(userData.is_sponsor && { zip_address: values.zipAddress }),
+      service_type: userData?.is_pro ? values.serviceTypes : [1], // TODO: burasi duzeltilecek.
+      ...(!userData.is_sponsor && { zip_address: values.zipAddress }),
       ...(userData.is_client && { min_incomer: values.minimumIncome }),
       ...(userData.is_pro && {
         twitter_account: values.twitter,
@@ -99,7 +100,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
         facebook_account: values.facebook,
       })
     }).then(() => {
-      enqueueSnackbar("Updated profile successfully!", { variant: 'success' })
+      enqueueSnackbar(formatMessage({
+        id: 'update_profile_successfully',
+        defaultMessage: 'Profile updated successfully!'
+      }), { variant: 'success' })
       togglePopup()
     }).catch(handleError(enqueueSnackbar, closeSnackbar))
   }
@@ -121,7 +125,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
         {/* firstname */}
         <Grid item xs={12} sm={6}>
           <TextField
-            label="First Name"
+            label={formatMessage({
+              id: 'first_name',
+              defaultMessage: 'First Name'
+            })}
             name="firstName"
             autoComplete="fname"
             size="small"
@@ -137,7 +144,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
         {/* lastname */}
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Last Name"
+            label={formatMessage({
+              id: 'last_name',
+              defaultMessage: 'Last Name'
+            })}
             name="lastName"
             autoComplete="lname"
             required
@@ -151,7 +161,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
         {/* username */}
         <Grid item xs={12} sm={6}>
           <TextField
-            label="User Name"
+            label={formatMessage({
+              id: 'username',
+              defaultMessage: 'User Name'
+            })}
             name="userName"
             autoComplete="uname"
             required
@@ -168,7 +181,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
             required
             fullWidth
             size='small'
-            label="E-mail"
+            label={formatMessage({
+              id: 'email',
+              defaultMessage: 'E-mail'
+            })}
             name="email"
             autoComplete="email"
             {...formik.getFieldProps("email")}
@@ -179,7 +195,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
         {/* phone number */}
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Phone Number"
+            label={formatMessage({
+              id: 'phone_number',
+              defaultMessage: 'Phone Number'
+            })}
             name="phone"
             autoComplete="phone"
             required
@@ -193,7 +212,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
         {/* phone number 2 */}
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Phone Number 2"
+            label={formatMessage({
+              id: 'phone_number',
+              defaultMessage: 'Phone Number'
+            }) + ' 2'}
             name="phone2"
             autoComplete="phone2"
             fullWidth
@@ -205,8 +227,11 @@ export const EditProfile = ({ togglePopup, userData }) => {
         <Grid item xs={12} sm={6}>
           <FormControl className={classes.formControl}>
             <InputLabel putLabel id="gender-label">
-              Gender
-                </InputLabel>
+              {formatMessage({
+                id: 'gender',
+                defaultMessage: 'Gender'
+              })}
+            </InputLabel>
             <Select
               labelId="gender-label"
               id="gender"
@@ -234,7 +259,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
           (<Grid item xs={12} sm={6}>
             <FormControl className={classes.formControl}>
               <InputLabel id="min-income-select-helper-label">
-                Do you have minimum income?
+                {formatMessage({
+                  id: 'do_you_have_minimum_income',
+                  defaultMessage: 'Do you have minimum income?'
+                })}
               </InputLabel>
               <Select
                 labelId="min-income-select-helper-label"
@@ -248,19 +276,36 @@ export const EditProfile = ({ togglePopup, userData }) => {
                   formik.touched.minimumIncome && formik.errors.minimumIncome
                 }
               >
-                <MenuItem value={false}>No</MenuItem>
-                <MenuItem value={true}>Yes</MenuItem>
+                <MenuItem value={false}>
+                  {
+                    formatMessage({
+                      id: 'No',
+                      defaultMessage: 'No'
+                    })
+                  }
+                </MenuItem>
+                <MenuItem value={true}>
+                  {
+                    formatMessage({
+                      id: 'yes',
+                      defaultMessage: 'Yes'
+                    })
+                  }
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>)
         }
         {/* zipaddress */}
         {
-          !userData.is_sponsor && 
+          !userData.is_sponsor &&
           (
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Zip Address"
+                label={formatMessage({
+                  id: 'zip_code',
+                  defaultMessage: 'Zip Address'
+                })}
                 name="zipAddress"
                 autoComplete="zaddress"
                 required
@@ -278,7 +323,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
         {/* address */}
         <Grid item xs={12} sm={userData.is_client ? 6 : 12}>
           <TextField
-            label="Address"
+            label={formatMessage({
+              id: 'address',
+              defaultMessage: 'Address'
+            })}
             name="address"
             autoComplete="address"
             required
@@ -292,7 +340,10 @@ export const EditProfile = ({ togglePopup, userData }) => {
         {/* aboutme */}
         <Grid item xs={12} sm={12}>
           <TextField
-            label="About Me (My goal, my dream, my wish..)"
+            label={formatMessage({
+              id: 'about_me',
+              defaultMessage: 'About Me (My goal, my dream, my wish..)'
+            })}
             name="aboutMe"
             autoComplete="aboutMe"
             required
@@ -369,8 +420,13 @@ export const EditProfile = ({ togglePopup, userData }) => {
         color="secondary"
         className={classes.submit}
       >
-        Submit
-          </Button>
+        {
+          formatMessage({
+            id: 'submit',
+            defaultMessage: 'Submit'
+          })
+        }
+      </Button>
     </form>
   );
 };

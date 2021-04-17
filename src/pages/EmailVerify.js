@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import {useHistory} from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EmailVerify = () => {
+
+   const { formatMessage } = useIntl();
     const classes = useStyles();
     const params = useParams();
     const {search} = useLocation()
@@ -74,46 +77,65 @@ const EmailVerify = () => {
             history.push(`/login?_wfx_=9a38c990-9613-11eb-8b3d-32b5f385aed9`);
         }
     };
-
-    return (
-        <Grid
-            container
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justify="center"
-            style={{minHeight: "100vh"}}
-        >
-            <Grid item xs={12}>
-                <Card className={classes.root}>
-                    <CardContent>
-                        <Typography className={classes.title}>
-                            <img src="../images/logo.jpg" className={classes.avatar}/>
-                            Email Verification
-                        </Typography>
-                        {isVerified ? (
-                            <Alert severity="success">
-                                Your email successfully verified!
-                            </Alert>
-                        ) : (
-                            <Alert severity="error">Your email not verified!</Alert>
-                        )}
-                    </CardContent>
-                    <CardActions>
-                        <Button
-                            onClick={handleClick}
-                            fullWidth
-                            variant="outlined"
-                            color="secondary"
-                            value="Login Page"
-                        >
-                            Go to Login Page
-                        </Button>
-                    </CardActions>
-                </Card>
-            </Grid>
-        </Grid>
-    );
+  return (
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justify="center"
+      style={{ minHeight: "100vh" }}
+    >
+      <Grid item xs={12}>
+        <Card className={classes.root}>
+          <CardContent>
+            <Typography className={classes.title}>
+              <img src="../images/logo.jpg" className={classes.avatar} />
+              {
+                formatMessage({
+                  id: 'email_verification',
+                  defaultMessage: 'E-mail Verification'
+                })
+              }
+            </Typography>
+            {isVerified ? (
+              <Alert severity="success">
+                {
+                  formatMessage({
+                    id: 'your_email_successfully_verified',
+                    defaultMessage: 'Your e-mail successfully verified!'
+                  })
+                }
+              </Alert>
+            ) : (
+              <Alert severity="error">{
+                formatMessage({
+                  id: 'your_email_not_verified',
+                  defaultMessage: 'Your email not verified!'
+                })
+              }</Alert>
+            )}
+          </CardContent>
+          <CardActions>
+            <Button
+              onClick={handleClick}
+              fullWidth
+              variant="outlined"
+              color="secondary"
+              value="Login Page"
+            >
+              {
+                formatMessage({
+                  id: 'go_to_login_page',
+                  defaultMessage: 'Go to Login Page'
+                })
+              }
+            </Button>
+          </CardActions>
+        </Card>
+      </Grid>
+    </Grid>
+  );
 };
 
 export {EmailVerify};

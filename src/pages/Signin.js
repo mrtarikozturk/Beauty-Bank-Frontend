@@ -19,6 +19,11 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { AppContext } from "../context/AppContext";
 import api, { UserRoles, handleError } from '../api'
+import { email, password } from '../utils/validations';
+import ForgotPassword from '../components/ForgotPassword';
+import CheckMail from '../components/CheckMail';
+import ResetPassword from '../components/ResetPassword';
+import PasswordChanged from '../components/PasswordChanged';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -46,20 +51,21 @@ const Signin = () => {
   const classes = useStyles();
   const history = useHistory();
   const { setUser } = useContext(AppContext);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { formatMessage } = useIntl();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   // states
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [forgotPasswordModal, setForgotPasswordModal] = useState(false);
+  const [checkMailModal, setCheckMailModal] = useState(false)
+  const [resetPasswordModal, setResetPasswordModal] = useState(true)
+  const [passwordChangedModal, setPasswordChangedModal] = useState(false)
 
   // validation schema
   const validationSchema = yup.object().shape({
-    email: yup
-      .string()
-      .required("This field is required")
-      .email("Invalid e-mail"),
-    password: yup.string().required("This field is required"),
+    email,
+    password,
   });
 
   // initial values
@@ -100,7 +106,10 @@ const Signin = () => {
       <div className={classes.paper}>
         <img src="../images/logo.jpg" className={classes.avatar} />
         <Typography component="h1" variant="h5">
-          Sign In
+          {formatMessage({
+            id: 'sign_in',
+            defaultMessage: 'Sign In'
+          })}
         </Typography>
         <form
           className={classes.form}
@@ -113,7 +122,10 @@ const Signin = () => {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label={formatMessage({
+              id: 'email_address',
+              defaultMessage: 'E-mail Address'
+            })}
             name="email"
             autoComplete="email"
             autoFocus
@@ -127,7 +139,10 @@ const Signin = () => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={formatMessage({
+              id: 'password',
+              defaultMessage: 'Password'
+            })}
             type={isShowPassword ? "text" : "password"}
             id="password"
             autoComplete="current-password"
@@ -155,23 +170,32 @@ const Signin = () => {
             color="secondary"
             className={classes.submit}
           >
-            {loading ? <CircularProgress size={18} /> : formatMessage({ id: 'sign_in' })}
+            {loading ? <CircularProgress size={18} /> : formatMessage({ id: 'sign_in', defaultMessage: 'Sign In' })}
           </Button>
         </form>
         <Grid container>
           <Grid item xs>
-            <Link to='#' variant="body2">
-              Forgot password?
-              </Link>
+            <Link to='#' variant="body2" onClick={() => setForgotPasswordModal(prev => !prev)}>
+              {formatMessage({
+                id: 'forgot_password',
+                defaultMessage: 'Forgot password?'
+              })}
+            </Link>
           </Grid>
           <Grid item>
-            Don't have an account?{" "}
             <Link to='/register' variant="body2">
-              Sign Up
-              </Link>
+              {formatMessage({
+                id: 'sign_up',
+                defaultMessage: 'Sign Up'
+              })}
+            </Link>
           </Grid>
         </Grid>
       </div>
+      <ForgotPassword {...{ forgotPasswordModal, setForgotPasswordModal, setCheckMailModal }} />
+      <CheckMail {...{ checkMailModal, setForgotPasswordModal, setCheckMailModal }} />
+      <ResetPassword {...{ resetPasswordModal, setResetPasswordModal, setPasswordChangedModal }} />
+      <PasswordChanged {...{ passwordChangedModal, setPasswordChangedModal }} />
     </Container>
   );
 };

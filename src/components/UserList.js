@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { LayoutConnector } from "../views";
+import { useSnackbar } from "notistack";
+import { useIntl } from 'react-intl';
 import {
   Modal,
   Table,
@@ -13,11 +14,11 @@ import {
   makeStyles,
   CircularProgress,
 } from "@material-ui/core";
+
 import Pagination from "@material-ui/lab/Pagination";
 import { UserDetail } from "./UserDetail";
-import { useSnackbar } from "notistack";
+import { LayoutConnector } from "../views";
 import api, { handleError } from "../api";
-
 import { SearchBar } from "./SearchBar";
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const UserList = ({ listType, title, modal, list }) => {
   const classes = useStyles();
+  const { formatMessage } = useIntl();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [userList, setUserList] = useState([]);
@@ -83,7 +85,7 @@ export const UserList = ({ listType, title, modal, list }) => {
     setOpen(true);
     setSelectedUser(username);
   };
-  
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -107,7 +109,10 @@ export const UserList = ({ listType, title, modal, list }) => {
   );
 
   return (
-    <LayoutConnector pageTitle="User List">
+    <LayoutConnector pageTitle={formatMessage({
+      id: 'user_list',
+      defaultMessage: 'User List'
+    })}>
       <Modal
         open={open}
         onClose={handleClose}
@@ -199,7 +204,12 @@ export const UserList = ({ listType, title, modal, list }) => {
                 </div>
               )}
               {!loading && userList.length === 0 && (
-                <Typography>No users to list!</Typography>
+                <Typography>
+                  {formatMessage({
+                    id: 'no_users_to_list',
+                    defaultMessage: 'No users to list!'
+                  })}
+                </Typography>
               )}
             </div>
           </Paper>

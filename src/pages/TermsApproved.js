@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +39,8 @@ const TermsApproved = () => {
   const params = useParams();
   const [isVerified, setVerified] = useState(false);
   const history = useHistory();
+  const { formatMessage } = useIntl();
+
 
   useEffect(async () => {
     const id = params.id;
@@ -80,14 +83,25 @@ const TermsApproved = () => {
           <CardContent>
             <Typography className={classes.title}>
               <img src="../images/logo.jpg" className={classes.avatar} />
-              Terms Approve
+              {formatMessage({
+                id: 'terms_approve',
+                defaultMessage: 'Approve the Terms'
+              })}
             </Typography>
             {isVerified ? (
               <Alert severity="success">
-                You approved terms successfully!
+                {formatMessage({
+                  id: 'you_approved_terms_successfully',
+                  defaultMessage: 'You approved the terms and conditions successfully!'
+                })}
               </Alert>
             ) : (
-              <Alert severity="error">You did not approve terms!</Alert>
+              <Alert severity="error">
+                {formatMessage({
+                  id: 'you_did_not_approve_terms',
+                  defaultMessage: 'You did not approve the terms and conditions!'
+                })}
+              </Alert>
             )}
           </CardContent>
           <CardActions>
@@ -98,7 +112,12 @@ const TermsApproved = () => {
               color="secondary"
               value="Login Page"
             >
-              Go to Dashboard
+              {
+                formatMessage({
+                  id: 'Go to Dashboard',
+                  defaultMessage: 'Go to Dashboard'
+                })
+              }
             </Button>
           </CardActions>
         </Card>

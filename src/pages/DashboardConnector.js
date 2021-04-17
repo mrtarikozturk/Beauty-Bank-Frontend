@@ -10,6 +10,7 @@ import { AssignPro } from "../components/AssignPro";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
 import AddIcCallIcon from '@material-ui/icons/AddIcCall';
+import { useIntl } from 'react-intl';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -55,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const DashboardConnector = () => {
   const classes = useStyles();
+  const { formatMessage } = useIntl();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 
@@ -107,16 +109,43 @@ export const DashboardConnector = () => {
         },
       ]}
       list={{
-        title: "All Tickets",
+        title: formatMessage({
+          id: 'all_tickets',
+          defaultMessage: 'All Requests'
+        }),
         headers: [
-          "Ticket ID",
-          "Owner",
-          "Create Date",
-          "Appointment Date",
-          "Phone Number",
-          'Intake Call Date',
-          'Intake Call',
-          "Assign Pro",
+          formatMessage({
+            id: 'ticket_id',
+            defaultMessage: 'Request ID'
+          }),
+          formatMessage({
+            id: 'owner',
+            defaultMessage: 'Owner'
+          }),
+          formatMessage({
+            id: 'create_date',
+            defaultMessage: 'Create Date'
+          }),
+          formatMessage({
+            id: 'appointment_date',
+            defaultMessage: 'Appointment Date'
+          }),
+          formatMessage({
+            id: 'phone_number',
+            defaultMessage: 'Phone Number'
+          }),
+          formatMessage({
+            id: 'intake_call_date',
+            defaultMessage: 'Intake Call Date'
+          }),
+          formatMessage({
+            id: 'intake_call',
+            defaultMessage: 'Intake Call'
+          }),
+          formatMessage({
+            id: 'assign_pro',
+            defaultMessage: 'Assign Pro'
+          })
         ],
         body: [
           (t) => t.id,
@@ -128,13 +157,19 @@ export const DashboardConnector = () => {
           (t) => (
             !t?.intake_call_date ?
               <Button
-                onClick={() => handleOpen(t, 'Intake Call Date')}
+                onClick={() => handleOpen(t, formatMessage({
+                  id: 'intake_call_date',
+                  defaultMessage: 'Intake Call Date'
+                }))}
                 variant="outlined"
                 color='primary'
                 value="intake"
                 className={classes.button}
               >
-                Set Date
+                {formatMessage({
+                  id: 'set_date',
+                  defaultMessage: 'Set Date'
+                })}
               </Button>
               :
               <DateTimePicker
@@ -148,19 +183,33 @@ export const DashboardConnector = () => {
             t?.is_intake_call ?
               <CheckCircleIcon color='secondary' />
               :
-              <IconButton onClick={() => handleOpen(t, 'Intake Call Done')}>
+              <IconButton onClick={() => handleOpen(t, formatMessage({
+                id: 'intake_call_done',
+                defaultMessage: 'Intake Call Done'
+              }))}>
                 < AddIcCallIcon color='primary' />
               </IconButton>
           ),
           (t) => (
             <Button
-              onClick={() => handleOpen(t, 'Assign Pro')}
+              onClick={() => handleOpen(t, formatMessage({
+                id: 'assign_pro',
+                defaultMessage: 'Assign Pro'
+              }))}
               variant="outlined"
               color={t?.pro ? "secondary" : "primary"}
               value="Choose"
               className={classes.button}
             >
-              {t?.pro ? "Pro Assigned" : "Assign Pro"}
+              {t?.pro ?
+                formatMessage({
+                  id: 'pro_assigned',
+                  defaultMessage: 'Pro Assigned'
+                }) :
+                formatMessage({
+                  id: 'assign_pro',
+                  defaultMessage: 'Assign Pro'
+                })}
             </Button>
           ),
         ],

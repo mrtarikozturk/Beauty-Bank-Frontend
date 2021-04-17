@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useIntl } from 'react-intl';
+
 
 import {
   Grid,
@@ -76,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UserDetail = ({ selectedUser, handleClose }) => {
   const classes = useStyles();
+  const { formatMessage } = useIntl();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [userData, setUserData] = useState(null);
@@ -96,20 +99,14 @@ const UserDetail = ({ selectedUser, handleClose }) => {
     <main className={classes.layout}>
       <Paper className={classes.paper}>
         <Grid container spacing={3}>
-          {/* <Grid item xs={6} className={classes.profile_image}>
-            <Avatar
-              alt={userData?.email}
-              src={userData?.profile_image}
-              className={classes.large}
-            />
-          </Grid> */}
-          // TODO: Burasi nedir? Gerekli degilse silelim.
-
           {!loading ? (
             <>
               <Grid item xs={12}>
                 <Typography gutterBottom variant="h5" component="h2">
-                  About me:
+                  {formatMessage({
+                    id: 'about_me',
+                    defaultMessage: 'About me:'
+                  })}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {userData?.about_me}
@@ -126,58 +123,112 @@ const UserDetail = ({ selectedUser, handleClose }) => {
                             whiteSpace: "nowrap",
                             textAlign: "center !important",
                           }}
-                        >{`${
-                          userData?.username?.charAt(0).toUpperCase() +
+                        >{`${userData?.username?.charAt(0).toUpperCase() +
                           userData?.username?.slice(1)
-                        }'s Profile`}</TableCell>
+                          }'s Profile`}</TableCell>
                         <TableCell align="right"></TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       <TableRow>
-                        <TableCell>Email</TableCell>
+                        <TableCell>
+                          {formatMessage({
+                            id: 'email',
+                            defaultMessage: 'E-mail'
+                          })}
+                        </TableCell>
                         <TableCell align="left">{userData?.email}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>First Name</TableCell>
+                        <TableCell>
+                          {formatMessage({
+                            id: 'first_name',
+                            defaultMessage: 'First Name'
+                          })}
+                        </TableCell>
                         <TableCell align="left">
                           {userData?.first_name}
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Last Name</TableCell>
+                        <TableCell>
+                          {formatMessage({
+                            id: 'last_name',
+                            defaultMessage: 'Last Name'
+                          })}
+                        </TableCell>
                         <TableCell align="left">
                           {userData?.last_name}
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Gender</TableCell>
+                        <TableCell>
+                          {
+                            formatMessage({
+                              id: 'gender',
+                              defaultMessage: 'Gender'
+                            })
+                          }
+                        </TableCell>
                         <TableCell align="left">
                           {userData?.gender === 0
-                            ? "Male"
+                            ? formatMessage({
+                              id: 'male',
+                              defaultMessage: 'Male'
+                            })
                             : userData?.gender === 1
-                            ? "Female"
-                            : "Not Specified"}
+                              ? formatMessage({
+                                id: 'female',
+                                defaultMessage: 'Female'
+                              })
+                              : formatMessage({
+                                id: 'not_specified',
+                                defaultMessage: 'Not Specified'
+                              })}
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Address</TableCell>
+                        <TableCell>
+                          {
+                            formatMessage({
+                              id: 'address',
+                              defaultMessage: 'Address'
+                            })
+                          }
+                        </TableCell>
                         <TableCell align="left">{userData?.address}</TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Zip Code</TableCell>
+                        <TableCell>
+                          {formatMessage({
+                            id: 'zip_code',
+                            defaultMessage: 'Zip Code'
+                          })}
+                        </TableCell>
                         <TableCell align="left">
                           {userData?.zip_address}
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Phone Number</TableCell>
+                        <TableCell>
+                          {
+                            formatMessage({
+                              id: 'phone_number',
+                              defaultMessage: 'Phone Number'
+                            })
+                          }
+                        </TableCell>
                         <TableCell align="left">
                           {userData?.phone_number}
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>Phone Number 2</TableCell>
+                        <TableCell>
+                          {formatMessage({
+                            id: 'phone_number',
+                            defaultMessage: 'Phone Number'
+                          }) + '2'}
+                        </TableCell>
                         <TableCell align="left">
                           {userData?.phone_number2}
                         </TableCell>
@@ -185,13 +236,27 @@ const UserDetail = ({ selectedUser, handleClose }) => {
                       {userData?.is_pro && (
                         <>
                           <TableRow>
-                            <TableCell>Company Name</TableCell>
+                            <TableCell>
+                              {
+                                formatMessage({
+                                  id: 'company_name',
+                                  defaultMessage: 'Company Name'
+                                })
+                              }
+                            </TableCell>
                             <TableCell align="left">
                               {userData?.company_name}
                             </TableCell>
                           </TableRow>
                           <TableRow>
-                            <TableCell>Service Type</TableCell>
+                            <TableCell>
+                              {
+                                formatMessage({
+                                  id: 'service_type',
+                                  defaultMessage: 'Service Type'
+                                })
+                              }
+                            </TableCell>
                             <TableCell align="left">
                               {userData?.service_type}
                             </TableCell>
