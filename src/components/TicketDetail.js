@@ -67,15 +67,6 @@ const TicketDetail = ({ selectedTicket }) => {
                 aria-label="a dense table"
                 size="small"
               >
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{`${selectedTicket?.owner.username.charAt(0).toUpperCase() +
-                      selectedTicket?.owner.username.slice(1)
-                      }'s Ticket`}</TableCell>
-                    //TODO: Burasi nasil duzeltilecek
-                    <TableCell align="right"></TableCell>
-                  </TableRow>
-                </TableHead>
                 <TableBody>
                   <TableRow>
                     <TableCell>
