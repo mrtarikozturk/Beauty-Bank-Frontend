@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { makeStyles } from "@material-ui/core/styles";
 import { useIntl } from 'react-intl';
+import axios from 'axios';
 import {
   Paper,
   Grid,
@@ -19,6 +20,8 @@ import {
   FormControl,
   InputLabel,
   CircularProgress,
+  ListItemText,
+  Input,
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -77,7 +80,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   formControl: {
-    minWidth: "100%",
+    minWidth: '100%',
+    maxWidth: 275
   },
 }));
 
@@ -89,11 +93,14 @@ const SignupDetail = () => {
   const { id } = useParams();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { open, togglePopup } = usePopup();
+  const { REACT_APP_API_BASE_URL } = process.env;
 
   //states
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [detailPath, setDetailPath] = useState("");
   const [loading, setLoading] = useState(false);
+  const [services, setServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
 
   useEffect(() => {
     if (id === "client") {
@@ -107,6 +114,17 @@ const SignupDetail = () => {
     } else {
       history.push("/login");
     }
+
+    axios.get(`${REACT_APP_API_BASE_URL}/auth/service-type/`)
+      .then(response => {
+        setServices(response?.data?.results);
+        console.log(response?.data?.results)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .then(() => console.log(services))
+
   }, []);
 
   // validation obj
@@ -170,9 +188,9 @@ const SignupDetail = () => {
         about_me: values.aboutMe,
         company_name: values.companyName,
         for_gender: values.gender,
-        reserved_capacity: values.capacity,
+        reserved_capacity: values.capacity === 0 ? 1 : values.capacity,
         zip_address: values.zip,
-        service_type: 0,
+        service_type: selectedServices,
       }),
       ...(id === "client" && {
         zip_address: values.zip,
@@ -215,6 +233,10 @@ const SignupDetail = () => {
   const handleTerms = () => {
     togglePopup();
   }
+
+  const handleChange = (event) => {
+    setSelectedServices(event.target.value);
+  };
 
   return (
     <>
@@ -364,6 +386,7 @@ const SignupDetail = () => {
                   }
                 />
               </Grid>
+
               {id === "client" && (
                 <Grid item xs={12} sm={12}>
                   <TextField
@@ -384,7 +407,6 @@ const SignupDetail = () => {
                 </Grid>
               )}
 
-              {/* company name */}
               {id === "professional" && (
                 <>
                   <Grid item xs={12} sm={6}>
@@ -457,12 +479,32 @@ const SignupDetail = () => {
                       helperText={formik.touched.zip && formik.errors.zip}
                     />
                   </Grid>
-                  // TODO: ayni alandan yukarida da var.
+                  <Grid item xs={12} sm={6}>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="demo-mutiple-checkbox-label">Services</InputLabel>
+                      <Select
+                        labelId="demo-mutiple-checkbox-label"
+                        id="demo-mutiple-checkbox"
+                        multiple
+                        fullWidth
+                        value={selectedServices}
+                        onChange={handleChange}
+                        input={<Input />}
+                        renderValue={(selected) => selected.join(", ")}
+                      >
+                        {services && services?.map((item) => (
+                          <MenuItem key={item.id} value={item.id}>
+                            <Checkbox checked={selectedServices.indexOf(item.id) > -1} />
+                            <ListItemText primary={item.name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
                 </>
               )}
-
               {/* phone number */}
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   label={formatMessage({
                     id: 'phone_number',
@@ -482,7 +524,7 @@ const SignupDetail = () => {
                 <Grid item xs={12}>
                   <TextField
                     label={formatMessage({
-                      id: 'about_me',
+                      id: 'about_me_detail',
                       defaultMessage: 'About Me'
                     })}
                     name="aboutMe"
@@ -496,6 +538,7 @@ const SignupDetail = () => {
                   />
                 </Grid>
               )}
+
               {/* Privacy */}
               <Grid item xs={12}>
                 <Checkbox
@@ -507,7 +550,7 @@ const SignupDetail = () => {
                   {formatMessage({
                     id: 'i_have_read_the',
                     defaultMessage: 'I have read the'
-                  })}{" "}
+                  })}
                   <Button style={{ fontSize: "bold" }} onClick={handleTerms}>{formatMessage({
                     id: 'privacy_policy',
                     defaultMessage: 'Privacy Policy'
