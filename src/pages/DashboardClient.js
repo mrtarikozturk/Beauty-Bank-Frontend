@@ -58,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   button: {
-    width: 150,
     fontSize: 12,
     paddingLeft: 2,
     paddingRight: 2,
