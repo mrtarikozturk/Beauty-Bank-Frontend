@@ -159,7 +159,22 @@ const CreateTicket = () => {
                         id: 'gender',
                         defaultMessage: 'Gender'
                       })}</TableCell>
-                      <TableCell align="left">{userData?.gender}</TableCell>
+                      <TableCell align="left">
+                        {userData?.gender === 0
+                          ? formatMessage({
+                            id: 'female',
+                            defaultMessage: 'Female'
+                          })
+                          : userData?.gender === 1
+                            ? formatMessage({
+                              id: 'male',
+                              defaultMessage: 'Male'
+                            })
+                            : formatMessage({
+                              id: 'not_specified',
+                              defaultMessage: 'Not Specified'
+                            })}
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>{formatMessage({
@@ -184,6 +199,15 @@ const CreateTicket = () => {
                       })}</TableCell>
                       <TableCell align="left">
                         {userData?.phone_number}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>{formatMessage({
+                        id: 'minimum_income',
+                        defaultMessage: 'Minimum Income'
+                      })}</TableCell>
+                      <TableCell align="left">
+                        {userData?.min_incomer ? 'Yes' : 'No'}
                       </TableCell>
                     </TableRow>
                   </TableBody>

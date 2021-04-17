@@ -253,27 +253,20 @@ const Profile = () => {
                   aria-label="a dense table"
                   size="small"
                 >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>{`${user?.username.charAt(0).toUpperCase() +
-                        user?.username.slice(1)
-                        }'s Profile`}</TableCell>
-                      {/* TODO: Burasi nasil olacak dil paketi ile */}
-                      <TableCell align="right"></TableCell>
-                    </TableRow>
-                  </TableHead>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>{formatMessage({
-                        id: 'social_media',
-                        defaultMessage: 'Social Media'
-                      })}</TableCell>
-                      <TableCell align="left">
-                        <SocialMediaLinks
-                          {...{ socialMedia }}
-                        />
-                      </TableCell>
-                    </TableRow>
+                    ...{userData?.is_pro && (
+                      <TableRow>
+                        <TableCell>{formatMessage({
+                          id: 'social_media',
+                          defaultMessage: 'Social Media'
+                        })}</TableCell>
+                        <TableCell align="left">
+                          <SocialMediaLinks
+                            {...{ socialMedia }}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )}
                     <TableRow>
                       <TableCell>{formatMessage({
                         id: 'email',
