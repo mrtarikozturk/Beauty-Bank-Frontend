@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'center',
     },
     margin: theme.spacing(2),
+    gap: theme.spacing(3),
   },
   avatarBox: {
     display: "flex",
@@ -144,34 +145,43 @@ const Profile = () => {
   }, [open]);
 
   const socialMedia = {
-    youtube: {
-      label: 'Youtube',
-      color: 'secondary',
-      size: 'small',
-      url: userData.youtube_account,
-      icon: <YouTubeIcon />,
-    },
-    twitter: {
-      label: 'Twitter',
-      color: 'secondary',
-      size: 'small',
-      url: userData.twitter_account,
-      icon: <TwitterIcon />
-    },
-    instagram: {
-      label: 'Instagram',
-      color: 'secondary',
-      size: 'small',
-      url: userData.instagram_account,
-      icon: <InstagramIcon />
-    },
-    facebook: {
-      label: 'Facebook',
-      color: 'secondary',
-      size: 'small',
-      url: userData.facebook_account,
-      icon: <FacebookIcon />
-    },
+    ...(userData.youtube_account && {
+      youtube: {
+        label: 'Youtube',
+        color: 'secondary',
+        size: 'small',
+        url: userData.youtube_account,
+        icon: <YouTubeIcon />,
+      },
+    }),
+    ...(userData.twitter_account && {
+      twitter: {
+        label: 'Twitter',
+        color: 'secondary',
+        size: 'small',
+        url: userData.twitter_account,
+        icon: <TwitterIcon />
+      },
+    }),
+    ...(userData.instagram_account && {
+      instagram: {
+        label: 'Instagram',
+        color: 'secondary',
+        size: 'small',
+        url: userData.instagram_account,
+        icon: <InstagramIcon />
+      },
+    }),
+    ...(userData.facebook_account && {
+      facebook: {
+        label: 'Facebook',
+        color: 'secondary',
+        size: 'small',
+        url: userData.facebook_account,
+        icon: <FacebookIcon />
+      },
+    })
+
   }
 
   return (
@@ -346,7 +356,7 @@ const Profile = () => {
                         {userData?.phone_number2}
                       </TableCell>
                     </TableRow>
-                    {userData?.is_pro && (
+                    {/* {userData?.is_pro && (
                       <>
                         <TableRow>
                           <TableCell>Instagram</TableCell>
@@ -381,7 +391,8 @@ const Profile = () => {
                           </TableCell>
                         </TableRow>
                       </>
-                    )}
+                    )} */}
+                    {/* TODO: eger istenmez ise silinecek */}
                   </TableBody>
                 </Table>
               </TableContainer>
