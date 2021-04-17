@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme) => ({
         right: theme.spacing(1),
         top: theme.spacing(1),
         color: theme.palette.grey[500]
+    },
+    modalContent: {
+        outline: 'none',
     }
 }));
 
@@ -31,13 +34,14 @@ export const Popup = (props) => {
         children,
         togglePopup,
         buttons,
-        customTitle,
+        customHeader,
         customFooter,
         closeIcon = true,
         autoClose = true,
         scroll = 'paper',
         maxWidth = 'sm',
-        dividers = true
+        dividers = true,
+        fullWidth = false
     } = props
 
     const descriptionElementRef = useRef(null);
@@ -57,13 +61,13 @@ export const Popup = (props) => {
             open={open}
             onClose={autoClose && togglePopup}
             scroll={scroll}
-            fullWidth={false}
+            fullWidth={fullWidth}
             maxWidth={maxWidth}
             aria-labelledby="dialog-title"
             aria-describedby="dialog-description"
         >
             <DialogTitle disableTypography >
-                {customTitle || <Typography variant="h6">{title}</Typography>}
+                {customHeader || <Typography variant="h6">{title}</Typography>}
                 {closeIcon &&
                     <IconButton
                         aria-label="close"
@@ -77,6 +81,7 @@ export const Popup = (props) => {
                 dividers={dividers}
                 ref={descriptionElementRef}
                 tabIndex={-1}
+                className={classes.modalContent}
             >
                 {children}
             </DialogContent>
