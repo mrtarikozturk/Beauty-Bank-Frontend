@@ -65,12 +65,6 @@ export const EditProfile = ({ togglePopup, userData }) => {
     aboutMe,
     ...(!userData?.is_sponsor && { zipAddress }),
     ...(userData?.is_client && { minimumIncome }),
-    ...(userData?.is_pro && {
-      twitter: url,
-      youtube: url,
-      instagram: url,
-      facebook: url,
-    })
   });
 
   // initial values

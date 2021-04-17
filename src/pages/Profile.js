@@ -133,15 +133,6 @@ const Profile = () => {
       .then(setUserData)
       .catch(handleError(enqueueSnackbar, closeSnackbar))
       .finally(() => setImageLoading(false));
-
-    if (!userData.about_me || !userData.address || !userData.zip_address) {
-      enqueueSnackbar(formatMessage({
-        id: 'please_complete_your_profile_information',
-        defaultMessage: 'Please complete your Profile Information!'
-      }), {
-        variant: "warning",
-      });
-    }
   }, [open]);
 
   const socialMedia = {
