@@ -12,6 +12,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import Pagination from "@material-ui/lab/Pagination";
+import { useIntl } from 'react-intl';
 
 import { AppContext } from "../context/AppContext";
 import { LayoutConnector } from "../views";
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ConnectorUserList = () => {
   const classes = useStyles();
+  const { formatMessage } = useIntl();
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -93,13 +95,16 @@ const ConnectorUserList = () => {
 
   const modalBody = (
     <div className={classes.paperModal}>
-      <h1 id="simple-modal-title">User Detail</h1>
+      <h1 id="simple-modal-title">{formatMessage({
+        id: 'user_detail',
+        defaultMessage: 'User Detail'
+      })}</h1>
       <UserDetail selectedUser={selectedUser} handleClose={handleClose} />
     </div>
   );
 
   return (
-    <LayoutConnector pageTitle="User List">
+    <LayoutConnector pageTitle={formatMessage({ id: 'user_list', defaultMessage: 'All Users List' })}>
       <Modal
         open={open}
         onClose={handleClose}
@@ -118,7 +123,7 @@ const ConnectorUserList = () => {
               color="secondary"
               gutterBottom
             >
-              User List
+              {formatMessage({ id: 'user_list', defaultMessage: 'All Users List' })}
             </Typography>
             {userList.length > 0 ? (
               <>
@@ -130,14 +135,38 @@ const ConnectorUserList = () => {
                 <Table size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell>User ID</TableCell>
-                      <TableCell>Username</TableCell>
-                      <TableCell>First Name</TableCell>
-                      <TableCell>Last Name</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Phone Number</TableCell>
-                      <TableCell>Gender</TableCell>
-                      <TableCell>Zip Code</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'user_id',
+                        defaultMessage: 'User ID'
+                      })}</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'username',
+                        defaultMessage: 'Username'
+                      })}</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'first_name',
+                        defaultMessage: 'First Name'
+                      })}</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'last_name',
+                        defaultMessage: 'Last Name'
+                      })}</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'email',
+                        defaultMessage: 'E-mail'
+                      })}</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'phone_number',
+                        defaultMessage: 'Phone Number'
+                      })}</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'gender',
+                        defaultMessage: 'Gender'
+                      })}</TableCell>
+                      <TableCell>{formatMessage({
+                        id: 'zip_code',
+                        defaultMessage: 'Zip Code'
+                      })}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -157,11 +186,19 @@ const ConnectorUserList = () => {
                         <TableCell>{user?.phone_number}</TableCell>
                         <TableCell>
                           {user?.gender == 0
-                            ? "Male"
+                            ? formatMessage({
+                              id: 'male',
+                              defaultMessage
+                            })
                             : user?.gender == 1
-                              ? "Female"
-                              : "-"}
-                              //TODO: Burasi duzeltilecek. Not specified yazilacak
+                              ? formatMessage({
+                                id: 'female',
+                                defaultMessage: 'Female'
+                              })
+                              : formatMessage({
+                                id: 'not_specified',
+                                defaultMessage: 'Not Specified'
+                              })}
                         </TableCell>
                         <TableCell>{user?.zip_address}</TableCell>
                       </TableRow>

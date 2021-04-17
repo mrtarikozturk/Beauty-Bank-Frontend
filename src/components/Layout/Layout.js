@@ -1,16 +1,27 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { useIntl } from 'react-intl';
 
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-    CssBaseline, Drawer,
-    Container, AppBar, Toolbar,
-    List, Typography, Divider, Avatar, IconButton
+    CssBaseline,
+    Drawer,
+    Container,
+    AppBar,
+    Toolbar,
+    List,
+    Typography,
+    Divider,
+    Avatar,
+    IconButton,
+    Box,
 } from "@material-ui/core";
 import {
     ChevronLeft as ChevronLeftIcon,
-    AccountBox as AccountBoxIcon, ExitToApp as ExitToAppIcon, Menu as MenuIcon
+    AccountBox as AccountBoxIcon,
+    ExitToApp as ExitToAppIcon,
+    Menu as MenuIcon
 } from "@material-ui/icons";
 
 import LayoutListItem from './ListItem'
@@ -32,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "flex-end",
         padding: "0 8px",
         ...theme.mixins.toolbar,
+    },
+    appBarActions: {
+        flexGrow: 1,
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: "center",
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -98,6 +115,7 @@ const Layout = ({ children, pageTitle, list }) => {
     // constants
     const classes = useStyles();
     const history = useHistory();
+    const { formatMessage } = useIntl();
     const { user, setUser, userProfile } = useContext(AppContext);
 
     // states
@@ -133,32 +151,30 @@ const Layout = ({ children, pageTitle, list }) => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography
-                        component="h1"
-                        variant="h6"
-                        color="inherit"
-                        noWrap
-                        className={classes.title}
-                    >
-                        {`${user?.username.charAt(0).toUpperCase() + user?.username.slice(1)
-                            }'s ${pageTitle}`}
-                    </Typography>
-                    <IconButton color="inherit">
-                        {false ? (
-                            <Avatar
-                                alt={userProfile?.email}
-                                src={userProfile?.profile_image}
-                                className={classes.small}
-                            />
-                        ) : (
-                            <AccountBoxIcon />
-                        )}
-                        <Typography>{user?.username}</Typography>
-                    </IconButton>
-                    <IconButton color="inherit" onClick={handleLogOut}>
-                        <ExitToAppIcon />
-                        <Typography>Log Out</Typography>
-                    </IconButton>
+                    <Box className={classes.appBarActions}>
+                        <IconButton color="inherit">
+                            {false ? (
+                                <Avatar
+                                    alt={userProfile?.email}
+                                    src={userProfile?.profile_image}
+                                    className={classes.small}
+                                />
+                            ) : (
+                                <AccountBoxIcon />
+                            )}
+                            <Typography>{user?.username}</Typography>
+                        </IconButton>
+                        <IconButton color="inherit" onClick={handleLogOut}>
+                            <ExitToAppIcon />
+                            <Typography>
+                                {formatMessage({
+                                    id: 'log_out',
+                                    defaultMessage: 'Log Out'
+                                })}
+                            </Typography>
+                        </IconButton>
+
+                    </Box>
                 </Toolbar>
             </AppBar>
 

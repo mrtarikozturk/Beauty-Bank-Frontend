@@ -10,6 +10,7 @@ import { SetTicketDate } from "../components/SetTicketDate";
 import { SetTicketFeedback } from "../components/SetTicketFeedback";
 import { TicketDetail } from "../components/TicketDetail";
 import useWindowSize from "../hooks/useWindowsSize";
+import { useIntl } from 'react-intl';
 
 import api from "../api";
 
@@ -57,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   button: {
-    width: 150,
     fontSize: 12,
     paddingLeft: 2,
     paddingRight: 2,
@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const DashboardClient = () => {
   const classes = useStyles();
+  const { formatMessage } = useIntl();
   const { enqueueSnackbar } = useSnackbar();
   const { width } = useWindowSize();
   const isMobile = width < 550;
@@ -119,31 +120,55 @@ export const DashboardClient = () => {
       isMobile={isMobile}
       modals={[
         {
-          title: "Set Appointment Date",
+          title: formatMessage({
+            id: 'set_appointment_date',
+            defaultMessage: 'Set Appointment Date'
+          }),
           content: <SetTicketDate {...dateParams} />,
           open: openDate,
           onModalClose: handleClose,
         },
         {
-          title: "Set Appointment Feedback",
+          title: formatMessage({
+            id: 'set_appointment_feedbac',
+            defaultMessage: 'Give Feedback'
+          }),
           content: <SetTicketFeedback {...dateParams} />,
           open: open,
           onModalClose: handleClose,
         },
         {
-          title: "Ticket Detail Page",
+          title: formatMessage({
+            id: 'ticket_detail_page',
+            defaultMessage: 'Request Detail Page'
+          }),
           content: <TicketDetail {...dateParams} />,
           open: openTicket,
           onModalClose: handleClose,
         },
       ]}
       list={{
-        title: "My Tickets",
+        title: formatMessage({
+          id: 'my_tickets',
+          defaultMessage: 'My Requests'
+        }),
         headers: [
-          "Ticket ID",
-          "Appointment Date",
-          "Approve&Set Date",
-          "Ticket Detail",
+          formatMessage({
+            id: 'ticket_id',
+            defaultMessage: 'Request ID'
+          }),
+          formatMessage({
+            id: 'appointment_date',
+            defaultMessage: 'Appointment Date'
+          }),
+          formatMessage({
+            id: 'approve_set_date',
+            defaultMessage: 'Approve&Set Date'
+          }),
+          formatMessage({
+            id: 'ticket_detail',
+            defaultMessage: 'Request Detail'
+          })
         ],
         body: [
           (t) => t.id,
@@ -154,7 +179,10 @@ export const DashboardClient = () => {
               size="small"
               onClick={() => {
                 t?.appointment_date
-                  ? alert("You already set the date!")
+                  ? alert(formatMessage({
+                    id: 'you_already_set_the_date',
+                    defaultMessage: 'You already set the date!'
+                  }))
                   : handleOpenDate(t);
               }}
               variant="outlined"
@@ -164,10 +192,19 @@ export const DashboardClient = () => {
               className={classes.button}
             >
               {t?.appointment_date
-                ? "Date Setted"
+                ? formatMessage({
+                  id: 'date_setted',
+                  defaultMessage: 'Date Setted'
+                })
                 : t?.terms_approved
-                  ? "Set Ticket Date"
-                  : "Approve Terms"}
+                  ? formatMessage({
+                    id: 'set_ticket_date',
+                    defaultMessage: 'Set Request Date'
+                  })
+                  : formatMessage({
+                    id: 'approve_terms',
+                    defaultMessage: 'Approve Terms and Conditions'
+                  })}
             </Button>
           ),
           (t) => (
@@ -179,7 +216,10 @@ export const DashboardClient = () => {
               value="Ticket Detail"
               className={classes.button}
             >
-              Ticket Detail
+              {formatMessage({
+                id: 'ticket_detail',
+                defaultMessage: 'Request Detail'
+              })}
             </Button>
           ),
           (t) =>
@@ -193,7 +233,10 @@ export const DashboardClient = () => {
                 value="Feedback"
                 className={classes.button}
               >
-                Feedback
+                {formatMessage({
+                  id: 'feedback',
+                  defaultMessage: 'Feedback'
+                })}
               </Button>
             ),
         ],

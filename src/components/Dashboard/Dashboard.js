@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import { useIntl } from 'react-intl';
 
 import {
   Grid,
@@ -27,9 +28,13 @@ export const Dashboard = ({
     hasStepper && !isMobile
       ? clsx(classes.paper, classes.fixedHeight)
       : clsx(classes.paperMobil);
+  const { formatMessage } = useIntl();
 
   return (
-    <Layout pageTitle="Dashboard">
+    <Layout pageTitle={formatMessage({
+      id: 'dashboard',
+      defaultMessage: 'Dashboard'
+    })}>
       {modals.map((modal) => (
         <Modal
           key={modal.title}
@@ -74,7 +79,10 @@ export const Dashboard = ({
               </div>
             )}
             {!loading && !tickets.length && (
-              <Typography>No tickets to list!</Typography>
+              <Typography>{formatMessage({
+                id: 'no_ticket_to_list',
+                defaultMessage: 'No request was made.'
+              })}</Typography>
             )}
             {loading && (
               <div

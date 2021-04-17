@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CardMedia from '@material-ui/core/CardMedia';
+import { useIntl } from 'react-intl';
 
 const useStyles = makeStyles((theme) => ({
     '@global': {
@@ -41,58 +42,97 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const items = [
-    {
-        title: 'Client',
-        price: '0',
-        description: [' U kunt onder  de verzekering van  onze stichting terecht    voor een goede service. Alstublieft!'],
-        buttonText: "That's me!",
-        buttonVariant: 'outlined',
-        imageURL: '../images/client.jpg',
-    },
-    {
-        title: 'Professional',
-        // subheader: 'Most Popular',
-        price: '15',
-        description: [
-            'Wil je je klanten niet imponeren met je talenten en ze een goede service bieden?',
-        ],
-        buttonText: "That's me!",
-        buttonVariant: 'outlined',
-        imageURL: 'images/professional.jpg',
-    },
-    {
-        title: 'Connector',
-        subheader: '',
-        price: '30',
-        description: [
-            'Als vrijwillig medewerker van onze stichting bouw je een brug tussen professionals en klanten.',
-        ],
-        buttonText: 'Contact us',
-        buttonVariant: 'contained',
-        imageURL: '../images/connector.jpg',
-    },
-    {
-        title: 'Sponsor',
-        subheader: '',
-        price: '30',
-        description: [
-            'Wilt u als sponsor deelnemen om onze stichting te helpen een breder publiek te bereiken?',
-        ],
-        buttonText: 'Contact us',
-        buttonVariant: 'contained',
-        imageURL: 'images/sponsor.jpg',
-    },
 
-];
 
 const SignupMenu = () => {
     const classes = useStyles();
     const history = useHistory();
+    const { formatMessage } = useIntl();
 
     const handleClick = (event) => {
         history.push(`/register/${event.currentTarget.value.toLowerCase()}`)
     }
+
+    const items = [
+        {
+            title: formatMessage({
+                id: 'client',
+                defaultMessage: 'Client'
+            }),
+            price: '0',
+            description: [formatMessage({
+                id: 'client_message',
+                defaultMessage: 'U kunt onder  de verzekering van  onze stichting terecht    voor een goede service. Alstublieft!'
+            })],
+            buttonText: formatMessage({
+                id: 'thats_me',
+                defaultMessage: 'That\'s me!'
+            }),
+            buttonVariant: 'outlined',
+            imageURL: '../images/client.jpg',
+        },
+        {
+            title: formatMessage({
+                id: 'professional',
+                defaultMessage: 'Professional'
+            }),
+            // subheader: 'Most Popular',
+            price: '15',
+            description: [
+                formatMessage({
+                    id: 'professional_message',
+                    defaultMessage: 'Wil je je klanten niet imponeren met je talenten en ze een goede service bieden?'
+                }),
+            ],
+            buttonText: formatMessage({
+                id: 'thats_me',
+                defaultMessage: 'That\'s me!'
+            }),
+            buttonVariant: 'outlined',
+            imageURL: 'images/professional.jpg',
+        },
+        {
+            title: formatMessage({
+                id: 'connector',
+                defaultMessage: 'Connector'
+            }),
+            subheader: '',
+            price: '30',
+            description: [
+                formatMessage({
+                    id: 'connector_message',
+                    defaultMessage: 'Als vrijwillig medewerker van onze stichting bouw je een brug tussen professionals en klanten.'
+                }),
+            ],
+            buttonText: formatMessage({
+                id: 'contact_us',
+                defaultMessage: 'Contact Us'
+            }),
+            buttonVariant: 'contained',
+            imageURL: '../images/connector.jpg',
+        },
+        {
+            title: formatMessage({
+                id: 'sponsor',
+                defaultMessage: 'Sponsor'
+            }),
+            subheader: '',
+            price: '30',
+            description: [
+                formatMessage({
+                    id: 'sponsor_message',
+                    defaultMessage: 'Wilt u als sponsor deelnemen om onze stichting te helpen een breder publiek te bereiken?'
+                }),
+            ],
+            buttonText: formatMessage({
+                id: 'contact_us',
+                defaultMessage: 'Contact Us'
+            }),
+            buttonVariant: 'contained',
+            imageURL: 'images/sponsor.jpg',
+        },
+
+    ];
 
     return (
         <Container maxWidth="lg" >

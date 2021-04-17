@@ -3,6 +3,8 @@ import { useHistory, useParams,useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { makeStyles } from "@material-ui/core/styles";
+import { useIntl } from 'react-intl';
+import axios from 'axios';
 import {
   Paper,
   Grid,
@@ -18,6 +20,8 @@ import {
   FormControl,
   InputLabel,
   CircularProgress,
+  ListItemText,
+  Input,
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -25,6 +29,21 @@ import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
 import { usePopup, Popup } from '../components/Popup';
 import Privacy from '../components/Privacy';
+import {
+  firstName,
+  lastName,
+  userName,
+  email,
+  password,
+  passwordConfirm,
+  phone,
+  conditions,
+  zipAddress,
+  aboutMe,
+  gender,
+  companyName,
+  capacity,
+} from '../utils/validations'
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -61,7 +80,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   formControl: {
-    minWidth: "100%",
+    minWidth: '100%',
+    maxWidth: 275
   },
 }));
 
@@ -69,14 +89,18 @@ const SignupDetail = () => {
   // constants
   const classes = useStyles();
   const history = useHistory();
+  const { formatMessage } = useIntl();
   const { id } = useParams();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { open, togglePopup } = usePopup();
+  const { REACT_APP_API_BASE_URL } = process.env;
 
   //states
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [detailPath, setDetailPath] = useState("");
   const [loading, setLoading] = useState(false);
+  const [services, setServices] = useState([]);
+  const [selectedServices, setSelectedServices] = useState([]);
 
   useEffect(() => {
     if (id === "client") {
@@ -90,66 +114,36 @@ const SignupDetail = () => {
     } else {
       history.push("/login");
     }
+
+    axios.get(`${REACT_APP_API_BASE_URL}/auth/service-type/`)
+      .then(response => {
+        setServices(response?.data?.results);
+        console.log(response?.data?.results)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .then(() => console.log(services))
+
   }, []);
 
   // validation obj
   const validationSchema = yup.object().shape({
-    firstName: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    lastName: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    userName: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    email: yup
-      .string()
-      .required("This field is required")
-      .email("Invalid e-mail")
-      .min(4, "Must be at least 4 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    password: yup
-      .string()
-      .required("This field is required")
-      .min(6, "Must be at least 6 characters")
-      .max(30, "Must be a maximum of 30 characters"),
-    passwordConfirm: yup
-      .string()
-      .oneOf([yup.ref("password"), null], "Passwords must match"),
-    phone: yup
-      .string()
-      .required("This field is required")
-      .min(1, "Must be at least 1 characters")
-      .max(20, "Must be a maximum of 20 characters"),
-    conditions: yup.bool().oneOf([true], "This field is required"),
-    ...(id === "client" && {
-      zip: yup
-        .string()
-        .required("This field is required")
-        .min(1, "Must be at least 1 characters")
-        .max(8, "Must be a maximum of 8 characters"),
-    }),
+    firstName,
+    lastName,
+    userName,
+    email,
+    password,
+    passwordConfirm,
+    phone,
+    conditions,
+    ...(id === "client" && { zip: zipAddress }),
     ...(id === "professional" && {
-      zip: yup
-        .string()
-        .required("This field is required")
-        .min(1, "Must be at least 1 characters")
-        .max(8, "Must be a maximum of 8 characters"),
-      aboutMe: yup
-        .string()
-        .required("This field is required")
-        .min(1, "Must be at least 1 characters")
-        .max(1500, "Must be a maximum of 1500 characters"),
-      companyName: yup.string().max(100, "Must be a maximum of 100 characters"),
-      gender: yup.number().min(0).max(2),
-      capacity: yup.number().min(0),
+      zip: zipAddress,
+      aboutMe,
+      companyName,
+      gender,
+      capacity,
     }),
   });
 
@@ -194,9 +188,9 @@ const SignupDetail = () => {
         about_me: values.aboutMe,
         company_name: values.companyName,
         for_gender: values.gender,
-        reserved_capacity: values.capacity,
+        reserved_capacity: values.capacity === 0 ? 1 : values.capacity,
         zip_address: values.zip,
-        service_type: 0,
+        service_type: selectedServices,
       }),
       ...(id === "client" && {
         zip_address: values.zip,
@@ -240,14 +234,21 @@ const SignupDetail = () => {
     togglePopup();
   }
 
+  const handleChange = (event) => {
+    setSelectedServices(event.target.value);
+  };
+
   return (
     <>
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           <img src="../images/logo.jpg" className={classes.avatar} />
           <Typography component="h1" variant="h5">
-            Register
-        </Typography>
+            {formatMessage({
+              id: 'register',
+              defaultMessage: 'Register'
+            })}
+          </Typography>
           <form
             className={classes.form}
             noValidate
@@ -257,7 +258,10 @@ const SignupDetail = () => {
               {/* firstname */}
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="First Name"
+                  label={formatMessage({
+                    id: 'first_name',
+                    defaultMessage: 'First Name'
+                  })}
                   name="firstName"
                   autoComplete="fname"
                   required
@@ -271,7 +275,10 @@ const SignupDetail = () => {
               {/* lastname */}
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Last Name"
+                  label={formatMessage({
+                    id: 'last_name',
+                    defaultMessage: 'Last Name'
+                  })}
                   name="lastName"
                   autoComplete="lname"
                   required
@@ -284,7 +291,10 @@ const SignupDetail = () => {
               {/* username */}
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="User Name"
+                  label={formatMessage({
+                    id: 'usernam',
+                    defaultMessage: 'User Name'
+                  })}
                   name="userName"
                   autoComplete="uname"
                   required
@@ -299,7 +309,10 @@ const SignupDetail = () => {
                 <TextField
                   required
                   fullWidth
-                  label="E-mail"
+                  label={formatMessage({
+                    id: 'email',
+                    defaultMessage: 'E-mail'
+                  })}
                   name="email"
                   autoComplete="email"
                   {...formik.getFieldProps("email")}
@@ -310,7 +323,10 @@ const SignupDetail = () => {
               {/* password */}
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Password"
+                  label={formatMessage({
+                    id: 'password',
+                    defaultMessage: 'Password'
+                  })}
                   name="password"
                   autoComplete="password"
                   required
@@ -337,7 +353,10 @@ const SignupDetail = () => {
               {/* password confirm */}
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Confirm"
+                  label={formatMessage({
+                    id: 'confirm',
+                    defaultMessage: 'Confirm'
+                  })}
                   name="passwordConfirm"
                   autoComplete="passwordConfirm"
                   required
@@ -367,10 +386,16 @@ const SignupDetail = () => {
                   }
                 />
               </Grid>
+
               {id === "client" && (
                 <Grid item xs={12} sm={12}>
                   <TextField
-                    label="Zip / Postal code"
+                    label={
+                      formatMessage({
+                        id: 'zip_code',
+                        defaultMessage: '"Zip / Postal code"'
+                      })
+                    }
                     name="zip"
                     autoComplete="zip"
                     required
@@ -382,12 +407,16 @@ const SignupDetail = () => {
                 </Grid>
               )}
 
-              {/* company name */}
               {id === "professional" && (
                 <>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                      label="Company"
+                      label={
+                        formatMessage({
+                          id: 'company',
+                          defaultMessage: 'Company'
+                        })
+                      }
                       name="companyName"
                       autoComplete="companyName"
                       fullWidth
@@ -450,14 +479,37 @@ const SignupDetail = () => {
                       helperText={formik.touched.zip && formik.errors.zip}
                     />
                   </Grid>
-                  // TODO: ayni alandan yukarida da var.
+                  <Grid item xs={12} sm={6}>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="demo-mutiple-checkbox-label">Services</InputLabel>
+                      <Select
+                        labelId="demo-mutiple-checkbox-label"
+                        id="demo-mutiple-checkbox"
+                        multiple
+                        fullWidth
+                        value={selectedServices}
+                        onChange={handleChange}
+                        input={<Input />}
+                        renderValue={(selected) => selected.join(", ")}
+                      >
+                        {services && services?.map((item) => (
+                          <MenuItem key={item.id} value={item.id}>
+                            <Checkbox checked={selectedServices.indexOf(item.id) > -1} />
+                            <ListItemText primary={item.name} />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
                 </>
               )}
-
               {/* phone number */}
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Phone Number"
+                  label={formatMessage({
+                    id: 'phone_number',
+                    defaultMessage: 'Phone Number'
+                  })}
                   name="phone"
                   autoComplete="phone"
                   required
@@ -471,7 +523,10 @@ const SignupDetail = () => {
               {id === "professional" && (
                 <Grid item xs={12}>
                   <TextField
-                    label="About Me"
+                    label={formatMessage({
+                      id: 'about_me_detail',
+                      defaultMessage: 'About Me'
+                    })}
                     name="aboutMe"
                     autoComplete="aboutMe"
                     multiline
@@ -483,6 +538,7 @@ const SignupDetail = () => {
                   />
                 </Grid>
               )}
+
               {/* Privacy */}
               <Grid item xs={12}>
                 <Checkbox
@@ -491,8 +547,14 @@ const SignupDetail = () => {
                   id="conditions"
                 />
                 <label for="conditions">
-                  I have read the{" "}
-                  <Button style={{ fontSize: "bold" }} onClick={handleTerms}>Privacy Policy</Button>
+                  {formatMessage({
+                    id: 'i_have_read_the',
+                    defaultMessage: 'I have read the'
+                  })}
+                  <Button style={{ fontSize: "bold" }} onClick={handleTerms}>{formatMessage({
+                    id: 'privacy_policy',
+                    defaultMessage: 'Privacy Policy'
+                  })}</Button>
                 </label>
                 {formik.errors.conditions ? (
                   <label style={{ color: "red" }}>
@@ -508,14 +570,23 @@ const SignupDetail = () => {
               color="secondary"
               className={classes.submit}
             >
-              {loading ? <CircularProgress size={18} /> : "Sign Up"}
+              {loading ? <CircularProgress size={18} /> : formatMessage({
+                id: 'sign_up',
+                defaultMessage: 'Sign Up'
+              })}
             </Button>
             <Grid container justify="flex-end" spacing={3}>
               <Grid item>
-                Already have an account?{"  "}
+                {formatMessage({
+                  id: 'already_have_an_account',
+                  defaultMessage: 'Already have an account?'
+                })}{"  "}
                 <Link href="/login" variant="body2">
-                  Log in
-              </Link>
+                  {formatMessage({
+                    id: 'login',
+                    defaultMessage: 'Log in'
+                  })}
+                </Link>
               </Grid>
             </Grid>
           </form>

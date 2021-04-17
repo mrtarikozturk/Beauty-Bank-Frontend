@@ -6,6 +6,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 
+//TODO: Bu component sadece iki yerde kullanilmis ancak oralarda da islevi yok. Gereksiz ise silelim.
+
 const TicketTable = ({tableHeader, ticketsData}) => {
     return (
         <>
