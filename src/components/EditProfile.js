@@ -49,14 +49,12 @@ export const EditProfile = ({ togglePopup, userData }) => {
     aboutMe,
     ...(!userData?.is_sponsor && { zipAddress }),
     ...(userData?.is_client && { minimumIncome }),
-    // ...(userData?.is_pro && {
-    //   twitter: url,
-    //   youtube: url,
-    //   instagram: url,
-    //   facebook: url,
-
-    // })
-    //TODO: sosyal medya icin validation konulacak.
+    ...(userData?.is_pro && {
+      twitter: url,
+      youtube: url,
+      instagram: url,
+      facebook: url,
+    })
   });
 
   // initial values
@@ -92,7 +90,8 @@ export const EditProfile = ({ togglePopup, userData }) => {
       address: values.address,
       about_me: values.aboutMe,
       gender: values.gender,
-      ...(userData.is_sponsor && { zip_address: values.zipAddress }),
+      service_type: userData?.is_pro ? values.serviceTypes : [1], // TODO: burasi duzeltilecek.
+      ...(!userData.is_sponsor && { zip_address: values.zipAddress }),
       ...(userData.is_client && { min_incomer: values.minimumIncome }),
       ...(userData.is_pro && {
         twitter_account: values.twitter,
