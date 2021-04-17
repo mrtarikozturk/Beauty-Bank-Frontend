@@ -59,7 +59,7 @@ const Signin = () => {
   const [loading, setLoading] = useState(false);
   const [forgotPasswordModal, setForgotPasswordModal] = useState(false);
   const [checkMailModal, setCheckMailModal] = useState(false)
-  const [resetPasswordModal, setResetPasswordModal] = useState(true)
+  const [resetPasswordModal, setResetPasswordModal] = useState(false)
   const [passwordChangedModal, setPasswordChangedModal] = useState(false)
 
   // validation schema
