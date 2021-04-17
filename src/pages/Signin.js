@@ -19,7 +19,11 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { AppContext } from "../context/AppContext";
 import api, { UserRoles, handleError } from '../api'
-import { email, password } from '../utils/validations'
+import { email, password } from '../utils/validations';
+import ForgotPassword from '../components/ForgotPassword';
+import CheckMail from '../components/CheckMail';
+import ResetPassword from '../components/ResetPassword';
+import PasswordChanged from '../components/PasswordChanged';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -53,6 +57,10 @@ const Signin = () => {
   // states
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [forgotPasswordModal, setForgotPasswordModal] = useState(false);
+  const [checkMailModal, setCheckMailModal] = useState(false)
+  const [resetPasswordModal, setResetPasswordModal] = useState(true)
+  const [passwordChangedModal, setPasswordChangedModal] = useState(false)
 
   // validation schema
   const validationSchema = yup.object().shape({
@@ -167,7 +175,7 @@ const Signin = () => {
         </form>
         <Grid container>
           <Grid item xs>
-            <Link to='#' variant="body2">
+            <Link to='#' variant="body2" onClick={() => setForgotPasswordModal(prev => !prev)}>
               {formatMessage({
                 id: 'forgot_password',
                 defaultMessage: 'Forgot password?'
@@ -175,10 +183,6 @@ const Signin = () => {
             </Link>
           </Grid>
           <Grid item>
-            {formatMessage({
-              id: 'dont_have_an_account',
-              defaultMessage: 'Don\'t have an account?'
-            })}{" "}
             <Link to='/register' variant="body2">
               {formatMessage({
                 id: 'sign_up',
@@ -188,6 +192,10 @@ const Signin = () => {
           </Grid>
         </Grid>
       </div>
+      <ForgotPassword {...{ forgotPasswordModal, setForgotPasswordModal, setCheckMailModal }} />
+      <CheckMail {...{ checkMailModal, setForgotPasswordModal, setCheckMailModal }} />
+      <ResetPassword {...{ resetPasswordModal, setResetPasswordModal, setPasswordChangedModal }} />
+      <PasswordChanged {...{ passwordChangedModal, setPasswordChangedModal }} />
     </Container>
   );
 };
