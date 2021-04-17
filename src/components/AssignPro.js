@@ -254,7 +254,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                       {
                         formatMessage({
                           id: 'minimum_income',
-                          defaultMessage: 'Minumum Income'
+                          defaultMessage: 'Minimum Income'
                         })
                       }
                     </TableCell>
