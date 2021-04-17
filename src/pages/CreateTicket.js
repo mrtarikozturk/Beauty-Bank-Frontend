@@ -132,15 +132,6 @@ const CreateTicket = () => {
                   aria-label="a dense table"
                   size="small"
                 >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>{`${user?.username.charAt(0).toUpperCase() +
-                        user?.username.slice(1)
-                        }'s Credentials`}</TableCell>
-                        // TODO:Burasi nasil dil paketine aktarilacak
-                      <TableCell align="right"></TableCell>
-                    </TableRow>
-                  </TableHead>
                   <TableBody>
                     <TableRow>
                       <TableCell>{formatMessage({
