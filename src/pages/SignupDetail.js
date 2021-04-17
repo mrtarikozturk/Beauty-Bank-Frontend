@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams,useLocation } from "react-router-dom";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { makeStyles } from "@material-ui/core/styles";
@@ -163,12 +163,15 @@ const SignupDetail = () => {
     ...(id === "connector" && {
       zip: "1671 EA",
     }),
+    ...(id === "sponsor" && {
+      zip: "1671 EA",
+    }),
     ...(id === "professional" && {
       aboutMe: "",
       zip: "",
       companyName: "",
       gender: null,
-      capacity: 0,
+      capacity: 1,
 
     }),
   };
@@ -188,7 +191,7 @@ const SignupDetail = () => {
         about_me: values.aboutMe,
         company_name: values.companyName,
         for_gender: values.gender,
-        reserved_capacity: values.capacity === 0 ? 1 : values.capacity,
+        reserved_capacity: values.capacity,
         zip_address: values.zip,
         service_type: selectedServices,
       }),
@@ -196,6 +199,9 @@ const SignupDetail = () => {
         zip_address: values.zip,
       }),
       ...(id === "connector" && {
+        zip_address: "1671 EA",
+      }),
+      ...(id === "sponsor" && {
         zip_address: "1671 EA",
       }),
     };
