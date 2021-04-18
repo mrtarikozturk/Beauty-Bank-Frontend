@@ -2,12 +2,15 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useIntl } from 'react-intl';
-
+import axios from 'axios';
+import { useSnackbar } from "notistack";
 import ModalHeader from './ModalHeader';
 import ActionBox from './ActionBox';
 import { Popup } from './Popup';
 import { email } from '../utils/validations'
 import { TextField, Button, makeStyles } from '@material-ui/core';
+import { handleError } from "../api";
+
 
 const useStyles = makeStyles(theme => ({
     submit: {
@@ -20,13 +23,26 @@ const ForgotPassword = (props) => {
 
     const { forgotPasswordModal, setForgotPasswordModal, setCheckMailModal } = props;
     const { formatMessage } = useIntl();
+    const { REACT_APP_API_BASE_URL } = process.env;
 
     const toggleForgot = () => setForgotPasswordModal(prev => !prev);
     const toggleCheckMail = () => setCheckMailModal(prev => !prev);
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const onSubmit = () => {
-        toggleForgot();
-        toggleCheckMail();
+
+    const onSubmit = (values) => {
+        axios.post(`https://bbank-backend-app.herokuapp.com/auth/reset-email`, { email: values.email })
+            .then(() => {
+                enqueueSnackbar(formatMessage({
+                    id: 'We have sent you a link to reset your password',
+                    defaultMessage: 'We have sent you a link to reset your password'
+                }), {
+                    variant: "success",
+                });
+                toggleForgot();
+                toggleCheckMail();
+            })
+            .catch(handleError(enqueueSnackbar, closeSnackbar));
     }
 
     const formik = useFormik({

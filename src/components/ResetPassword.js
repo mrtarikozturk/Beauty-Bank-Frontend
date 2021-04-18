@@ -4,8 +4,12 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useIntl } from 'react-intl';
+import axios from 'axios';
+import { useSnackbar } from "notistack";
 
 
+
+import { handleError } from "../api";
 import ModalHeader from './ModalHeader';
 import { Popup } from './Popup';
 import ActionBox from './ActionBox';
@@ -15,9 +19,11 @@ import { passwordConfirm, password } from '../utils/validations';
 const ResetPassword = (props) => {
     const { formatMessage } = useIntl();
 
-    const { resetPasswordModal, setResetPasswordModal, setPasswordChangedModal } = props;
+    const { resetPasswordModal, setResetPasswordModal, setPasswordChangedModal, token, uidb64 } = props;
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const { REACT_APP_API_BASE_URL } = process.env;
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
 
     const toggleResetModal = () => setResetPasswordModal(prev => !prev);
@@ -26,10 +32,19 @@ const ResetPassword = (props) => {
     const toggleConfirm = () => setShowConfirmPassword(prev => !prev);
 
     const onSubmit = (values) => {
-        alert(values.password);
-        //TODO:API baglanacak
-        toggleResetModal();
-        toggleSuccessModal();
+        axios.patch(`${REACT_APP_API_BASE_URL}/auth/password-reset-complete`,
+            { password: values.password, token, uidb64 })
+            .then(() => {
+                enqueueSnackbar(formatMessage({
+                    id: 'We have sent you a link to reset your password',
+                    defaultMessage: 'We have sent you a link to reset your password'
+                }), {
+                    variant: "success",
+                });
+                toggleResetModal();
+                toggleSuccessModal();
+            })
+            .catch(handleError(enqueueSnackbar, closeSnackbar));
     }
 
     const formik = useFormik({

@@ -21,13 +21,6 @@ const CheckMail = (props) => {
     const toggleCheckMail = () => setCheckMailModal(prev => !prev)
     const toggleForgot = () => setForgotPasswordModal(prev => !prev);
 
-
-    const handleClick = (e) => {
-        // e.preventDefault();
-        alert('Hooop');
-        //TODO: API baglanacak
-    }
-
     const handleSkip = (e) => {
         toggleCheckMail();
     }
@@ -47,12 +40,9 @@ const CheckMail = (props) => {
         >
             <img src={'../images/mail2.png'} alt='company logo' className={classes.logo} />
             <ActionBox
-                buttonTextId='resend_email'
-                buttonTextMsg='Resend Email'
-                buttonOnClick={handleClick}
-                linkTxtId='skip'
-                linkTxtMsg={'Skip, I\'ll confirm later'}
-                linkOnClick={handleSkip}
+                buttonTextId='skip'
+                buttonTextMsg='Skip'
+                buttonOnClick={handleSkip}
             />
         </Popup >
     )
