@@ -18,13 +18,10 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Paper,
   Avatar,
   CircularProgress,
-  Link,
-  Chip,
 } from "@material-ui/core";
 
 // custom imports
@@ -76,6 +73,9 @@ const useStyles = makeStyles((theme) => ({
   fileInput: {
     display: "none",
   },
+  aboutmeText: {
+    marginTop: theme.spacing(3),
+  }
 }));
 
 const Profile = () => {
@@ -240,7 +240,15 @@ const Profile = () => {
                     defaultMessage: 'About me:'
                   })}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                {userData?.is_client && (
+                  <Typography gutterBottom variant="span" component="span" color='secondary' >
+                    {formatMessage({
+                      id: 'about_me_detail',
+                      defaultMessage: `This section is very important for us to understand you better. Please tell about your dreams, your goals, your wishes..`
+                    })}
+                  </Typography>
+                )}
+                <Typography variant="body2" color="textSecondary" component="p" className={classes.aboutmeText}>
                   {userData?.about_me}
                 </Typography>
               </CardContent>
@@ -254,7 +262,7 @@ const Profile = () => {
                   size="small"
                 >
                   <TableBody>
-                    ...{userData?.is_pro && (
+                    {userData?.is_pro && (
                       <TableRow>
                         <TableCell>{formatMessage({
                           id: 'social_media',
@@ -310,6 +318,28 @@ const Profile = () => {
                             })}
                       </TableCell>
                     </TableRow>
+                    {userData?.is_pro && (
+                      <>
+                        <TableRow>
+                          <TableCell>{formatMessage({
+                            id: 'company_name',
+                            defaultMessage: 'Company Name'
+                          })}</TableCell>
+                          <TableCell align="left">
+                            {userData?.company_name}
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>{formatMessage({
+                            id: 'capacity',
+                            defaultMessage: 'Capacity'
+                          })}</TableCell>
+                          <TableCell align="left">
+                            {userData?.reserved_capacity}
+                          </TableCell>
+                        </TableRow>
+                      </>
+                    )}
                     <TableRow>
                       <TableCell>{formatMessage({
                         id: 'address',
@@ -340,43 +370,6 @@ const Profile = () => {
                         {userData?.phone_number2}
                       </TableCell>
                     </TableRow>
-                    {/* {userData?.is_pro && (
-                      <>
-                        <TableRow>
-                          <TableCell>Instagram</TableCell>
-                          <TableCell align="left">
-                            <Link href={userData?.instagram_account} variant="body2">
-                              {userData?.instagram_account}
-                            </Link>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Facebook</TableCell>
-                          <TableCell align="left">
-                            <Link href={userData?.facebook_account} variant="body2">
-                              {userData?.facebook_account}
-                            </Link>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Youtube</TableCell>
-                          <TableCell align="left">
-                            <Link href={userData?.youtube_account} variant="body2">
-                              {userData?.youtube_account}
-                            </Link>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>Twitter</TableCell>
-                          <TableCell align="left">
-                            <Link href={userData?.twitter_account} variant="body2">
-                              {userData?.twitter_account}
-                            </Link>
-                          </TableCell>
-                        </TableRow>
-                      </>
-                    )} */}
-                    {/* TODO: eger istenmez ise silinecek */}
                   </TableBody>
                 </Table>
               </TableContainer>
