@@ -180,7 +180,7 @@ const SignupDetail = () => {
   const onSubmit = (values) => {
     setLoading(true);
     const data = {
-      email: values.email,
+      email: values.email.toLowerCase(),
       username: values.userName,
       password: values.password,
       first_name: values.firstName,
@@ -298,7 +298,7 @@ const SignupDetail = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   label={formatMessage({
-                    id: 'usernam',
+                    id: 'username',
                     defaultMessage: 'User Name'
                   })}
                   name="userName"
@@ -455,7 +455,7 @@ const SignupDetail = () => {
                         <MenuItem value={0}>Female</MenuItem>
                         <MenuItem value={1}>Male</MenuItem>
                         <MenuItem value={2}>I don't say</MenuItem>
-                        //TODO:Burasi duzeltilecek
+                        {/*  TODO:Burasi duzeltilecek */}
                       </Select>
                     </FormControl>
                   </Grid>
@@ -530,7 +530,7 @@ const SignupDetail = () => {
                 <Grid item xs={12}>
                   <TextField
                     label={formatMessage({
-                      id: 'about_me_detail',
+                      id: 'about_me',
                       defaultMessage: 'About Me'
                     })}
                     name="aboutMe"
