@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import { useIntl } from "react-intl";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -53,13 +53,19 @@ const Signin = () => {
   const { setUser } = useContext(AppContext);
   const { formatMessage } = useIntl();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { search } = useLocation();
+  const searchParam = new URLSearchParams(search);
+  // const token=al944w-41e8aca8c9158b44f501e12b6625dd6d&uidb64=MTY&resetPassword=true
+  const resetPassword = searchParam.get('resetPassword');
+  const token = searchParam.get('token');
+  const uidb64 = searchParam.get('uidb64');
 
   // states
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [forgotPasswordModal, setForgotPasswordModal] = useState(false);
   const [checkMailModal, setCheckMailModal] = useState(false)
-  const [resetPasswordModal, setResetPasswordModal] = useState(false)
+  const [resetPasswordModal, setResetPasswordModal] = useState(resetPassword ? true : false)
   const [passwordChangedModal, setPasswordChangedModal] = useState(false)
 
   // validation schema
@@ -194,7 +200,7 @@ const Signin = () => {
       </div>
       <ForgotPassword {...{ forgotPasswordModal, setForgotPasswordModal, setCheckMailModal }} />
       <CheckMail {...{ checkMailModal, setForgotPasswordModal, setCheckMailModal }} />
-      <ResetPassword {...{ resetPasswordModal, setResetPasswordModal, setPasswordChangedModal }} />
+      <ResetPassword {...{ resetPasswordModal, setResetPasswordModal, setPasswordChangedModal, token, uidb64 }} />
       <PasswordChanged {...{ passwordChangedModal, setPasswordChangedModal }} />
     </Container>
   );

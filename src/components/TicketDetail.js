@@ -51,11 +51,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TicketDetail = ({ selectedTicket }) => {
+const TicketDetail = ({ selectedTicket,connector =false }) => {
   // constants
   const classes = useStyles();
   const { formatMessage } = useIntl();
-
   return (
     <main className={classes.layout}>
       <Paper className={classes.paper}>
@@ -109,7 +108,7 @@ const TicketDetail = ({ selectedTicket }) => {
               </CardContent>
             </Grid>
 
-            {Number(selectedTicket.ticket_status) >= 2 ? (
+            {!connector && Number(selectedTicket.ticket_status) >= 2 ? (
               <TableContainer>
                 <Table
                   className={classes.table}
@@ -192,7 +191,88 @@ const TicketDetail = ({ selectedTicket }) => {
                   </TableBody>
                 </Table>
               </TableContainer>
-            ) : null}
+            ) : (<TableContainer>
+                <Table
+                  className={classes.table}
+                  aria-label="a dense table"
+                  size="small"
+                >
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'full_name',
+                            defaultMessage: 'Full Name'
+                          })
+                        }
+                      </TableCell>
+                      <TableCell align="left">{selectedTicket?.pro_detail?.first_name ? `${selectedTicket?.pro_detail?.first_name} ${selectedTicket?.pro_detail?.last_name}`:"---"}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        {formatMessage({
+                          id: 'company_name',
+                          defaultMessage: 'Company Name'
+                        })}
+                      </TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.company_name}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        {formatMessage({
+                          id: 'phone_number',
+                          defaultMessage: 'Phone Number'
+                        })}
+                      </TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.phone_number}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'email',
+                            defaultMessage: 'E-mail'
+                          })
+                        }
+                      </TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.email}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'zip_code',
+                            defaultMessage: 'Zip Address'
+                          })
+                        }
+                      </TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.zip_address}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        {formatMessage({
+                          id: 'address',
+                          defaultMessage: 'Address'
+                        })}
+                      </TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.pro_detail?.address
+                          ? selectedTicket?.pro_detail?.address
+                          : "--"}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>)}
 
             <Grid item xs={12}>
               <CardContent style={{ alignItems: "center" }}>
@@ -212,7 +292,7 @@ const TicketDetail = ({ selectedTicket }) => {
               </CardContent>
             </Grid>
 
-            {Number(selectedTicket.ticket_status) >= 1 ? (
+            {!connector && Number(selectedTicket.ticket_status) >= 1 ? (
               <TableContainer>
                 <Table
                   className={classes.table}
@@ -229,7 +309,7 @@ const TicketDetail = ({ selectedTicket }) => {
                           })
                         }
                       </TableCell>
-                      <TableCell align="left">{`${selectedTicket?.connector_detail?.first_name} ${selectedTicket?.connector_detail?.last_name}`}</TableCell>
+                      <TableCell align="left">{selectedTicket?.connector_detail?.first_name ? `${selectedTicket?.connector_detail?.first_name} ${selectedTicket?.connector_detail?.last_name}` :"---"}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
@@ -260,7 +340,53 @@ const TicketDetail = ({ selectedTicket }) => {
                   </TableBody>
                 </Table>
               </TableContainer>
-            ) : null}
+            ) : ( <TableContainer>
+                <Table
+                  className={classes.table}
+                  aria-label="a dense table"
+                  size="small"
+                >
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'full_name',
+                            defaultMessage: 'Full Name'
+                          })
+                        }
+                      </TableCell>
+                      <TableCell align="left">{selectedTicket?.connector_detail?.first_name ? `${selectedTicket?.connector_detail?.first_name} ${selectedTicket?.connector_detail?.last_name}` : "---"}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'phone_number',
+                            defaultMessage: 'Phone Number'
+                          })
+                        }
+                      </TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.connector_detail?.phone_number}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        {
+                          formatMessage({
+                            id: 'email',
+                            defaultMessage: 'E-mail'
+                          })
+                        }
+                      </TableCell>
+                      <TableCell align="left">
+                        {selectedTicket?.connector_detail?.email}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>)}
           </Grid>
         </Grid>
       </Paper>
