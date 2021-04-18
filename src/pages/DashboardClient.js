@@ -120,28 +120,19 @@ export const DashboardClient = () => {
       isMobile={isMobile}
       modals={[
         {
-          title: formatMessage({
-            id: 'set_appointment_date',
-            defaultMessage: 'Set Appointment Date'
-          }),
+          title: 'set_appointment_date',
           content: <SetTicketDate {...dateParams} />,
           open: openDate,
           onModalClose: handleClose,
         },
         {
-          title: formatMessage({
-            id: 'set_appointment_feedbac',
-            defaultMessage: 'Give Feedback'
-          }),
-          content: <SetTicketFeedback {...dateParams} />,
+          title: 'set_appointment_feedback',
+          content: < SetTicketFeedback {...dateParams} />,
           open: open,
           onModalClose: handleClose,
         },
         {
-          title: formatMessage({
-            id: 'ticket_detail_page',
-            defaultMessage: 'Request Detail Page'
-          }),
+          title: 'ticket_detail_page',
           content: <TicketDetail {...dateParams} />,
           open: openTicket,
           onModalClose: handleClose,

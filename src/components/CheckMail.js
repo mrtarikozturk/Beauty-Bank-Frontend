@@ -32,8 +32,8 @@ const CheckMail = (props) => {
             dividers={false}
             scroll='body'
             customHeader={<ModalHeader
-                titleId='Check Your Mail'
-                titleMsg='Check Your Mail'
+                titleId='check_your_email'
+                titleMsg='Check Your E-mail'
                 descId='check_your_mail_message'
                 descMsg={'We have sent a password recover instructions to your email.'}
             />}
@@ -41,7 +41,7 @@ const CheckMail = (props) => {
             <img src={'../images/mail2.png'} alt='company logo' className={classes.logo} />
             <ActionBox
                 buttonTextId='skip'
-                buttonTextMsg='Skip'
+                buttonTextMsg={'Skip'}
                 buttonOnClick={handleSkip}
             />
         </Popup >

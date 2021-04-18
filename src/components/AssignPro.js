@@ -105,7 +105,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
   function onSubmit() {
     // alert(modalName)
     switch (modalName) {
-      case 'Assign Pro':
+      case 'assign_pro':
         api
           .put(`/ticket/connector-tickets/${selectedTicket.id}`, {
             pro: selectPro,
@@ -122,12 +122,12 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
           })
           .catch(handleError(enqueueSnackbar, closeSnackbar));
         break;
-      case 'Intake Call Date':
-      case 'Intake Call Done':
+      case 'intake_call_date':
+      case 'intake_call_done':
         api
           .put(`/ticket/connector-intake/${selectedTicket.id}`, {
-            ...(modalName === 'Intake Call Date' && { intake_call_date: date }),
-            ...(modalName === 'Intake Call Done' && { is_intake_call: isIntake }),
+            ...(modalName === 'intake_call_date' && { intake_call_date: date }),
+            ...(modalName === 'intake_call_done' && { is_intake_call: isIntake }),
           })
           .then(() => {
             enqueueSnackbar(formatMessage({
@@ -169,15 +169,6 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                 aria-label="a dense table"
                 size="small"
               >
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{`${selectedTicket?.owner.username.charAt(0).toUpperCase() +
-                      selectedTicket?.owner.username.slice(1)
-                      }'s Ticket`}</TableCell>
-                      // TODO:BUrasi nasil cevrilecek
-                    <TableCell align="right"></TableCell>
-                  </TableRow>
-                </TableHead>
                 <TableBody>
                   <TableRow>
                     <TableCell>
@@ -259,7 +250,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                       }
                     </TableCell>
                     <TableCell align="left">
-                      {selectedTicket?.owner.income}
+                      {selectedTicket?.owner.min_incomer ? 'Yes' : 'No'}
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -288,7 +279,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
               <div className={classes.formInputs}>
                 <Grid item xs={12}>
                   {
-                    modalName === 'Assign Pro' &&
+                    modalName === 'assign_pro' &&
                     (
                       <FormControl variant="outlined" fullWidth>
                         <InputLabel id="demo-simple-select-outlined-label">
@@ -317,7 +308,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                     )
                   }
                   {
-                    modalName === 'Intake Call Date' &&
+                    modalName === 'intake_call_date' &&
                     (
                       <FormControlLabel
                         control={<DateTimePicker
@@ -330,14 +321,14 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
                         />}
                         label={formatMessage({
                           id: 'set_intake_call_date',
-                          defaultMessage: 'Set Intake Call Date:'
+                          defaultMessage: 'Set Intake Call Date:  '
                         })}
                         labelPlacement='start'
                       />
                     )
                   }
                   {
-                    modalName === 'Intake Call Done' &&
+                    modalName === 'intake_call_done' &&
                     (
                       <FormControlLabel
                         control={<Switch checked={isIntake} onChange={() => setIsIntake(prev => !prev)} name="isIntake" />}

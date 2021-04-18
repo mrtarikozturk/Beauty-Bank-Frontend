@@ -36,7 +36,7 @@ const ResetPassword = (props) => {
             { password: values.password, token, uidb64 })
             .then(() => {
                 enqueueSnackbar(formatMessage({
-                    id: 'We have sent you a link to reset your password',
+                    id: 'we_have sent you a link to reset your password',
                     defaultMessage: 'We have sent you a link to reset your password'
                 }), {
                     variant: "success",

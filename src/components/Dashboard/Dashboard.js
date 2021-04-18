@@ -44,7 +44,11 @@ export const Dashboard = ({
           aria-describedby="simple-modal-description"
         >
           <div className={classes.paperModal}>
-            <h1 className="simple-modal-title">{modal.title}</h1>
+            <h1 className="simple-modal-title">
+              {modal.title && formatMessage({
+                id: modal.title
+              })}
+            </h1>
             {modal.content}
           </div>
         </Modal>
