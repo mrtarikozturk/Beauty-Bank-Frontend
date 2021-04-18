@@ -34,7 +34,7 @@ const ForgotPassword = (props) => {
         axios.post(`https://bbank-backend-app.herokuapp.com/auth/reset-email`, { email: values.email })
             .then(() => {
                 enqueueSnackbar(formatMessage({
-                    id: 'We have sent you a link to reset your password',
+                    id:'we_have_sent_you_a_link_to_reset_your_password',
                     defaultMessage: 'We have sent you a link to reset your password'
                 }), {
                     variant: "success",
@@ -59,8 +59,8 @@ const ForgotPassword = (props) => {
             customHeader={<ModalHeader
                 titleId='Forgot Password'
                 titleMsg='Forgot Password'
-                descId='Forgot'
-                descMsg={'Enter your email and we\' ll send you a link to reset your password'}
+                descId='forgot_password_message'
+                descMsg={'Enter your email and we\'ll send you a link to reset your password'}
             />}
         >
             <form noValidate onSubmit={formik.handleSubmit}>
