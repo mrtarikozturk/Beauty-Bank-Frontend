@@ -177,10 +177,7 @@ export const DashboardConnector = () => {
           (t) => (
             !t?.intake_call_date ?
               <Button
-                onClick={() => handleOpen(t, formatMessage({
-                  id: 'intake_call_date',
-                  defaultMessage: 'Intake Call Date'
-                }))}
+                onClick={() => handleOpen(t, 'intake_call_date')}
                 variant="outlined"
                 color='primary'
                 value="intake"
@@ -203,19 +200,13 @@ export const DashboardConnector = () => {
             t?.is_intake_call ?
               <CheckCircleIcon color='secondary' />
               :
-              <IconButton onClick={() => handleOpen(t, formatMessage({
-                id: 'intake_call_done',
-                defaultMessage: 'Intake Call Done'
-              }))}>
+              <IconButton onClick={() => handleOpen(t, 'intake_call_done')}>
                 < AddIcCallIcon color='primary' />
               </IconButton>
           ),
           (t) => (
             <Button
-              onClick={() => handleOpen(t, formatMessage({
-                id: 't',
-                defaultMessage: 'Assign Pro'
-              }))}
+              onClick={() => handleOpen(t, 'assign_pro')}
               variant="outlined"
               color={t?.pro ? "secondary" : "primary"}
               value="Choose"

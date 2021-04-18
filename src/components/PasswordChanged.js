@@ -41,8 +41,8 @@ const PasswordChanged = (props) => {
         >
             <img src={'../images/success.png'} alt='password changed successfully' className={classes.logo} />
             <ActionBox
-                buttonTextId='ok'
-                buttonTextMsg='OK'
+                buttonTextId='back_to_login'
+                buttonTextMsg='Back To Login'
                 buttonOnClick={handleClick}
             />
         </Popup >

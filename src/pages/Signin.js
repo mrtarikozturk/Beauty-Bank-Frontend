@@ -84,7 +84,10 @@ const Signin = () => {
   const onSubmit = (values) => {
     setLoading(true);
     console.log({ values })
-    api.post('/auth/login/', values).then(data => {
+    api.post('/auth/login/', {
+      email: values.email.toLowerCase(),
+      password: values.password,
+    }).then(data => {
       setUser(data)
       localStorage.setItem("user", JSON.stringify(data))
       history.push(UserRoles[data.role]?.path ?? '/login')
