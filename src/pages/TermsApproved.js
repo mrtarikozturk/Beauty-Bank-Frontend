@@ -40,6 +40,7 @@ const TermsApproved = () => {
   const [isVerified, setVerified] = useState(false);
   const history = useHistory();
   const { formatMessage } = useIntl();
+  const { REACT_APP_API_BASE_URL } = process.env;
 
 
   useEffect(async () => {
@@ -54,7 +55,7 @@ const TermsApproved = () => {
     };
 
     const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/ticket/terms-approved/`,
+      `${REACT_APP_API_BASE_URL}ticket/terms-approved/`,
       requestOptions
       //TODO:API degisecek
     );

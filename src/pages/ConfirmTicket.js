@@ -41,6 +41,7 @@ const ConfirmTicket = () => {
   const [isConfirmed, setConfirmed] = useState(false);
   const history = useHistory();
   const { formatMessage } = useIntl();
+  const { REACT_APP_API_BASE_URL } = process.env;
 
   const { user, setUser, userProfile, setUserProfile } = useContext(AppContext);
 
@@ -55,7 +56,7 @@ const ConfirmTicket = () => {
     };
 
     const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/ticket/confirm/${params.id}`,
+      `${REACT_APP_API_BASE_URL}ticket/confirm/${params.id}`,
       requestOptions
     );
     const data = await response.json();
