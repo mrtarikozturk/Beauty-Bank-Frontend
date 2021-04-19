@@ -1,16 +1,18 @@
 import axios from 'axios';
 
-const api = axios.create({baseURL: "https://bbank-backend-app.herokuapp.com/"})
+const { REACT_APP_API_BASE_URL } = process.env;
+
+const api = axios.create({ baseURL: REACT_APP_API_BASE_URL })
 //TODO:API url degistirilecek
 
 api.interceptors.request.use(request => {
   let user = localStorage.getItem("user");
-  request.headers = {"Content-Type": "application/json", ...request.headers}
+  request.headers = { "Content-Type": "application/json", ...request.headers }
 
   if (user && !request.url.includes('auth/login')) {
     user = JSON.parse(user);
     if (user?.tokens?.access) {
-      request.headers = {Authorization: `Bearer ${user.tokens.access}`, ...request.headers}
+      request.headers = { Authorization: `Bearer ${user.tokens.access}`, ...request.headers }
     }
   }
   return request
