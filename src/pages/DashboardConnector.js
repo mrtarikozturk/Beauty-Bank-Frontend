@@ -7,6 +7,7 @@ import { Dashboard } from "../components/Dashboard";
 import { LayoutConnector } from "../views";
 import { FormatDate, FormatDateTime } from "../helper/FormatDate";
 import { AssignPro } from "../components/AssignPro";
+import { TicketDetail } from "../components/TicketDetail";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
 import AddIcCallIcon from '@material-ui/icons/AddIcCall';
@@ -61,6 +62,7 @@ export const DashboardConnector = () => {
 
 
   const [open, setOpen] = useState(false);
+   const [openTicket, setOpenTicket] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
@@ -75,8 +77,15 @@ export const DashboardConnector = () => {
     setModalName(name);
   };
 
+  const handleOpenTicket = (ticket,name) => {
+    setOpenTicket(true);
+    setSelectedTicket(ticket);
+    setModalName(name);
+  };
+
   const handleClose = () => {
     setOpen(false);
+    setOpenTicket(false);
   };
 
   useEffect(() => {
@@ -94,6 +103,7 @@ export const DashboardConnector = () => {
   const dateParams = { selectedTicket, handleClose, modalName };
   const modalParams = { open, onModalClose: handleClose };
 
+
   return (
     <Dashboard
       Layout={LayoutConnector}
@@ -106,6 +116,12 @@ export const DashboardConnector = () => {
           title: modalName,
           content: <AssignPro {...dateParams} />,
           ...modalParams,
+        },
+            {
+          title: modalName,
+          content: <TicketDetail connector={true} {...dateParams} />,
+          open: openTicket,
+          onModalClose: handleClose,
         },
       ]}
       list={{
@@ -145,7 +161,11 @@ export const DashboardConnector = () => {
           formatMessage({
             id: 'assign_pro',
             defaultMessage: 'Assign Pro'
-          })
+          }),
+            formatMessage({
+            id: 'ticket_detail',
+            defaultMessage: 'Ticket Detail'
+          }),
         ],
         body: [
           (t) => t.id,
@@ -201,6 +221,25 @@ export const DashboardConnector = () => {
                   id: 'assign_pro',
                   defaultMessage: 'Assign Pro'
                 })}
+            </Button>
+          ),
+             (t) => (
+            <Button
+              onClick={() => handleOpenTicket(t, formatMessage({
+                 id: 'ticket_detail',
+            defaultMessage: 'Ticket Detail'
+              }))}
+              variant="outlined"
+              color={ "secondary"}
+              value="Choose"
+              className={classes.button}
+            >
+              { formatMessage({
+                id: 'ticket_detail',
+            defaultMessage: 'Ticket Detail'
+              }) }
+
+
             </Button>
           ),
         ],
