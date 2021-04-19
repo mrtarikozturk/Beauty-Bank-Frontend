@@ -31,10 +31,10 @@ const ForgotPassword = (props) => {
 
 
     const onSubmit = (values) => {
-        axios.post(`https://bbank-backend-app.herokuapp.com/auth/reset-email`, { email: values.email })
+        axios.post(`${REACT_APP_API_BASE_URL}auth/reset-email`, { email: values.email })
             .then(() => {
                 enqueueSnackbar(formatMessage({
-                    id:'we_have_sent_you_a_link_to_reset_your_password',
+                    id: 'we_have_sent_you_a_link_to_reset_your_password',
                     defaultMessage: 'We have sent you a link to reset your password'
                 }), {
                     variant: "success",

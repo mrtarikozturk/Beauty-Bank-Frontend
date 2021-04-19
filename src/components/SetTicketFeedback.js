@@ -80,6 +80,7 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
   const classes = useStyles();
   const { user } = useContext(AppContext);
   const { formatMessage } = useIntl();
+  const { REACT_APP_API_BASE_URL } = process.env;
 
   //useStates
   const [fed, setFed] = useState(null);
@@ -139,7 +140,7 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
       // TODO: API degisecek
       axios
         .post(
-          `https://bbank-backend-app.herokuapp.com/ticket/feedback-imageupload/${fed?.id}`,
+          `${REACT_APP_API_BASE_URL}ticket/feedback-imageupload/${fed?.id}`,
           form_data,
           {
             headers: {

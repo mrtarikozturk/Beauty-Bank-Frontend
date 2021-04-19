@@ -157,5 +157,6 @@
     "password_changed_successfully_message":"You can now sign in with your new password",
     "back_to_login":"Back To Login",
     "reset_your_password":"Reset Your Password",
-    "reset_your_password_message":"Please enter and confirm your new password below to access your account"
+    "reset_your_password_message":"Please enter and confirm your new password below to access your account",
+    "must_be_at_least_6_characters":"Must be at least 6 characters"
 }

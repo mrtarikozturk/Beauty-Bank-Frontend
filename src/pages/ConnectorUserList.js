@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
 const ConnectorUserList = () => {
   const classes = useStyles();
   const { formatMessage } = useIntl();
-
+  const { REACT_APP_API_BASE_URL } = process.env;
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const { user, setUser, userProfile, setUserProfile } = useContext(AppContext);
@@ -81,7 +81,7 @@ const ConnectorUserList = () => {
     };
 
     const response = await fetch(
-      `https://bbank-backend-app.herokuapp.com/auth/user-list/?page=${page}`,
+      `${REACT_APP_API_BASE_URL}auth/user-list/?page=${page}`,
       requestOptions
     );
     // TODO: api .env dosyasina tasinmasi gerekir.
