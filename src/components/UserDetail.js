@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useIntl } from 'react-intl';
-
+import axios from 'axios';
 
 import {
   Grid,
@@ -80,9 +80,11 @@ const UserDetail = ({ selectedUser, handleClose }) => {
   const classes = useStyles();
   const { formatMessage } = useIntl();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { REACT_APP_API_BASE_URL } = process.env;
 
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState([])
 
   useEffect(() => {
     api
@@ -93,6 +95,16 @@ const UserDetail = ({ selectedUser, handleClose }) => {
         setLoading(false);
       })
       .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
+
+    axios.get(`${REACT_APP_API_BASE_URL}/auth/service-type/`)
+      .then(response => {
+        setServices(response?.data?.results);
+        console.log(response?.data?.results)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+      .then(() => console.log(services))
   }, []);
 
   return (
@@ -115,20 +127,6 @@ const UserDetail = ({ selectedUser, handleClose }) => {
               <Grid item xs={12}>
                 <TableContainer>
                   <Table aria-label="a dense table" size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                          style={{
-                            overflowX: "auto",
-                            whiteSpace: "nowrap",
-                            textAlign: "center !important",
-                          }}
-                        >{`${userData?.username?.charAt(0).toUpperCase() +
-                          userData?.username?.slice(1)
-                          }'s Profile`}</TableCell>
-                        <TableCell align="right"></TableCell>
-                      </TableRow>
-                    </TableHead>
                     <TableBody>
                       <TableRow>
                         <TableCell>
@@ -159,6 +157,17 @@ const UserDetail = ({ selectedUser, handleClose }) => {
                         </TableCell>
                         <TableCell align="left">
                           {userData?.last_name}
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          {formatMessage({
+                            id: 'username',
+                            defaultMessage: 'Username'
+                          })}
+                        </TableCell>
+                        <TableCell align="left">
+                          {userData?.username}
                         </TableCell>
                       </TableRow>
                       <TableRow>
@@ -233,6 +242,23 @@ const UserDetail = ({ selectedUser, handleClose }) => {
                           {userData?.phone_number2}
                         </TableCell>
                       </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          {formatMessage({
+                            id: 'minimum_income',
+                            defaultMessage: 'Minimum Income'
+                          })}
+                        </TableCell>
+                        <TableCell align="left">
+                          {userData?.min_incomer ? formatMessage({
+                            id: 'yes',
+                            defaultMessage: 'Yes'
+                          }) : formatMessage({
+                            id: 'no',
+                            defaultMessage: 'No'
+                          })}
+                        </TableCell>
+                      </TableRow>
                       {userData?.is_pro && (
                         <>
                           <TableRow>
@@ -258,7 +284,11 @@ const UserDetail = ({ selectedUser, handleClose }) => {
                               }
                             </TableCell>
                             <TableCell align="left">
-                              {userData?.service_type}
+                              {
+                                userData?.service_type.map(item => {
+                                  return services.find(type => type.id == item).name
+                                }).join(', ')
+                              }
                             </TableCell>
                           </TableRow>
                         </>
@@ -282,8 +312,8 @@ const UserDetail = ({ selectedUser, handleClose }) => {
             </Grid>
           )}
         </Grid>
-      </Paper>
-    </main>
+      </Paper >
+    </main >
   );
 };
 
