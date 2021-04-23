@@ -23,7 +23,6 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import BookIcon from '@material-ui/icons/Book';
-import { TicketTable } from '../components/Index';
 import { useIntl } from 'react-intl';
 
 // TODO: Bu sayfa kullanilacak mi yoksa silelim.
@@ -215,7 +214,6 @@ const DashboardAdmin = () => {
                         {/* Recent Orders */}
                         <Grid item xs={12}>
                             <Paper className={classes.paper}>
-                                <TicketTable />
                             </Paper>
                         </Grid>
                     </Grid>
