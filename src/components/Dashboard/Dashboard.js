@@ -6,12 +6,12 @@ import {
   Grid,
   Paper,
   Typography,
-  Modal,
   CircularProgress,
 } from "@material-ui/core";
 
 import { Stepper } from "../Stepper";
 import { List } from "./List";
+import { Popup } from '../Popup';
 
 export const Dashboard = ({
   Layout,
@@ -36,23 +36,21 @@ export const Dashboard = ({
       defaultMessage: 'Dashboard'
     })}>
       {modals.map((modal) => (
-        <Modal
+        <Popup
           key={modal.title}
           open={modal.open}
-          onClose={modal.onModalClose}
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
+          scroll='body'
+          togglePopup={modal.onModalClose}
+          title={
+            modal?.title && formatMessage({
+              id: modal.title
+            })
+          }
         >
-          <div className={classes.paperModal}>
-            <h1 className="simple-modal-title">
-              {modal.title && formatMessage({
-                id: modal.title
-              })}
-            </h1>
-            {modal.content}
-          </div>
-        </Modal>
-      ))}
+          {modal.content}
+        </Popup>
+      ))
+      }
       <Grid container spacing={3}>
         {hasStepper && (
           <Grid item xs={12}>
@@ -102,6 +100,6 @@ export const Dashboard = ({
           </Paper>
         </Grid>
       </Grid>
-    </Layout>
+    </Layout >
   );
 };
