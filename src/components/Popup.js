@@ -8,10 +8,13 @@ const useStyles = makeStyles((theme) => ({
         position: "absolute",
         right: theme.spacing(1),
         top: theme.spacing(1),
-        color: theme.palette.grey[500]
+        color: theme.palette.grey[500],
     },
     modalContent: {
         outline: 'none',
+    },
+    title: {
+        marginRight: theme.spacing(5),
     }
 }));
 
@@ -67,7 +70,7 @@ export const Popup = (props) => {
             aria-describedby="dialog-description"
         >
             <DialogTitle disableTypography >
-                {customHeader || <Typography variant="h6">{title}</Typography>}
+                {customHeader || <Typography variant="h6" align='center' className={classes.title}>{title}</Typography>}
                 {closeIcon &&
                     <IconButton
                         aria-label="close"

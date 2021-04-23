@@ -1,9 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
+import { useIntl } from 'react-intl';
 import { useSnackbar } from "notistack";
 import { makeStyles } from "@material-ui/core/styles";
+import { DateTimePicker } from "@material-ui/pickers";
 import {
-  Paper,
   Grid,
   Typography,
   Button,
@@ -14,49 +15,17 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
-  TableHead,
   TableRow,
   CardContent,
   FormControlLabel,
   Switch,
+  Box,
 } from "@material-ui/core";
-import { AppContext } from "../context/AppContext";
+
 import api, { handleError } from "../api";
-import { DateTimePicker } from "@material-ui/pickers";
-import { useIntl } from 'react-intl';
 
 
 const useStyles = makeStyles((theme) => ({
-  layout: {
-    width: "auto",
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
-      marginLeft: "auto",
-      marginRight: "auto",
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(10),
-    padding: theme.spacing(2),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(10),
-      padding: theme.spacing(3),
-    },
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-  },
   form: {
     width: "100%",
     marginTop: theme.spacing(1),
@@ -68,12 +37,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "row",
   },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
-  },
-  textField: {
-    minWidth: "100%",
-  },
+  dateBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing(3),
+    padding: theme.spacing(2)
+  }
 }));
 
 const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
@@ -101,9 +71,9 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
       .finally(() => setLoading(false));
   }, []);
 
-  // handleSubmit // Assign Pro
+  // handleSubmit
   function onSubmit() {
-    // alert(modalName)
+
     switch (modalName) {
       case 'assign_pro':
         api
@@ -159,207 +129,201 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
   console.log(selectedTicket);
 
   return (
-    <main className={classes.layout}>
-      <Paper className={classes.paper}>
-        <Grid container spacing={3}>
+    <>
+      <Table
+        className={classes.table}
+        aria-label="a dense table"
+        size="small"
+      >
+        <TableBody>
+          <TableRow>
+            <TableCell>
+              {formatMessage({
+                id: 'email',
+                defaultMessage: 'E-mail'
+              })}
+            </TableCell>
+            <TableCell align="left">
+              {selectedTicket?.owner.email}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              {formatMessage({
+                id: 'first_name',
+                defaultMessage: 'First Name'
+              })}
+            </TableCell>
+            <TableCell align="left">
+              {selectedTicket?.owner.first_name}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              {
+                formatMessage({
+                  id: 'last_name',
+                  defaultMessage: 'Last Name'
+                })
+              }
+            </TableCell>
+            <TableCell align="left">
+              {selectedTicket?.owner.last_name}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              {
+                formatMessage({
+                  id: 'gender',
+                  defaultMessage: 'Gender'
+                })
+              }
+            </TableCell>
+            <TableCell align="left">
+              {selectedTicket?.owner.gender}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              {formatMessage({
+                id: 'zip_code',
+                defaultMessage: 'Zip Code'
+              })}
+            </TableCell>
+            <TableCell align="left">
+              {selectedTicket?.owner.zip_address}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              {formatMessage({
+                id: 'phone_number',
+                defaultMessage: 'Phone Number'
+              })}
+            </TableCell>
+            <TableCell align="left">
+              {selectedTicket?.owner.phone_number}
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              {
+                formatMessage({
+                  id: 'minimum_income',
+                  defaultMessage: 'Minimum Income'
+                })
+              }
+            </TableCell>
+            <TableCell align="left">
+              {selectedTicket?.owner.min_incomer ? 'Yes' : 'No'}
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+      <CardContent>
+        <Typography variant="h6" component='h6'>
+          {
+            formatMessage({
+              id: 'about_me',
+              defaultMessage: 'About me'
+            }) + ':'
+          }
+        </Typography>
+        <Typography variant="body2" component="p" align='justify'>
+          {selectedTicket?.owner.about_me}
+        </Typography>
+      </CardContent>
+      <form
+        className={classes.form}
+        noValidate
+        onSubmit={formik.handleSubmit}
+      >
+        <div className={classes.formInputs}>
           <Grid item xs={12}>
-            <TableContainer>
-              <Table
-                className={classes.table}
-                aria-label="a dense table"
-                size="small"
-              >
-                <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      {formatMessage({
-                        id: 'email',
-                        defaultMessage: 'E-mail'
-                      })}
-                    </TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.owner.email}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      {formatMessage({
-                        id: 'first_name',
-                        defaultMessage: 'First Name'
-                      })}
-                    </TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.owner.first_name}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      {
-                        formatMessage({
-                          id: 'last_name',
-                          defaultMessage: 'Last Name'
-                        })
-                      }
-                    </TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.owner.last_name}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      {
-                        formatMessage({
-                          id: 'gender',
-                          defaultMessage: 'Gender'
-                        })
-                      }
-                    </TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.owner.gender}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      {formatMessage({
-                        id: 'zip_code',
-                        defaultMessage: 'Zip Code'
-                      })}
-                    </TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.owner.zip_address}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      {formatMessage({
-                        id: 'phone_number',
-                        defaultMessage: 'Phone Number'
-                      })}
-                    </TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.owner.phone_number}
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>
-                      {
-                        formatMessage({
-                          id: 'minimum_income',
-                          defaultMessage: 'Minimum Income'
-                        })
-                      }
-                    </TableCell>
-                    <TableCell align="left">
-                      {selectedTicket?.owner.min_incomer ? 'Yes' : 'No'}
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Grid item xs={12}>
-              <CardContent>
-                <Typography variant="body2">
-                  {
-                    formatMessage({
-                      id: 'about_me',
-                      defaultMessage: 'About me:'
-                    })
-                  }
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {selectedTicket?.owner.about_me}
-                </Typography>
-              </CardContent>
-            </Grid>
-            <form
-              className={classes.form}
-              noValidate
-              onSubmit={formik.handleSubmit}
-            >
-              <div className={classes.formInputs}>
-                <Grid item xs={12}>
-                  {
-                    modalName === 'assign_pro' &&
-                    (
-                      <FormControl variant="outlined" fullWidth>
-                        <InputLabel id="demo-simple-select-outlined-label">
-                          {
-                            formatMessage({
-                              id: 'select_pr',
-                              defaultMessage: 'Select Professional'
-                            })
-                          }
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-outlined-label"
-                          id="demo-simple-select-outlined"
-                          value={selectPro}
-                          onChange={handleChangePro}
-                          label="Select Pro"
-                        >
-                          {!loading &&
-                            proList?.map((pro) => (
-                              <MenuItem
-                                value={pro?.id}
-                              >{`${pro?.company_name} (☎${pro?.phone}) (${pro?.distance}-KM)`}</MenuItem>
-                            ))}
-                        </Select>
-                      </FormControl>
-                    )
-                  }
-                  {
-                    modalName === 'intake_call_date' &&
-                    (
-                      <FormControlLabel
-                        control={<DateTimePicker
-                          clearable
-                          ampm={false}
-                          value={date}
-                          onChange={setDate}
-                          disablePast
-                          format="DD/MM/yyyy HH:mm"
-                        />}
-                        label={formatMessage({
-                          id: 'set_intake_call_date',
-                          defaultMessage: 'Set Intake Call Date:  '
-                        })}
-                        labelPlacement='start'
-                      />
-                    )
-                  }
-                  {
-                    modalName === 'intake_call_done' &&
-                    (
-                      <FormControlLabel
-                        control={<Switch checked={isIntake} onChange={() => setIsIntake(prev => !prev)} name="isIntake" />}
-                        label={formatMessage({
-                          id: 'intake_call_done',
-                          defaultMessage: 'Intake Call Done'
-                        }) + '?'}
-                        labelPlacement='top'
-                      />
-                    )
-                  }
-                </Grid>
-              </div>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="secondary"
-                className={classes.submit}
-              >
-                {formatMessage({
-                  id: 'save',
-                  defaultMessage: 'Save'
-                })}
-              </Button>
-            </form>
+            {
+              modalName === 'assign_pro' &&
+              (
+                <FormControl variant="outlined" fullWidth>
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    {
+                      formatMessage({
+                        id: 'select_pr',
+                        defaultMessage: 'Select Professional'
+                      })
+                    }
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={selectPro}
+                    onChange={handleChangePro}
+                    label="Select Pro"
+                  >
+                    {!loading &&
+                      proList?.map((pro) => (
+                        <MenuItem
+                          value={pro?.id}
+                        >{`${pro?.company_name} (☎${pro?.phone}) (${pro?.distance}-KM)`}</MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              )
+            }
+            {
+              modalName === 'intake_call_date' &&
+              (
+                <Box className={classes.dateBox}>
+                  <Typography >
+                    {
+                      formatMessage({
+                        id: 'set_intake_call_date',
+                        defaultMessage: 'Set Intake Call Date'
+                      })}{':'}
+                  </Typography>
+                  < DateTimePicker
+                    id='component-simple'
+                    clearable
+                    ampm={false}
+                    value={date}
+                    onChange={setDate}
+                    disablePast
+                    format="DD/MM/yyyy HH:mm"
+                  />
+                </Box>
+              )
+            }
+            {
+              modalName === 'intake_call_done' &&
+              (
+                <FormControlLabel
+                  control={<Switch checked={isIntake} onChange={() => setIsIntake(prev => !prev)} name="isIntake" />}
+                  label={formatMessage({
+                    id: 'intake_call_done',
+                    defaultMessage: 'Intake Call Done'
+                  }) + '?'}
+                  labelPlacement='top'
+                />
+              )
+            }
           </Grid>
-        </Grid>
-      </Paper>
-    </main>
+        </div>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="secondary"
+          className={classes.submit}
+        >
+          {formatMessage({
+            id: 'save',
+            defaultMessage: 'Save'
+          })}
+        </Button>
+      </form>
+    </>
   );
 };
 
 export { AssignPro };
+

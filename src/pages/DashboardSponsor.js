@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import { TicketTable } from "../components/Index";
 import { LayoutSponsor } from "../views";
 import { useIntl } from 'react-intl';
 
@@ -38,7 +37,6 @@ const DashboardSponsor = () => {
         {/* Recent Orders */}
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-            <TicketTable />
           </Paper>
         </Grid>
       </Grid>

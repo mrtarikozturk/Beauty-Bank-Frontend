@@ -43,7 +43,7 @@ export const EditProfile = ({ togglePopup, userData }) => {
   const { REACT_APP_API_BASE_URL } = process.env;
 
   useEffect(() => {
-    axios.get(`${REACT_APP_API_BASE_URL}/auth/service-type/`)
+    axios.get(`${REACT_APP_API_BASE_URL}auth/service-type/`)
       .then(response => {
         setServices(response?.data?.results);
         console.log(response?.data?.results)

@@ -62,7 +62,7 @@ export const DashboardConnector = () => {
 
 
   const [open, setOpen] = useState(false);
-   const [openTicket, setOpenTicket] = useState(false);
+  const [openTicket, setOpenTicket] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tickets, setTickets] = useState([]);
@@ -77,7 +77,7 @@ export const DashboardConnector = () => {
     setModalName(name);
   };
 
-  const handleOpenTicket = (ticket,name) => {
+  const handleOpenTicket = (ticket, name) => {
     setOpenTicket(true);
     setSelectedTicket(ticket);
     setModalName(name);
@@ -117,7 +117,7 @@ export const DashboardConnector = () => {
           content: <AssignPro {...dateParams} />,
           ...modalParams,
         },
-            {
+        {
           title: modalName,
           content: <TicketDetail connector={true} {...dateParams} />,
           open: openTicket,
@@ -162,7 +162,7 @@ export const DashboardConnector = () => {
             id: 'assign_pro',
             defaultMessage: 'Assign Pro'
           }),
-            formatMessage({
+          formatMessage({
             id: 'ticket_detail',
             defaultMessage: 'Ticket Detail'
           }),
@@ -200,7 +200,7 @@ export const DashboardConnector = () => {
             t?.is_intake_call ?
               <CheckCircleIcon color='secondary' />
               :
-              <IconButton onClick={() => handleOpen(t, 'intake_call_done')}>
+              <IconButton size='small' onClick={() => handleOpen(t, 'intake_call_done')}>
                 < AddIcCallIcon color='primary' />
               </IconButton>
           ),
@@ -223,21 +223,21 @@ export const DashboardConnector = () => {
                 })}
             </Button>
           ),
-             (t) => (
+          (t) => (
             <Button
               onClick={() => handleOpenTicket(t, formatMessage({
-                 id: 'ticket_detail',
-            defaultMessage: 'Ticket Detail'
+                id: 'ticket_detail',
+                defaultMessage: 'Ticket Detail'
               }))}
               variant="outlined"
-              color={ "secondary"}
+              color={"secondary"}
               value="Choose"
               className={classes.button}
             >
               { formatMessage({
                 id: 'ticket_detail',
-            defaultMessage: 'Ticket Detail'
-              }) }
+                defaultMessage: 'Ticket Detail'
+              })}
 
 
             </Button>
