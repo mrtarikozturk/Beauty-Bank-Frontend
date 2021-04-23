@@ -18,7 +18,7 @@ export const List = ({ list, tickets, pagination }) => (
         onChange={(_, page) => pagination.setPage(page)}
       />
     )}
-    <Table>
+    <Table size='small'>
       <TableHead>
         <TableRow>
           {list.headers.map((lh) => (
@@ -37,7 +37,7 @@ export const List = ({ list, tickets, pagination }) => (
       </TableHead>
       <TableBody>
         {tickets?.map((ticket) => (
-          <TableRow key={ticket.id}>
+          <TableRow key={ticket.id} hover>
             {list.body.map((lb) => (
               <TableCell
                 style={{
