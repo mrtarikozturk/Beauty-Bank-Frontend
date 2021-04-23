@@ -32,7 +32,7 @@ const ResetPassword = (props) => {
     const toggleConfirm = () => setShowConfirmPassword(prev => !prev);
 
     const onSubmit = (values) => {
-        axios.patch(`${REACT_APP_API_BASE_URL}/auth/password-reset-complete`,
+        axios.patch(`${REACT_APP_API_BASE_URL}auth/password-reset-complete`,
             { password: values.password, token, uidb64 })
             .then(() => {
                 enqueueSnackbar(formatMessage({
