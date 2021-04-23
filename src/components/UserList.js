@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 import { useIntl } from 'react-intl';
 import {
-  Modal,
   Table,
   TableBody,
   TableCell,
@@ -20,6 +19,7 @@ import { UserDetail } from "./UserDetail";
 import { LayoutConnector } from "../views";
 import api, { handleError } from "../api";
 import { SearchBar } from "./SearchBar";
+import { Popup } from './Popup';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -58,10 +58,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const UserList = ({ listType, title, modal, list }) => {
+  // constants
   const classes = useStyles();
   const { formatMessage } = useIntl();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+  // states
   const [userList, setUserList] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -101,26 +103,18 @@ export const UserList = ({ listType, title, modal, list }) => {
       .catch(handleError(enqueueSnackbar, closeSnackbar, setLoading));
   }, [page, open]);
 
-  const modalBody = (
-    <div className={classes.paperModal}>
-      <h1 id="simple-modal-title">{modal}</h1>
-      <UserDetail selectedUser={selectedUser} handleClose={handleClose} />
-    </div>
-  );
-
   return (
     <LayoutConnector pageTitle={formatMessage({
       id: 'user_list',
       defaultMessage: 'User List'
     })}>
-      <Modal
+      <Popup
         open={open}
-        onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        togglePopup={handleClose}
+        title={modal}
       >
-        {modalBody}
-      </Modal>
+        <UserDetail selectedUser={selectedUser} />
+      </Popup>
       <Grid container spacing={3}>
         {/* Recent Orders */}
         <Grid item xs={12}>
@@ -138,11 +132,14 @@ export const UserList = ({ listType, title, modal, list }) => {
                 <SearchBar onSearchClick={onSearch} />
               </Grid>
               <Grid item xs={12} md={12} lg={6} justify="flex-end">
+                {console.log(total)}
                 {total > 10 && (
-                  <Pagination
-                    count={total / 10}
+
+                  < Pagination
+
+                    count={Math.floor(total / 10)}
                     color="secondary"
-                    onChange={(event, page) => setPage(page)}
+                    onChange={(event, pg) => setPage(pg)}
                   />
                 )}
               </Grid>
