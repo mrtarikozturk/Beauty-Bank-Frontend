@@ -101,7 +101,8 @@ const SignupDetail = () => {
   const [loading, setLoading] = useState(false);
   const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
-
+  console.log(selectedServices)
+  
   useEffect(() => {
     if (id === "client") {
       setDetailPath("register");
@@ -172,7 +173,6 @@ const SignupDetail = () => {
       companyName: "",
       gender: null,
       capacity: 1,
-
     }),
   };
 
@@ -492,11 +492,14 @@ const SignupDetail = () => {
                         labelId="demo-mutiple-checkbox-label"
                         id="demo-mutiple-checkbox"
                         multiple
+                        required
                         fullWidth
                         value={selectedServices}
                         onChange={handleChange}
                         input={<Input />}
-                        renderValue={(selected) => selected.join(", ")}
+                        renderValue={(selected) => selected.map(item => {
+                          return services.find(type => type.id == item)?.name
+                        }).join(', ')}
                       >
                         {services && services?.map((item) => (
                           <MenuItem key={item.id} value={item.id}>
