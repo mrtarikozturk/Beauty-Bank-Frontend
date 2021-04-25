@@ -51,7 +51,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
   const classes = useStyles();
   const { formatMessage } = useIntl();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
+  console.log(selectedTicket);
   // states
   const [proList, setProList] = useState([]);
   const [selectPro, setSelectPro] = useState("");
@@ -181,7 +181,20 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
               }
             </TableCell>
             <TableCell align="left">
-              {selectedTicket?.owner.gender}
+              {selectedTicket?.owner?.gender == 0
+                ? formatMessage({
+                  id: 'male',
+                  defaultMessage: 'Male'
+                })
+                : selectedTicket?.owner?.gender == 1
+                  ? formatMessage({
+                    id: 'female',
+                    defaultMessage: 'Female'
+                  })
+                  : formatMessage({
+                    id: 'not_specified',
+                    defaultMessage: 'Not Specified'
+                  })}
             </TableCell>
           </TableRow>
           <TableRow>
@@ -216,7 +229,7 @@ const AssignPro = ({ selectedTicket, handleClose, modalName }) => {
               }
             </TableCell>
             <TableCell align="left">
-              {selectedTicket?.owner.min_incomer ? 'Yes' : 'No'}
+              {selectedTicket?.owner.min_incomer ? formatMessage({ id: 'yes', defaultMessage: 'Yes' }) : formatMessage({ id: 'no', defaultMessage: 'No' })}
             </TableCell>
           </TableRow>
         </TableBody>
