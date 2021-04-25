@@ -259,12 +259,18 @@ export const EditProfile = ({ togglePopup, userData }) => {
                 formik.touched.gender && formik.errors.gender
               }
             >
-              <MenuItem value={null}>
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={0}>Female</MenuItem>
-              <MenuItem value={1}>Male</MenuItem>
-              <MenuItem value={2}>I don't say</MenuItem>
+              <MenuItem value={0}>{formatMessage({
+                id: 'male',
+                defaultMessage: 'Male'
+              })}</MenuItem>
+              <MenuItem value={1}>{formatMessage({
+                id: 'female',
+                defaultMessage: 'Female'
+              })}</MenuItem>
+              <MenuItem value={2}>{formatMessage({
+                id: 'not_spesified',
+                defaultMessage: 'Not Specified'
+              })}</MenuItem>
             </Select>
           </FormControl>
         </Grid>

@@ -304,13 +304,13 @@ const Profile = () => {
                       <TableCell align="left">
                         {userData?.gender === 0
                           ? formatMessage({
-                            id: 'female',
-                            defaultMessage: 'Female'
+                            id: 'male',
+                            defaultMessage: 'male'
                           })
                           : userData?.gender === 1
                             ? formatMessage({
-                              id: 'male',
-                              defaultMessage: 'Male'
+                              id: 'female',
+                              defaultMessage: 'Female'
                             })
                             : formatMessage({
                               id: 'not_specified',
