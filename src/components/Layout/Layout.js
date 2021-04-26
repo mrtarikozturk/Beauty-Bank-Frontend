@@ -16,6 +16,8 @@ import {
     Avatar,
     IconButton,
     Box,
+    MenuItem,
+    Select,
 } from "@material-ui/core";
 import {
     ChevronLeft as ChevronLeftIcon,
@@ -109,6 +111,11 @@ const useStyles = makeStyles((theme) => ({
         height: theme.spacing(5),
         marginRight: theme.spacing(1),
     },
+    select: {
+        '& .MuiSelect-select.MuiSelect-select': {
+            padding: theme.spacing(2)
+        }
+    },
 }));
 
 const Layout = ({ children, pageTitle, list }) => {
@@ -116,7 +123,7 @@ const Layout = ({ children, pageTitle, list }) => {
     const classes = useStyles();
     const history = useHistory();
     const { formatMessage } = useIntl();
-    const { user, setUser, userProfile } = useContext(AppContext);
+    const { user, setUser, userProfile, lang, setLang } = useContext(AppContext);
 
     // states
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -127,6 +134,10 @@ const Layout = ({ children, pageTitle, list }) => {
         localStorage.removeItem("user");
         history.push("/login");
     };
+
+    const handleChangeFlag = (event) => {
+        setLang(event.target.value);
+    }
 
     return (
         <div className={classes.root}>
@@ -152,6 +163,20 @@ const Layout = ({ children, pageTitle, list }) => {
                         <MenuIcon />
                     </IconButton>
                     <Box className={classes.appBarActions}>
+                        <Select
+                            className={classes.select}
+                            value={lang}
+                            onChange={handleChangeFlag}
+                            disableUnderline
+                            IconComponent={() => ('')}
+                        >
+                            <MenuItem value={'en'}>
+                                <img style={{ margin: 'auto', width: '30px' }} src='../images/united-kingdom.png' />
+                            </MenuItem>
+                            <MenuItem value={'nl'}>
+                                <img style={{ margin: 'auto', width: '30px' }} src='../images/netherlands.png' />
+                            </MenuItem>
+                        </Select>
                         <IconButton color="inherit">
                             {false ? (
                                 <Avatar
@@ -173,7 +198,6 @@ const Layout = ({ children, pageTitle, list }) => {
                                 })}
                             </Typography>
                         </IconButton>
-
                     </Box>
                 </Toolbar>
             </AppBar>
@@ -213,7 +237,7 @@ const Layout = ({ children, pageTitle, list }) => {
                     {children}
                 </Container>
             </main>
-        </div>
+        </div >
     );
 };
 
