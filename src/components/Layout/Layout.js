@@ -171,10 +171,10 @@ const Layout = ({ children, pageTitle, list }) => {
                             IconComponent={() => ('')}
                         >
                             <MenuItem value={'en'}>
-                                <img style={{ margin: 'auto', width: '30px' }} src='../images/united-kingdom.png' />
+                                <img style={{ margin: 'auto', width: '30px' }} src={'../images/united-kingdom.png'} />
                             </MenuItem>
                             <MenuItem value={'nl'}>
-                                <img style={{ margin: 'auto', width: '30px' }} src='../images/netherlands.png' />
+                                <img style={{ margin: 'auto', width: '30px' }} src={'../images/netherlands.png'} />
                             </MenuItem>
                         </Select>
                         <IconButton color="inherit">
