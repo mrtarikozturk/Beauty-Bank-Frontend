@@ -17,7 +17,9 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+
 import { AppContext } from "../context/AppContext";
+import storage from '../services/storageService';
 import api, { UserRoles, handleError } from '../api'
 import { email, password } from '../utils/validations';
 import ForgotPassword from '../components/ForgotPassword';
@@ -89,7 +91,7 @@ const Signin = () => {
       password: values.password,
     }).then(data => {
       setUser(data)
-      localStorage.setItem("user", JSON.stringify(data))
+      storage.set('user', data);
       history.push(UserRoles[data.role]?.path ?? '/login')
     }).catch(handleError(enqueueSnackbar, closeSnackbar, setLoading))
   };
