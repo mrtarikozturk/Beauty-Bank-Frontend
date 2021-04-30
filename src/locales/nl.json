@@ -72,7 +72,7 @@
     "sign_up":"Aanmelden",
     "must_be_at_least_1_characters":"Moet uit minimaal 1 karakters (cijfer of letter) bestaan",
     "must_be_at_least_6_characters":"Moet uit minimaal 6 karakters (cijfer of letter) bestaan",
-    "must_be_a_maximum_of_30_characters":"Mag maximaal 30 karakters (cijfers of letters) zijn",
+    "must_be_a_maximum_of_30_characters":"Mag maximaal {value} karakters (cijfers of letters) zijn",
     "must_be_at_least_4_characters":"Moet uit minimaal 4 karakters (cijfers of letters) bestaan",
     "passwords_must_match":"Wachtwoorden zijn niet hetzelfde",
     "must_be_at_least_2_characters":"Moet uit minimaal 2 karakters (cijfers of letters) bestaan",
@@ -160,5 +160,7 @@
     "password_changed_successfully_message":"You can now sign in with your new password",
     "back_to_login":"Back To Login",
     "reset_your_password":"Reset Your Password",
-    "reset_your_password_message":"Please enter and confirm your new password below to access your account"
+    "reset_your_password_message":"Please enter and confirm your new password below to access your account",
+    "services" :"Services"
+
 }
