@@ -207,7 +207,13 @@ const CreateTicket = () => {
                         defaultMessage: 'Minimum Income'
                       })}</TableCell>
                       <TableCell align="left">
-                        {userData?.min_incomer ? 'Yes' : 'No'}
+                        {userData?.min_incomer ? formatMessage({
+                          id: 'yes',
+                          defaultMessage: 'Yes'
+                        }) : formatMessage({
+                          id: 'no',
+                          defaultMessage: 'No'
+                        })}
                       </TableCell>
                     </TableRow>
                   </TableBody>

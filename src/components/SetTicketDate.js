@@ -83,8 +83,7 @@ const SetTicketDate = ({ selectedTicket, handleClose }) => {
   const [datePicker, setDatePicker] = useState("2021-01-01T00:00:00Z");
 
   // handleSubmit
-  async function onSubmit(values) {
-    // TODO: async olmasina gerek yok?
+ function onSubmit(values) {
     api
       .put(`/ticket/client-tickets/${selectedTicket.id}`, {
         appointment_date: datePicker,

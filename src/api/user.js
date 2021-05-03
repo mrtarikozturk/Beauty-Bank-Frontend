@@ -11,7 +11,4 @@ export const UserRoles = {
   Sponsor: {
     path: "/sponsor",
   },
-  Admin: {
-    path: "/admin",
-  },
 };

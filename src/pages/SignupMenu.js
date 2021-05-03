@@ -184,7 +184,3 @@ const SignupMenu = () => {
 }
 
 export { SignupMenu };
-
-// TODO: yazi alanina sabit bir uzunluk vermek gerekiyor ki yaziya gore yukariya dogru uzamanasin.
-// TODO: Cart'larin header kismina farkli bir renk verilebilir.
-// TODO: 

@@ -132,7 +132,6 @@ export const UserList = ({ listType, title, modal, list }) => {
                 <SearchBar onSearchClick={onSearch} />
               </Grid>
               <Grid item xs={12} md={12} lg={6} justify="flex-end">
-                {console.log(total)}
                 {total > 10 && (
 
                   < Pagination
