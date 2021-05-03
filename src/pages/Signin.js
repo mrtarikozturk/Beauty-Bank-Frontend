@@ -6,17 +6,12 @@ import * as yup from "yup";
 import { useSnackbar } from 'notistack'
 import {
   Button,
-  TextField,
   Grid,
   Typography,
   Container,
-  InputAdornment,
-  IconButton,
   CircularProgress,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 import { AppContext } from "../context/AppContext";
 import storage from '../services/storageService';
@@ -26,6 +21,8 @@ import ForgotPassword from '../components/ForgotPassword';
 import CheckMail from '../components/CheckMail';
 import ResetPassword from '../components/ResetPassword';
 import PasswordChanged from '../components/PasswordChanged';
+import Field from '../components/Field/Field';
+import PasswordField from '../components/PasswordField/PasswordField';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -57,13 +54,11 @@ const Signin = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { search } = useLocation();
   const searchParam = new URLSearchParams(search);
-  // const token=al944w-41e8aca8c9158b44f501e12b6625dd6d&uidb64=MTY&resetPassword=true
   const resetPassword = searchParam.get('resetPassword');
   const token = searchParam.get('token');
   const uidb64 = searchParam.get('uidb64');
 
   // states
-  const [isShowPassword, setIsShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [forgotPasswordModal, setForgotPasswordModal] = useState(false);
   const [checkMailModal, setCheckMailModal] = useState(false)
@@ -85,7 +80,6 @@ const Signin = () => {
   // handleSubmit
   const onSubmit = (values) => {
     setLoading(true);
-    console.log({ values })
     api.post('/auth/login/', {
       email: values.email.toLowerCase(),
       password: values.password,
@@ -103,15 +97,6 @@ const Signin = () => {
     onSubmit,
   });
 
-  // handle functions
-  const handleClickShowPassword = () => {
-    setIsShowPassword(!isShowPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   return (
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
@@ -127,53 +112,25 @@ const Signin = () => {
           noValidate
           onSubmit={formik.handleSubmit}
         >
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label={formatMessage({
-              id: 'email_address',
-              defaultMessage: 'E-mail Address'
-            })}
-            name="email"
-            autoComplete="email"
-            autoFocus
-            {...formik.getFieldProps("email")}
-            error={formik.touched.email && formik.errors.email}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label={formatMessage({
-              id: 'password',
-              defaultMessage: 'Password'
-            })}
-            type={isShowPassword ? "text" : "password"}
-            id="password"
-            autoComplete="current-password"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {isShowPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            {...formik.getFieldProps("password")}
-            error={formik.touched.password && formik.errors.password}
-            helperText={formik.touched.password && formik.errors.password}
-          />
+          <Grid container spacing={3}>
+            <Field
+              name='email'
+              formik={formik}
+              id='email_address'
+              defaultMessage='E-mail Address'
+              autoFocus
+              sm={12}
+              variant='outlined'
+            />
+            <PasswordField
+              name='password'
+              formik={formik}
+              id='password'
+              defaultMessage='Password'
+              sm={12}
+              variant='outlined'
+            />
+          </Grid>
           <Button
             type="submit"
             fullWidth

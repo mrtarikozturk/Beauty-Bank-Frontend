@@ -1,30 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, useParams, useLocation } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { makeStyles } from "@material-ui/core/styles";
 import { useIntl } from 'react-intl';
-import axios from 'axios';
 import {
   Paper,
   Grid,
   Typography,
-  TextField,
   Checkbox,
   Button,
   Link,
-  InputAdornment,
-  IconButton,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   CircularProgress,
-  ListItemText,
-  Input,
 } from "@material-ui/core";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import api, { handleError } from "../api";
 import { useSnackbar } from "notistack";
 import { usePopup, Popup } from '../components/Popup';
@@ -44,6 +32,10 @@ import {
   companyName,
   capacity,
 } from '../utils/validations'
+import Field from '../components/Field/Field';
+import GenderField from '../components/GenderField/GenderField';
+import ServiceTypeField from '../components/ServiceTypeField';
+import PasswordField from '../components/PasswordField/PasswordField';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -79,10 +71,6 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  formControl: {
-    minWidth: '100%',
-    maxWidth: 275
-  },
 }));
 
 const SignupDetail = () => {
@@ -93,15 +81,10 @@ const SignupDetail = () => {
   const { id } = useParams();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { open, togglePopup } = usePopup();
-  const { REACT_APP_API_BASE_URL } = process.env;
 
   //states
-  const [isShowPassword, setIsShowPassword] = useState(false);
   const [detailPath, setDetailPath] = useState("");
   const [loading, setLoading] = useState(false);
-  const [services, setServices] = useState([]);
-  const [selectedServices, setSelectedServices] = useState([]);
-  console.log(selectedServices)
 
   useEffect(() => {
     if (id === "client") {
@@ -115,17 +98,6 @@ const SignupDetail = () => {
     } else {
       history.push("/login");
     }
-
-    axios.get(`${REACT_APP_API_BASE_URL}auth/service-type/`)
-      .then(response => {
-        setServices(response?.data?.results);
-        console.log(response?.data?.results)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-      .then(() => console.log(services))
-
   }, []);
 
   // validation obj
@@ -173,6 +145,7 @@ const SignupDetail = () => {
       companyName: "",
       gender: null,
       capacity: 1,
+      serviceType: [],
     }),
   };
 
@@ -193,7 +166,7 @@ const SignupDetail = () => {
         for_gender: values.gender,
         reserved_capacity: values.capacity,
         zip_address: values.zip,
-        service_type: selectedServices,
+        service_type: values.serviceType,
       }),
       ...(id === "client" && {
         zip_address: values.zip,
@@ -226,23 +199,10 @@ const SignupDetail = () => {
     onSubmit,
   });
 
-  // handle functions
-  const handleClickShowPassword = () => {
-    setIsShowPassword(!isShowPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   // handle Terms and conditions
   const handleTerms = () => {
     togglePopup();
   }
-
-  const handleChange = (event) => {
-    setSelectedServices(event.target.value);
-  };
 
   return (
     <>
@@ -261,298 +221,94 @@ const SignupDetail = () => {
             onSubmit={formik.handleSubmit}
           >
             <Grid container spacing={3}>
-              {/* firstname */}
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label={formatMessage({
-                    id: 'first_name',
-                    defaultMessage: 'First Name'
-                  })}
-                  name="firstName"
-                  autoComplete="fname"
-                  required
-                  fullWidth
-                  autoFocus
-                  {...formik.getFieldProps("firstName")}
-                  error={formik.touched.firstName && formik.errors.firstName}
-                  helperText={formik.touched.firstName && formik.errors.firstName}
-                />
-              </Grid>
-              {/* lastname */}
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label={formatMessage({
-                    id: 'last_name',
-                    defaultMessage: 'Last Name'
-                  })}
-                  name="lastName"
-                  autoComplete="lname"
-                  required
-                  fullWidth
-                  {...formik.getFieldProps("lastName")}
-                  error={formik.touched.lastName && formik.errors.lastName}
-                  helperText={formik.touched.lastName && formik.errors.lastName}
-                />
-              </Grid>
-              {/* username */}
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label={formatMessage({
-                    id: 'username',
-                    defaultMessage: 'User Name'
-                  })}
-                  name="userName"
-                  autoComplete="uname"
-                  required
-                  fullWidth
-                  {...formik.getFieldProps("userName")}
-                  error={formik.touched.userName && formik.errors.userName}
-                  helperText={formik.touched.userName && formik.errors.userName}
-                />
-              </Grid>
-              {/* email */}
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  label={formatMessage({
-                    id: 'email',
-                    defaultMessage: 'E-mail'
-                  })}
-                  name="email"
-                  autoComplete="email"
-                  {...formik.getFieldProps("email")}
-                  error={formik.touched.email && formik.errors.email}
-                  helperText={formik.touched.email && formik.errors.email}
-                />
-              </Grid>
-              {/* password */}
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label={formatMessage({
-                    id: 'password',
-                    defaultMessage: 'Password'
-                  })}
-                  name="password"
-                  autoComplete="password"
-                  required
-                  fullWidth
-                  type={isShowPassword ? "text" : "password"}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                        >
-                          {isShowPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  {...formik.getFieldProps("password")}
-                  error={formik.touched.password && formik.errors.password}
-                  helperText={formik.touched.password && formik.errors.password}
-                />
-              </Grid>
-              {/* password confirm */}
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label={formatMessage({
-                    id: 'confirm',
-                    defaultMessage: 'Confirm'
-                  })}
-                  name="passwordConfirm"
-                  autoComplete="passwordConfirm"
-                  required
-                  fullWidth
-                  type={isShowPassword ? "text" : "password"}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                        >
-                          {isShowPassword ? <Visibility /> : <VisibilityOff />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  {...formik.getFieldProps("passwordConfirm")}
-                  error={
-                    formik.touched.passwordConfirm &&
-                    formik.errors.passwordConfirm
-                  }
-                  helperText={
-                    formik.touched.passwordConfirm &&
-                    formik.errors.passwordConfirm
-                  }
-                />
-              </Grid>
-
+              <Field
+                name='firstName'
+                id='first_name'
+                defaultMessage='First Name'
+                formik={formik}
+                autoFocus
+              />
+              <Field
+                name='lastName'
+                formik={formik}
+                id='last_name'
+                defaultMessage='Last Name'
+              />
+              <Field
+                name='userName'
+                formik={formik}
+                id='username'
+                defaultMessage='User Name'
+              />
+              <Field
+                name='email'
+                formik={formik}
+                id='email'
+                defaultMessage='E-mail'
+              />
+              <PasswordField
+                name='password'
+                formik={formik}
+                id='password'
+                defaultMessage='Password'
+              />
+              <PasswordField
+                name='passwordConfirm'
+                formik={formik}
+                id='confirm'
+                defaultMessage='Confirm'
+              />
               {id === "client" && (
-                <Grid item xs={12} sm={12}>
-                  <TextField
-                    label={
-                      formatMessage({
-                        id: 'zip_code',
-                        defaultMessage: '"Zip / Postal code"'
-                      })
-                    }
-                    name="zip"
-                    autoComplete="zip"
-                    required
-                    fullWidth
-                    {...formik.getFieldProps("zip")}
-                    error={formik.touched.zip && formik.errors.zip}
-                    helperText={formik.touched.zip && formik.errors.zip}
-                  />
-                </Grid>
+                <Field
+                  name='zip'
+                  formik={formik}
+                  id='zip_code'
+                  defaultMessage='Zip / Postal code'
+                />
               )}
-
               {id === "professional" && (
                 <>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label={
-                        formatMessage({
-                          id: 'company',
-                          defaultMessage: 'Company'
-                        })
-                      }
-                      name="companyName"
-                      autoComplete="companyName"
-                      fullWidth
-                      {...formik.getFieldProps("companyName")}
-                      error={
-                        formik.touched.companyName && formik.errors.companyName
-                      }
-                      helperText={
-                        formik.touched.companyName && formik.errors.companyName
-                      }
-                    />
-                  </Grid>
-                  {/* Gender */}
-                  <Grid item xs={12} sm={6}>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel id="gender-select-helper-label">
-                        Gender
-                    </InputLabel>
-                      <Select
-                        labelId="gender-select-helper-label"
-                        id="gender-select-helper"
-                        name="gender"
-                        {...formik.getFieldProps("gender")}
-                        error={formik.touched.gender && formik.errors.gender}
-                        helperText={formik.touched.gender && formik.errors.gender}
-                      >
-                        <MenuItem value={0}>{formatMessage({
-                          id: 'male',
-                          defaultMessage: 'Male'
-                        })}</MenuItem>
-                        <MenuItem value={1}>{formatMessage({
-                          id: 'female',
-                          defaultMessage: 'Female'
-                        })}</MenuItem>
-                        <MenuItem value={2}>{formatMessage({
-                          id: 'not_spesified',
-                          defaultMessage: 'Not Specified'
-                        })}</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Capacity"
-                      name="capacity"
-                      autoComplete="capacity"
-                      fullWidth
-                      type="number"
-                      {...formik.getFieldProps("capacity")}
-                      error={formik.touched.capacity && formik.errors.capacity}
-                      helperText={
-                        formik.touched.capacity && formik.errors.capacity
-                      }
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Zip / Postal code"
-                      name="zip"
-                      autoComplete="zip"
-                      required
-                      fullWidth
-                      {...formik.getFieldProps("zip")}
-                      error={formik.touched.zip && formik.errors.zip}
-                      helperText={formik.touched.zip && formik.errors.zip}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <FormControl className={classes.formControl}>
-                      <InputLabel id="demo-mutiple-checkbox-label">Services</InputLabel>
-                      <Select
-                        labelId="demo-mutiple-checkbox-label"
-                        id="demo-mutiple-checkbox"
-                        multiple
-                        required
-                        fullWidth
-                        value={selectedServices}
-                        onChange={handleChange}
-                        input={<Input />}
-                        renderValue={(selected) => selected.map(item => {
-                          return services.find(type => type.id == item)?.name
-                        }).join(', ')}
-                      >
-                        {services && services?.map((item) => (
-                          <MenuItem key={item.id} value={item.id}>
-                            <Checkbox checked={selectedServices.indexOf(item.id) > -1} />
-                            <ListItemText primary={item.name} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
+                  <Field
+                    name='companyName'
+                    formik={formik}
+                    id='company'
+                    defaultMessage='Company'
+                  />
+                  <GenderField formik={formik} />
+                  <Field
+                    name='capacity'
+                    formik={formik}
+                    id='capacity'
+                    defaultMessage='Capacity'
+                    required={false}
+                    type='number'
+                  />
+                  <Field
+                    name='zip'
+                    formik={formik}
+                    id='zip_code'
+                    defaultMessage='Zip / Postal code'
+                  />
+                  <ServiceTypeField {...{ formik }} />
                 </>
               )}
-              {/* phone number */}
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label={formatMessage({
-                    id: 'phone_number',
-                    defaultMessage: 'Phone Number'
-                  })}
-                  name="phone"
-                  autoComplete="phone"
-                  required
-                  fullWidth
-                  {...formik.getFieldProps("phone")}
-                  error={formik.touched.phone && formik.errors.phone}
-                  helperText={formik.touched.phone && formik.errors.phone}
-                />
-              </Grid>
-              {/* about me */}
+              <Field
+                name='phone'
+                sm={id === 'professional' || id === 'client' ? 6 : 12}
+                formik={formik}
+                id='phone_number'
+                defaultMessage='Phone Number'
+              />
               {id === "professional" && (
-                <Grid item xs={12}>
-                  <TextField
-                    label={formatMessage({
-                      id: 'about_me',
-                      defaultMessage: 'About Me'
-                    })}
-                    name="aboutMe"
-                    autoComplete="aboutMe"
-                    multiline
-                    required
-                    fullWidth
-                    {...formik.getFieldProps("aboutMe")}
-                    error={formik.touched.aboutMe && formik.errors.aboutMe}
-                    helperText={formik.touched.aboutMe && formik.errors.aboutMe}
-                  />
-                </Grid>
+                <Field
+                  name='aboutMe'
+                  formik={formik}
+                  id='about_me'
+                  defaultMessage='About Me'
+                  sm={12}
+                  multiline
+                />
               )}
-
               {/* Privacy */}
               <Grid item xs={12}>
                 <Checkbox
@@ -606,10 +362,7 @@ const SignupDetail = () => {
           </form>
         </Paper>
       </main>
-      <Popup
-        {...{ open, togglePopup }}
-        title='Privacy Policy'
-      >
+      <Popup {...{ open, togglePopup }} title='Privacy Policy' >
         <Privacy />
       </Popup>
     </>

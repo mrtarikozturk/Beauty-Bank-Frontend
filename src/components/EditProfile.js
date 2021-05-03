@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import axios from 'axios';
 import { useSnackbar } from 'notistack';
-import { makeStyles, Select, FormControl, MenuItem, InputLabel, Grid, TextField, Button, Checkbox, ListItemText, Input } from "@material-ui/core";
+import { makeStyles, Grid, Button, } from "@material-ui/core";
 import { useIntl } from 'react-intl';
 
 import api, { handleError } from '../api'
@@ -17,8 +15,11 @@ import {
   address,
   aboutMe,
   minimumIncome,
-  url,
 } from '../utils/validations';
+import Field from '../components/Field/Field';
+import ServiceTypeField from '../components/ServiceTypeField/';
+import GenderField from '../components/GenderField/GenderField';
+import IncomeField from '../components/IncomeField/';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -31,6 +32,11 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     minWidth: "100%",
   },
+  aboutMe: {
+    '& .MuiInputBase-input': {
+      textAlign: 'justify'
+    }
+  }
 }));
 
 export const EditProfile = ({ togglePopup, userData }) => {
@@ -38,21 +44,6 @@ export const EditProfile = ({ togglePopup, userData }) => {
   const classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { formatMessage } = useIntl();
-  const [services, setServices] = useState([]);
-  const [selectedServices, setSelectedServices] = useState([]);
-  const { REACT_APP_API_BASE_URL } = process.env;
-
-  useEffect(() => {
-    axios.get(`${REACT_APP_API_BASE_URL}auth/service-type/`)
-      .then(response => {
-        setServices(response?.data?.results);
-        console.log(response?.data?.results)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-      .then(() => console.log(services))
-  }, [])
 
   // validation obj
   const validationSchema = yup.object().shape({
@@ -101,7 +92,7 @@ export const EditProfile = ({ togglePopup, userData }) => {
       address: values.address,
       about_me: values.aboutMe,
       gender: values.gender,
-      service_type: userData?.is_pro ? selectedServices : [1], // TODO: burasi duzeltilecek.
+      service_type: userData?.is_pro ? values.serviceType : [1], // TODO: burasi duzeltilecek.
       ...(!userData.is_sponsor && { zip_address: values.zipAddress }),
       ...(userData.is_client && { min_incomer: values.minimumIncome }),
       ...(userData.is_pro && {
@@ -126,10 +117,6 @@ export const EditProfile = ({ togglePopup, userData }) => {
     onSubmit,
   });
 
-  const handleChange = (event) => {
-    setSelectedServices(event.target.value);
-  };
-
   return (
     <form
       className={classes.form}
@@ -137,320 +124,114 @@ export const EditProfile = ({ togglePopup, userData }) => {
       onSubmit={formik.handleSubmit}
     >
       <Grid container spacing={3}>
-        {/* firstname */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label={formatMessage({
-              id: 'first_name',
-              defaultMessage: 'First Name'
-            })}
-            name="firstName"
-            autoComplete="fname"
-            size="small"
-            required
-            fullWidth
-            size='small'
-            autoFocus
-            {...formik.getFieldProps("firstName")}
-            error={formik.touched.firstName && formik.errors.firstName}
-            helperText={formik.touched.firstName && formik.errors.firstName}
-          />
-        </Grid>
-        {/* lastname */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label={formatMessage({
-              id: 'last_name',
-              defaultMessage: 'Last Name'
-            })}
-            name="lastName"
-            autoComplete="lname"
-            required
-            fullWidth
-            size='small'
-            {...formik.getFieldProps("lastName")}
-            error={formik.touched.lastName && formik.errors.lastName}
-            helperText={formik.touched.lastName && formik.errors.lastName}
-          />
-        </Grid>
-        {/* username */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label={formatMessage({
-              id: 'username',
-              defaultMessage: 'User Name'
-            })}
-            name="userName"
-            autoComplete="uname"
-            required
-            fullWidth
-            size='small'
-            {...formik.getFieldProps("userName")}
-            error={formik.touched.userName && formik.errors.userName}
-            helperText={formik.touched.userName && formik.errors.userName}
-          />
-        </Grid>
-        {/* email */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            fullWidth
-            size='small'
-            label={formatMessage({
-              id: 'email',
-              defaultMessage: 'E-mail'
-            })}
-            name="email"
-            autoComplete="email"
-            {...formik.getFieldProps("email")}
-            error={formik.touched.email && formik.errors.email}
-            helperText={formik.touched.email && formik.errors.email}
-          />
-        </Grid>
-        {/* phone number */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label={formatMessage({
-              id: 'phone_number',
-              defaultMessage: 'Phone Number'
-            })}
-            name="phone"
-            autoComplete="phone"
-            required
-            fullWidth
-            size='small'
-            {...formik.getFieldProps("phone")}
-            error={formik.touched.phone && formik.errors.phone}
-            helperText={formik.touched.phone && formik.errors.phone}
-          />
-        </Grid>
-        {/* phone number 2 */}
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label={formatMessage({
-              id: 'phone_number',
-              defaultMessage: 'Phone Number'
-            }) + ' 2'}
-            name="phone2"
-            autoComplete="phone2"
-            fullWidth
-            size='small'
-            {...formik.getFieldProps("phone2")}
-          />
-        </Grid>
-        {/* Gender */}
-        <Grid item xs={12} sm={6}>
-          <FormControl className={classes.formControl}>
-            <InputLabel putLabel id="gender-label">
-              {formatMessage({
-                id: 'gender',
-                defaultMessage: 'Gender'
-              })}
-            </InputLabel>
-            <Select
-              labelId="gender-label"
-              id="gender"
-              name="gender"
-              {...formik.getFieldProps("gender")}
-              error={
-                formik.touched.gender && formik.errors.gender
-              }
-              helperText={
-                formik.touched.gender && formik.errors.gender
-              }
-            >
-              <MenuItem value={0}>{formatMessage({
-                id: 'male',
-                defaultMessage: 'Male'
-              })}</MenuItem>
-              <MenuItem value={1}>{formatMessage({
-                id: 'female',
-                defaultMessage: 'Female'
-              })}</MenuItem>
-              <MenuItem value={2}>{formatMessage({
-                id: 'not_spesified',
-                defaultMessage: 'Not Specified'
-              })}</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        {/* Income */}
+        <Field
+          name='firstName'
+          formik={formik}
+          id='first_name'
+          defaultMessage='First Name'
+          autoFocus
+          size='small'
+        />
+        <Field
+          name='lastName'
+          formik={formik}
+          id='last_name'
+          defaultMessage='Last Name'
+          size='small'
+        />
+        <Field
+          name='userName'
+          formik={formik}
+          id='username'
+          defaultMessage='User Name'
+          size='small'
+        />
+        <Field
+          name='email'
+          formik={formik}
+          id='email'
+          defaultMessage='E-mail'
+          size='small'
+        />
+        <Field
+          name='phone'
+          formik={formik}
+          id='phone_number'
+          defaultMessage='Phone Number'
+          size='small'
+        />
+        <Field
+          name='phone2'
+          formik={formik}
+          id='phone_number'
+          defaultMessage='Phone Number'
+          size='small'
+          required={false}
+        />
+        <GenderField formik={formik} />
+        {userData?.is_client && (<IncomeField formik={formik} />)}
         {
-          userData.is_client &&
-          (<Grid item xs={12} sm={6}>
-            <FormControl className={classes.formControl}>
-              <InputLabel id="min-income-select-helper-label">
-                {formatMessage({
-                  id: 'do_you_have_minimum_income',
-                  defaultMessage: 'Do you have minimum income?'
-                })}
-              </InputLabel>
-              <Select
-                labelId="min-income-select-helper-label"
-                id="min-income-select-helper"
-                name="minimumIncome"
-                {...formik.getFieldProps("minimumIncome")}
-                error={
-                  formik.touched.minimumIncome && formik.errors.minimumIncome
-                }
-                helperText={
-                  formik.touched.minimumIncome && formik.errors.minimumIncome
-                }
-              >
-                <MenuItem value={false}>
-                  {
-                    formatMessage({
-                      id: 'No',
-                      defaultMessage: 'No'
-                    })
-                  }
-                </MenuItem>
-                <MenuItem value={true}>
-                  {
-                    formatMessage({
-                      id: 'yes',
-                      defaultMessage: 'Yes'
-                    })
-                  }
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>)
-        }
-        {/* zipaddress */}
-        {
-          !userData.is_sponsor &&
+          !userData?.is_sponsor &&
           (
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label={formatMessage({
-                  id: 'zip_code',
-                  defaultMessage: 'Zip Address'
-                })}
-                name="zipAddress"
-                autoComplete="zaddress"
-                required
-                fullWidth
-                size='small'
-                {...formik.getFieldProps("zipAddress")}
-                error={formik.touched.zipAddress && formik.errors.zipAddress}
-                helperText={
-                  formik.touched.zipAddress && formik.errors.zipAddress
-                }
-              />
-            </Grid>
+            <Field
+              name='zipAddress'
+              formik={formik}
+              id='zip_code'
+              defaultMessage='Zip Address'
+              size='small'
+            />
           )
         }
-        {/* address */}
-        <Grid item xs={12} sm={userData.is_client ? 6 : 12}>
-          <TextField
-            label={formatMessage({
-              id: 'address',
-              defaultMessage: 'Address'
-            })}
-            name="address"
-            autoComplete="address"
-            required
-            fullWidth
-            size='small'
-            {...formik.getFieldProps("address")}
-            error={formik.touched.address && formik.errors.address}
-            helperText={formik.touched.address && formik.errors.address}
-          />
-        </Grid>
-        {/* aboutme */}
-        <Grid item xs={12} sm={12}>
-          <TextField
-            label={formatMessage({
-              id: 'about_me',
-              defaultMessage: 'About Me (My goal, my dream, my wish..)'
-            })}
-            name="aboutMe"
-            autoComplete="aboutMe"
-            required
-            fullWidth
-            size='small'
-            {...formik.getFieldProps("aboutMe")}
-            error={formik.touched.aboutMe && formik.errors.aboutMe}
-            helperText={
-              formik.touched.aboutMe && formik.errors.aboutMe
-            }
-          />
-        </Grid>
-        {/* Professional links */}
+        <Field
+          name='address'
+          formik={formik}
+          id='address'
+          defaultMessage='Address'
+          sm={userData?.is_client ? 6 : 12}
+          size='small'
+        />
+        <Field
+          name='aboutMe'
+          formik={formik}
+          id='about_me'
+          defaultMessage='About Me (My goal, my dream, my wish..)'
+          sm={12}
+          className={classes.aboutMe}
+          size='small'
+          multiline
+        />
         {
-          userData.is_pro && (
+          userData?.is_pro && (
             <>
-              <Grid item xs={12}>
-                <TextField
-                  label="Youtube"
-                  name="youtube"
-                  autoComplete="youtube"
-                  fullWidth
-                  size='small'
-                  {...formik.getFieldProps("youtube")}
-                  error={formik.touched.youtube && formik.errors.youtube}
-                  helperText={formik.touched.youtube && formik.errors.youtube}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Twitter"
-                  name="twitter"
-                  autoComplete="twitter"
-                  fullWidth
-                  size='small'
-                  {...formik.getFieldProps("twitter")}
-                  error={formik.touched.twitter && formik.errors.twitter}
-                  helperText={formik.touched.twitter && formik.errors.twitter}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Instagram"
-                  name="instagram"
-                  autoComplete="instagram"
-                  fullWidth
-                  size='small'
-                  {...formik.getFieldProps("instagram")}
-                  error={formik.touched.instagram && formik.errors.instagram}
-                  helperText={formik.touched.instagram && formik.errors.instagram}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Facebook"
-                  name="facebook"
-                  autoComplete="facebook"
-                  fullWidth
-                  size='small'
-                  {...formik.getFieldProps("facebook")}
-                  error={formik.touched.facebook && formik.errors.facebook}
-                  helperText={formik.touched.facebook && formik.errors.facebook}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-mutiple-checkbox-label">Services</InputLabel>
-                  <Select
-                    labelId="demo-mutiple-checkbox-label"
-                    id="demo-mutiple-checkbox"
-                    multiple
-                    fullWidth
-                    value={selectedServices}
-                    onChange={handleChange}
-                    input={<Input />}
-                    renderValue={(selected) => selected.join(", ")}
-                  >
-                    {services && services?.map((item) => (
-                      <MenuItem key={item.id} value={item.id}>
-                        <Checkbox checked={selectedServices.indexOf(item.id) > -1} />
-                        <ListItemText primary={item.name} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+              <Field
+                name='youtube'
+                formik={formik}
+                id='youtube'
+                defaultMessage='Youtube'
+                size='small'
+              />
+              <Field
+                name='twitter'
+                formik={formik}
+                id='twitter'
+                defaultMessage='Twitter'
+                size='small'
+              />
+              <Field
+                name='instagram'
+                formik={formik}
+                id='instagram'
+                defaultMessage='Instagram'
+                size='small'
+              />
+              <Field
+                name='facebook'
+                formik={formik}
+                id='facebook'
+                defaultMessage='Facebook'
+                size='small'
+              />
+              <ServiceTypeField {...{ formik }} />
             </>
           )
         }
@@ -470,6 +251,6 @@ export const EditProfile = ({ togglePopup, userData }) => {
           })
         }
       </Button>
-    </form>
+    </form >
   );
 };
