@@ -43,7 +43,6 @@ const EmailVerify = () => {
   const { search } = useLocation()
   const searchParams = new URLSearchParams(search)
   const userRole = searchParams.get('userRole')
-  console.log(userRole)
   const [isVerified, setVerified] = useState(false);
   const history = useHistory();
   const { REACT_APP_API_BASE_URL } = process.env;
@@ -60,7 +59,6 @@ const EmailVerify = () => {
     const response = await fetch(
       `${REACT_APP_API_BASE_URL}auth/email-verify/`,
       requestOptions
-      //TODO API nin degismesi gerekiyor.
     );
     const data = await response.json();
 

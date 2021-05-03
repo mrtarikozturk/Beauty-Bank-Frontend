@@ -9,7 +9,6 @@ import {
   Signin,
   SignupDetail,
   SignupMenu,
-  DashboardAdmin,
   DashboardClient,
   DashboardConnector,
   DashboardProfessional,
@@ -34,11 +33,6 @@ const AppRouter = () => {
         <Route exact path="/register" component={SignupMenu} />
         <Route exact path="/register/:id" component={SignupDetail} />
         <Route exact path="/login" component={Signin} />
-        <Route
-          exact
-          path="/admin"
-          component={user?.role === "Admin" ? DashboardAdmin : Signin}
-        />
         <Route
           exact
           path="/client"

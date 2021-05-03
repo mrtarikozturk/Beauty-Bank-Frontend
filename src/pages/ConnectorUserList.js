@@ -84,8 +84,6 @@ const ConnectorUserList = () => {
       `${REACT_APP_API_BASE_URL}auth/user-list/?page=${page}`,
       requestOptions
     );
-    // TODO: api .env dosyasina tasinmasi gerekir.
-    // TODO:console.log ifadelerini temizle.
 
     const data = await response.json();
     setPageSize(Math.floor(data.count / 10));

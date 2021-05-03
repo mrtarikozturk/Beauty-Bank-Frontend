@@ -2,7 +2,6 @@ export * from "./Signin";
 export * from "./SignupDetail";
 export * from "./SignupMenu";
 export * from "./DashboardClient";
-export * from "./DashboardAdmin";
 export * from "./DashboardConnector";
 export * from "./DashboardProfessional";
 export * from "./DashboardSponsor";

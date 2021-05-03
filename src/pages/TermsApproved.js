@@ -57,7 +57,6 @@ const TermsApproved = () => {
     const response = await fetch(
       `${REACT_APP_API_BASE_URL}ticket/terms-approved/`,
       requestOptions
-      //TODO:API degisecek
     );
     const data = await response.json();
 
