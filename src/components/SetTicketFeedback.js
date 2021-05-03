@@ -137,7 +137,6 @@ const SetTicketFeedback = ({ selectedTicket, handleClose }) => {
     for (let i = 0; i < fedImages.length; i++) {
       let form_data = await new FormData();
       await form_data.append("image", fedImages[i]);
-      // TODO: API degisecek
       axios
         .post(
           `${REACT_APP_API_BASE_URL}ticket/feedback-imageupload/${fed?.id}`,

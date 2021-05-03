@@ -40,7 +40,6 @@ const UserDetail = ({ selectedUser }) => {
     api
       .get(`/auth/connector-user-detail/${selectedUser}`)
       .then((data) => {
-        console.log(data);
         setUserData(data);
         setLoading(false);
       })
@@ -49,7 +48,6 @@ const UserDetail = ({ selectedUser }) => {
     axios.get(`${REACT_APP_API_BASE_URL}auth/service-type/`)
       .then(response => {
         setServices(response?.data?.results);
-        console.log(response?.data?.results)
       })
       .catch(err => {
         console.log(err)

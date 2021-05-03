@@ -1,3 +1,5 @@
+import storage from '../services/storageService';
+
 export const handleError = (snackbar, closer, setter) => err => {
   if (setter) setter(false)
   let error = 'Unknown error occurred!'
@@ -6,7 +8,7 @@ export const handleError = (snackbar, closer, setter) => err => {
     if (errors.length) {
       if (errors.indexOf('detail') !== -1) {
         // Token error
-        localStorage.removeItem('user')
+        storage?.remove('user')
         error = 'Session expired, please login again!'
       } else {
         const key = errors[0]
@@ -14,8 +16,10 @@ export const handleError = (snackbar, closer, setter) => err => {
       }
     }
   }
-  const key = snackbar(error, {variant: 'error', onClick: () => {
-    closer(key)
-  }})
+  const key = snackbar(error, {
+    variant: 'error', onClick: () => {
+      closer(key)
+    }
+  })
   return error
 }

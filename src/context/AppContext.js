@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from 'react'
+import storage from '../services/storageService';
 
 export const AppContext = createContext();
 
@@ -11,10 +12,15 @@ const AppContextProvider = ({ children }) => {
     const [userProfile, setUserProfile] = useState([]);
     const [token, setToken] = useState([]);
 
-    const [lang, setLang] = useState(supportedLangs.includes(navigatorLang.toUpperCase()) ? 'nl' : 'nl');
+    const [lang, setLanguage] = useState(storage?.get('language') || (supportedLangs.includes(navigatorLang.toUpperCase()) ? navigatorLang : 'nl'));
+
+    const setLang = (language) => {
+        storage?.set("language", language);
+        setLanguage(language);
+    };
 
     useEffect(() => {
-        setUser(JSON.parse(localStorage.getItem('user')));
+        setUser(storage.get('user'));
     }, [])
 
     return (

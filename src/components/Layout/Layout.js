@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { useIntl } from 'react-intl';
-
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -16,8 +15,7 @@ import {
     Avatar,
     IconButton,
     Box,
-    MenuItem,
-    Select,
+
 } from "@material-ui/core";
 import {
     ChevronLeft as ChevronLeftIcon,
@@ -29,6 +27,8 @@ import {
 import LayoutListItem from './ListItem'
 import { AppContext } from "../../context/AppContext";
 import config from '../../config'
+import LanguageOption from "../LanguageOption/LanguageOption";
+import storage from '../../services/storageService';
 
 const { theme: { drawer } } = config
 
@@ -131,7 +131,7 @@ const Layout = ({ children, pageTitle, list }) => {
     // Log Out
     const handleLogOut = () => {
         setUser(null);
-        localStorage.removeItem("user");
+        storage?.remove("user");
         history.push("/login");
     };
 
@@ -163,20 +163,7 @@ const Layout = ({ children, pageTitle, list }) => {
                         <MenuIcon />
                     </IconButton>
                     <Box className={classes.appBarActions}>
-                        <Select
-                            className={classes.select}
-                            value={lang}
-                            onChange={handleChangeFlag}
-                            disableUnderline
-                            IconComponent={() => ('')}
-                        >
-                            <MenuItem value={'en'}>
-                                <img style={{ margin: 'auto', width: '30px' }} src={'../images/united-kingdom.png'} />
-                            </MenuItem>
-                            <MenuItem value={'nl'}>
-                                <img style={{ margin: 'auto', width: '30px' }} src={'../images/netherlands.png'} />
-                            </MenuItem>
-                        </Select>
+                        <LanguageOption {...{ lang, handleChangeFlag }} />
                         <IconButton color="inherit">
                             {false ? (
                                 <Avatar

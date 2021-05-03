@@ -18,7 +18,6 @@ const messages = {
 function App() {
 
   const { lang } = useContext(AppContext);
-  console.log(lang);
 
   return (
     <IntlProvider messages={messages[lang]} locale={lang} defaultLocale='nl'>

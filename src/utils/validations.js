@@ -2,9 +2,9 @@ import { string, number, boolean, date, array, object, ref, bool } from 'yup';
 import { FormattedMessage } from 'react-intl'
 
 export const firstName = string()
-    .required(<FormattedMessage id='this_field_is_required' defaultMessage='This field is required' defaultMessage='This field is required' />)
+    .required(<FormattedMessage id='this_field_is_required' defaultMessage='This field is required' />)
     .min(2, <FormattedMessage id='must_be_at_least_2_characters' defaultMessage='Must be at least 2 characters' />)
-    .max(30, <FormattedMessage id='must_be_a_maximum_of_30_characters' defaultMessage='Must be a maximum of 30 characters' />);
+    .max(30, <FormattedMessage id='must_be_a_maximum_of_30_characters' defaultMessage='Must be a maximum of {value} characters' values={{ value: 30 }} />);
 
 export const lastName = string()
     .required(<FormattedMessage id='this_field_is_required' defaultMessage='This field is required' />)
@@ -27,7 +27,7 @@ export const password = string()
     .required(<FormattedMessage id='this_field_is_required' defaultMessage='This field is required' />)
     .min(6, <FormattedMessage id='must_be_at_least_6_characters' defaultMessage='Must be at least 6 characters' />)
     .max(30, <FormattedMessage id='must_be_a_maximum_of_30_characters' defaultMessage='Must be a maximum of 30 characters' />);
-
+<FormattedMessage id='' defaultMessage='' />
 export const passwordConfirm = string()
     .oneOf([ref("password"), null], <FormattedMessage id='passwords_must_match' defaultMessage='Passwords must match' />);
 
